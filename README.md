@@ -1,5 +1,4 @@
 # lora-weather-station
-
 A complete weather station composed of three separate modules. 
 - **External module**, which aims to collect all weather data from the sensors and to trasmit them to the Gateway.
 - **Gateway**, which aims to receive the weather data from External module (via LoRa network) and to route them on TCP/IP network.
@@ -14,5 +13,9 @@ This repository is divided into components as defined above:
 - **Gateway folder:** contains all necessary files to install and to configure the Gateway module.
 - **External module folder:** contains all necessary files to install and to configure the External module.
 
+In each folder there is a Readme.md file with all details for the specific module. This Readme.md file is just a overview of all weather station system.
+
 ## Features
 The weather station main features are:
+
+
