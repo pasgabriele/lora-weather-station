@@ -11,3 +11,5 @@ The External module is the set of all necessary sensors to detect weather data. 
 - Drew point ![](https://img.shields.io/badge/status-todo-red)
 - Wind chill ![](https://img.shields.io/badge/status-todo-red)
 - Heat index ![](https://img.shields.io/badge/status-todo-red)
+
+All weather data coming from sensors are processed by the External module, inserted in json string (this is an example `{"temp":27.23, "humi":62.05, "pres":1013.25}`) and then sended via LoRa wireless communication (433Mhz) to the Gateway.
