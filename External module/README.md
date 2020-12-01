@@ -1,6 +1,6 @@
 # External module
 
-The External module is the set of all necessary sensors to detect weather data. At the moment, the External module is able to detect the following measures:
+The External module is the set of all necessary sensors to detect weather data. It is able to detect the following measures:
 - Temperature ![](https://img.shields.io/badge/status-ok-green)
 - Humidity ![](https://img.shields.io/badge/status-ok-green)
 - Pressure ![](https://img.shields.io/badge/status-ok-green)
