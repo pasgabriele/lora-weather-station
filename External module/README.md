@@ -16,8 +16,8 @@ All weather data coming from sensors are processed by the External module, inser
 
 The External module is fully self powered via 2 li-ion 18650 batteries and a solar panel charger. To optimize the batteries life, the External module has been projected to work as following:
 
-- to read sensors values
-- to compone the json string
-- to send the json string to Gateway
+- reads sensors values
+- compones the json string
+- sends the json string to Gateway
 
-then to go in Deep Sleep mode for a configurable time (default is 15 minutes).
+then goes in Deep Sleep mode for a configurable time (default is 15 minutes).
