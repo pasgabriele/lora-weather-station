@@ -24,7 +24,7 @@ The External module is fully self powered via 2 li-ion 18650 batteries and a sol
 then goes in Deep Sleep mode for a configurable time (default is 15 minutes). Of couse, the batteries saving necessity affects the weather data update frequency. With 15 minutes of Deep Sleep mode you do not have a real time weather situation. This is insignificant for some weather data (for example temperature, humdity and preassure) because this measures don't have great variations in 15 minutes, but it could be significant for other weather data (for example wind speed and direction). For this reason you can set the Deep Sleep time based on your necessities.
 
 ## Hardware description
-The External module is composed as following:
+The External module is composed by following hardware components:
 
 |Quantity|Name|Description|Alternative|
 |--|--|--|--|
@@ -36,6 +36,18 @@ The External module is composed as following:
 |1|[Spurkfun Weather Meter Kit](https://www.sparkfun.com/products/15901)|Wind speed, wind direction and rain accumulation sensor||
 |1|[VEML6075](https://it.aliexpress.com/item/32843641073.html)|UV index sensor||
 |1|[DS3231](https://it.aliexpress.com/item/32925920564.html)|Real time clock||
+|2|[RJ11 6P6C female PCB socket](https://www.aliexpress.com/item/1005001419331726.html)|RJ11 6P6C female socket for PCB||
+|1|[Phoenix 2P connector](https://www.aliexpress.com/item/32819689207.html)|Phoenix 2P connector 5mm pitch for PCB||
+|1|[Switch 2 position](https://www.aliexpress.com/item/32799198160.html)|Toggle switch 2 position 2.54mm pitch||
+|1|[PCB 2 batteries case](https://www.aliexpress.com/item/4001009601436.html)|2 batteries case for PCB||
+|3|[10k resistor](https://www.aliexpress.com/item/4000695402017.html)|10k ohm resistor||
+|1|[100k resistor](https://www.aliexpress.com/item/4000695402017.html)|100k ohm resistor||
+|1|[27k resistor](https://www.aliexpress.com/item/4000695402017.html)|27k ohm resistor||
+|6|[XH2.54 4P connector](https://www.aliexpress.com/item/32959016223.html)|XH2.54mm 4P connector ||
+||[Male and female 2.54mm breakable pin header](https://www.aliexpress.com/item/32724478308.html)|Single row male and female 2.54mm breakable pin header PCB JST connector strip||
+|1|PCB by PCBWay (inserire link al progetto su PCBWay)|PCB||
+
+
 
 ## Wiring
 In the following the wiring schema for External module:
