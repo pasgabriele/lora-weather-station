@@ -14,7 +14,7 @@ The External module is the set of all necessary sensors to detect weather data. 
 
 All weather data coming from sensors are processed by the External module, inserted in json string (for example `{"temp":27.23, "humi":62.05, "pres":1013.25}`) and sended, via LoRa wireless communication (433Mhz), to the Gateway.
 
-The External module is fully self powered via 2 li-on 18650 batteries and a solar panel charger. To optimize the batteries life, the External module has been projected to work as following:
+The External module is fully self powered via 2 li-ion 18650 batteries and a solar panel charger. To optimize the batteries life, the External module has been projected to work as following:
 
 - to read sensors values
 - to compone the json string
