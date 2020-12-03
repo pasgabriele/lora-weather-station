@@ -55,4 +55,5 @@ The External module is composed by following hardware components:
 In the following the wiring schema for External module:
 ![external module schema](https://github.com/pasgabriele/lora-weather-station/blob/main/External%20module/external-module.svg)
 ![](https://img.shields.io/badge/status-toverify-yellow) The Lilygo SX1278 LoRa ESP32 is powered by the TP4056 output directly via SH1.25 battery interface.
+
 ![](https://img.shields.io/badge/status-toverify-yellow) All weather sensors are powered by the Lilygo SX1278 LoRa ESP32 3V3 and GND pins.
