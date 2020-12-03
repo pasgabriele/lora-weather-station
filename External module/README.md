@@ -45,7 +45,7 @@ The External module is composed by following hardware components:
 |1|[27k resistor](https://www.aliexpress.com/item/4000695402017.html)|27k ohm resistor||
 |6|[XH2.54 4P connector](https://www.aliexpress.com/item/32959016223.html)|XH2.54mm 4P connector ||
 ||[Male and female 2.54mm breakable pin header](https://www.aliexpress.com/item/32724478308.html)|Single row male and female 2.54mm breakable pin header PCB JST connector strip||
-|1|PCB by PCBWay (inserire link al progetto su PCBWay)|PCB||
+|1|[External module PCB](https://github.com/pasgabriele/lora-weather-station/tree/main/External%20module/pcb-external-module)|PCB for the external module||
 |1|schermo solare|||
 |1|cassetta impermeabile per esp32 e pannello solare|||
 
