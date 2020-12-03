@@ -54,3 +54,9 @@ The External module is composed by following hardware components:
 ## Wiring
 In the following the wiring schema for External module:
 ![external module schema](https://github.com/pasgabriele/lora-weather-station/blob/main/External%20module/external-module.svg)
+
+### TODO
+TODO:
+1. sfruttare il fatto che l'esp32 è già predisposto per l'alimentazione via batteria quindi l'output del TP4056 deve andare sull'interfaccia per la batteria (SH1.25) dell'ESP32.
+2. verificare se è possibile alimentare tutti i sensori dal pin 3V3 dell'ESP32 piuttosto che direttamente dalla batteria. I sensori alimentati direttamente dalla batteria hanno un voltaggio variabile (max 4.2) mentre alimentati dall'ESP32 il voltaggio è fisso a 3.3. Il voltaggio fisso è necessario per il corretto funzionamento dell'anemometro e del pluviometro pertando questi 2 sensori devono necessariamente essere alimentati dal pin 3V3.
+3. sfruttare il fatto che l'esp32 è già predisposto per l'alimentazione via batteria e quindi forse anche per poter leggere il voltaggio della batteria usando un pin analogico senza ulteriori resistenze.
