@@ -7,7 +7,7 @@ A complete weather station composed of three separate modules.
 
 In the following image an overview of its architecture and components.
 
-![weather station architecture](https://raw.githubusercontent.com/pasgabriele/lora-weather-station/main/weather-station-architecture.svg)
+![weather station architecture](https://github.com/pasgabriele/lora-weather-station/blob/main/weather-station-architecture.svg)
  
 This repository is divided into components as defined above:
 - **WeeWX Server folder:** contains all necessary files to install and to configure the WeeWX server.
