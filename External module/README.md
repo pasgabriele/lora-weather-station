@@ -60,6 +60,6 @@ This is the PCB created to merge all External module components:
 
 ![external module pcb](https://github.com/pasgabriele/lora-weather-station/blob/main/External%20module/pcb-external-module/pcb-external-module-v1.svg)
 
-**Note 1: **![](https://img.shields.io/badge/status-toverify-yellow) The Lilygo SX1278 LoRa ESP32 is powered by the TP4056 output via SH1.25 battery interface. 
+**Note 1:** ![](https://img.shields.io/badge/status-toverify-yellow) The Lilygo SX1278 LoRa ESP32 is powered by the TP4056 output via SH1.25 battery interface. 
 
-**Note 2: **![](https://img.shields.io/badge/status-toverify-yellow) All weather sensors are powered by the Lilygo SX1278 LoRa ESP32 3V3 and GND pins.
+**Note 2:** ![](https://img.shields.io/badge/status-toverify-yellow) All weather sensors are powered by the Lilygo SX1278 LoRa ESP32 3V3 and GND pins.
