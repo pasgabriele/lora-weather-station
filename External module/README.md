@@ -78,3 +78,11 @@ To compile correctly the source code is required to install the following board 
  - sandeepmistry/LoRa@^0.7.2
  - adafruit/Adafruit BME280 Library@^2.1.0
  - bblanchon/ArduinoJson@^6.16.1
+
+## TODO
+
+ - Verificare consumo corrente effettivo (ampere: mettersi in serie con voltometro) nelle seguenti condizioni:
+  - Deep Sleep semplice
+  - Deep Sleep con prima disattivazione WiFi e BLE
+  - Normale utilizzo
+  - Normale utilizzo con disattivazione di WiFi e BLE in setup()
