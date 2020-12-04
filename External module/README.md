@@ -23,7 +23,7 @@ The External module is fully self powered via 2 li-ion 18650 batteries and a sol
 
 then goes in Deep Sleep mode for a configurable time (default is 15 minutes). Of couse, the batteries saving necessity affects the weather data update frequency. With 15 minutes of Deep Sleep mode you do not have a real time weather situation. This is insignificant for some weather data (for example temperature, humdity and preassure) because this measures don't have great variations in 15 minutes, but it could be significant for other weather data (for example wind speed and direction). For this reason you can set the Deep Sleep time based on your necessities.
 
-## Hardware description
+## Hardware
 The External module is composed by following hardware components:
 
 |Quantity|Name|Description|Alternative|
@@ -51,7 +51,7 @@ The External module is composed by following hardware components:
 
 
 
-## Wiring schema and PCB
+### Wiring schema and PCB
 In the following the wiring schema for External module:
 
 ![external module schema](https://github.com/pasgabriele/lora-weather-station/blob/main/External%20module/external-module.svg)
@@ -64,5 +64,17 @@ and the PCB created to merge all External module components:
 
 **Note 2:** ![](https://img.shields.io/badge/status-toverify-yellow) All weather sensors are powered by the Lilygo SX1278 LoRa ESP32 3V3 and GND pins.
 
-## Software description
-The External module source code is uploaded in ![firmware-external-module](https://github.com/pasgabriele/lora-weather-station/tree/main/External%20module/firmware-external-module) folder
+## Software
+The External module source code is uploaded in [firmware-external-module](https://github.com/pasgabriele/lora-weather-station/tree/main/External%20module/firmware-external-module) folder. 
+The code has been written using [Atom IDE](https://atom.io/) and the [PlatformIO plugin](https://platformio.org/), therefore you can clone this repository directly on the above plaftorm.
+
+### Requirements
+To compile correctly the source code is required to install the following board and libraries from PlatformIO interface in Atom:
+
+ #### Board
+ - esp32doit-devkit-v1
+ 
+ #### Libraries
+ - sandeepmistry/LoRa@^0.7.2
+ - adafruit/Adafruit BME280 Library@^2.1.0
+ - bblanchon/ArduinoJson@^6.16.1
