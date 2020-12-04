@@ -8,6 +8,8 @@
    - Deep Sleep con prima disattivazione WiFi e BLE
    - Normale utilizzo
    - Normale utilizzo con disattivazione di WiFi e BLE in setup()
+ - Verifica correttezza funzione voltaggio batteria
+ - Verifica correttezza funzione velocità vento
 
 The External module is the set of all necessary sensors to detect weather data. It is able to detect the following measures:
 - Temperature ![](https://img.shields.io/badge/status-ok-green)
