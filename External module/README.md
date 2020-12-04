@@ -4,10 +4,10 @@
 ## TODO ![](https://img.shields.io/badge/status-todo-red)
 
  - Verificare consumo corrente effettivo (ampere: mettersi in serie con voltometro) nelle seguenti condizioni:
-  - Deep Sleep semplice
-  - Deep Sleep con prima disattivazione WiFi e BLE
-  - Normale utilizzo
-  - Normale utilizzo con disattivazione di WiFi e BLE in setup()
+   - Deep Sleep semplice
+   - Deep Sleep con prima disattivazione WiFi e BLE
+   - Normale utilizzo
+   - Normale utilizzo con disattivazione di WiFi e BLE in setup()
 
 The External module is the set of all necessary sensors to detect weather data. It is able to detect the following measures:
 - Temperature ![](https://img.shields.io/badge/status-ok-green)
