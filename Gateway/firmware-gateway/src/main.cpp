@@ -12,8 +12,6 @@
 #define DIO0 26
 
 int counter = 1;                //debug
-float DHTTemperature = -50.0;
-float DHTHumidity = 0.0;
 float BMETemperature = -50.0;
 float BMEHumidity = 0.0;
 float BMEPressure = 0.0;
@@ -64,8 +62,6 @@ void onReceive(int packetSize) {
   Serial.println(LoRa.packetRssi());
 
   //parse the received string using lib/jsonlib.h to extract sensors value
-  DHTTemperature = jsonExtract(received, "DHTTemperature").toFloat();
-  DHTHumidity = jsonExtract(received, "DHTHumidity").toFloat();
   BMETemperature = jsonExtract(received, "BMETemperature").toFloat();
   BMEHumidity = jsonExtract(received, "BMEHumidity").toFloat();
   BMEPressure = jsonExtract(received, "BMEPressure").toFloat();
@@ -73,10 +69,6 @@ void onReceive(int packetSize) {
   volt = jsonExtract(received, "battery").toFloat();
   Serial.print("INFO: ID mes: ");
   Serial.println(id);
-  Serial.print("INFO: DHT Temp: ");
-  Serial.println(DHTTemperature);
-  Serial.print("INFO: DHT Hum: ");
-  Serial.println(DHTHumidity);
   Serial.print("INFO: Battery: ");
   Serial.println(volt);
   Serial.print("INFO: BME Temp: ");
@@ -103,7 +95,7 @@ void setup() {
   Serial.begin(9600);
   while (!Serial);
   Serial.println();
-  Serial.println("Lora/Wi-Fi Gateway (LoRa Receiver v.3.0) by Pasgabriele");
+  Serial.println("Gateway - LoRa weather station by Pasgabriele");
 
   //lora connection
   lora_connection();
