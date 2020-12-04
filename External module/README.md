@@ -72,12 +72,12 @@ and the PCB created to merge all External module components:
 
 ![external module pcb](https://github.com/pasgabriele/lora-weather-station/blob/main/External%20module/pcb-external-module/pcb-external-module-v1.svg)
 
-**Note 1:** ![](https://img.shields.io/badge/status-toverify-yellow) The Lilygo SX1278 LoRa ESP32 is powered by the TP4056 output via SH1.25 battery interface. 
+**Note 1:** ![](https://img.shields.io/badge/status-toverify-yellow) The Lilygo SX1278 LoRa ESP32 is powered by the TP4056 output via SH1.25 battery interface.
 
 **Note 2:** ![](https://img.shields.io/badge/status-toverify-yellow) All weather sensors are powered by the Lilygo SX1278 LoRa ESP32 3V3 and GND pins.
 
 ## Software
-The External module source code is uploaded in [firmware-external-module](https://github.com/pasgabriele/lora-weather-station/tree/main/External%20module/firmware-external-module) folder. 
+The External module source code is uploaded in [firmware-external-module](https://github.com/pasgabriele/lora-weather-station/tree/main/External%20module/firmware-external-module) folder.
 The code has been written using [Atom IDE](https://atom.io/) and the [PlatformIO plugin](https://platformio.org/), therefore you can clone this repository directly on the above plaftorm.
 
 ### Requirements
@@ -85,8 +85,9 @@ To compile correctly the source code is required to install the following board 
 
  #### Board
  - esp32doit-devkit-v1
- 
+
  #### Libraries
  - sandeepmistry/LoRa@^0.7.2
  - adafruit/Adafruit BME280 Library@^2.1.0
  - bblanchon/ArduinoJson@^6.16.1
+ - adafruit/Adafruit Unified Sensor@^1.1.4
