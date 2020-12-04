@@ -7,6 +7,7 @@
 #include <Wire.h>
 #include <Adafruit_BME280.h>
 #include <Adafruit_SHT31.h>
+#include <WiFi.h>
 
 //used digital pins
 #define SCK 5
