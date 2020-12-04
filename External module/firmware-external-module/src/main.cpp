@@ -1,12 +1,9 @@
 #include <Arduino.h>
 #include <SPI.h>
 #include <LoRa.h>
-#include <DHT.h>
-#include <DHT_U.h>
 #include <ArduinoJson.h>
 #include <Wire.h>
 #include <Adafruit_BME280.h>
-#include <Adafruit_SHT31.h>
 #include <WiFi.h>
 
 //used digital pins
@@ -16,10 +13,8 @@
 #define SS 18
 #define RST 14
 #define DIO0 26
-#define DHTPIN 0
 #define LED 2
 #define WSPEED 23
-#define DHTTYPE DHT22
 
 //used analogic pins
 #define BATT 33
@@ -29,16 +24,10 @@
 #define TIME_TO_SLEEP  60           //time ESP32 will go to sleep (in seconds) (900 = 15 minutes)
 
 //global variables
-DHT dht(DHTPIN, DHTTYPE);
 Adafruit_BME280 bme;
-Adafruit_SHT31 sht31 = Adafruit_SHT31();
-float DHTTemperature = -50.0;
-float DHTHumidity = 0.0;
 float BMETemperature = -50.0;
 float BMEHumidity = 0.0;
 float BMEPressure = 0.0;
-float SHTTemperature = -50.0;
-float SHTHumidity = 0.0;
 float volt = 0.0;
 
 //RTC variables. These will be preserved during the deep sleep.
@@ -84,27 +73,6 @@ void print_wakeup_reason(){
 		case ESP_SLEEP_WAKEUP_ULP  : Serial.println("INFO: Wakeup caused by ULP program"); break;
 		default : Serial.println("INFO: Wakeup was not caused by deep sleep"); break;
 	}
-}
-
-//function to read DHT22 data
-void dhtReading(){
-  //setup DHT22
-  dht.begin();
-  delay(3000);
-
-  Serial.println("INFO: DHT22 Initilizing OK!");
-
-  //read DHT22 temperature
-  DHTTemperature = dht.readTemperature();
-  Serial.print(F("INFO: DHT Reading Temperature: "));
-  Serial.print(DHTTemperature);
-  Serial.println(F("°C"));
-
-  //read DHT22 humidity
-  DHTHumidity = dht.readHumidity();
-  Serial.print(F("INFO: DHT Reading Humidity: "));
-  Serial.print(DHTHumidity);
-  Serial.println(F("%"));
 }
 
 //function to read BME280 data
@@ -153,45 +121,6 @@ boolean bmeReading(){
 
 }
 
-//function to read SHT31 data
-boolean shtReading(){
-  //setup SHT31
-  Serial.print("INFO: SHT31 Initilizing.");
-
-  int i = 0;
-  while(i < 3){
-    if (! sht31.begin(0x44)) {
-      Serial.print(".");
-      delay(1000);
-    }
-    i++;
-  }
-
-  if (sht31.begin(0x44)){
-    Serial.println();
-    Serial.println("INFO: SHT31 Initilizing OK!");
-
-    //SHT31 read Temperature
-    SHTTemperature = sht31.readTemperature();
-    Serial.print(F("INFO: SHT31 Reading Temperature: "));
-    Serial.print(SHTTemperature);
-    Serial.println(F("°C"));
-
-    //SHT31 read humidity
-    SHTHumidity = sht31.readHumidity();
-    Serial.print(F("INFO: SHT31 Reading Humidity: "));
-    Serial.print(SHTHumidity);
-    Serial.println(F("%"));
-
-    return true;
-  }
-  else {
-    Serial.println();
-    Serial.println("ERROR: Couldn't find SHT31");
-    return false;
-  }
-}
-
 //function to read battery level
 void batteryLevel(){
   int analogValue = 0;
@@ -215,14 +144,10 @@ String componeJson(){
   String string;
   //populate JsonFormat
   data["id"] = bootCount;
-  data["DHTTemperature"] = DHTTemperature;
-  data["DHTHumidity"] = DHTHumidity;
   data["battery"] = volt;
   data["BMETemperature"] = BMETemperature;
   data["BMEHumidity"] = BMEHumidity;
   data["BMEPressure"] = BMEPressure;
-  data["SHTTemperature"] = SHTTemperature;
-  data["SHTHumidity"] = SHTHumidity;
 
   //copy JsonFormat to string
   serializeJson(data, string);
@@ -262,14 +187,8 @@ void setup() {
   //lora connection
   lora_connection();
 
-  //read DHT22 data
-  dhtReading();
-
   //read BME280 data
   bmeReading();
-
-  //read SHT31 data
-  shtReading();
 
   //read battery voltage
   batteryLevel();
