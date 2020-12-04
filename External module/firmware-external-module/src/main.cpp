@@ -175,7 +175,7 @@ void setup() {
   Serial.begin(9600);
   while (!Serial);
   Serial.println();
-  Serial.println("Weather Sensors (LoRa Sender v.3.0) by Pasgabriele");
+  Serial.println("External module - LoRa weather station by Pasgabriele");
 
   //increment boot number and print it every reboot
 	++bootCount;
