@@ -243,6 +243,9 @@ void setup() {
   pinMode(LED, OUTPUT);
   digitalWrite(LED, HIGH);
 
+  btStop();
+  WiFi.mode( WIFI_MODE_NULL );
+
   //initialize Serial Monitor
   Serial.begin(9600);
   while (!Serial);
