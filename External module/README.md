@@ -8,8 +8,10 @@
    - Deep Sleep con prima disattivazione WiFi e BLE
    - Normale utilizzo
    - Normale utilizzo con disattivazione di WiFi e BLE in setup()
- - Verifica correttezza funzione voltaggio batteria
- - Verifica correttezza funzione velocità vento
+ - Verificare correttezza funzione voltaggio batteria
+ - Verificare correttezza funzione velocità vento
+ - Verificare alimentazione ESP32: TP4056 output -> SH1.22
+ - Verificare alimentazione di tutti i sensori tramite il pin 3V3 dell'ESP32
 
 The External module is the set of all necessary sensors to detect weather data. It is able to detect the following measures:
 - Temperature ![](https://img.shields.io/badge/status-ok-green)
