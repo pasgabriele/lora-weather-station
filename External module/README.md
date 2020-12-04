@@ -10,7 +10,7 @@
    - Normale utilizzo con disattivazione di WiFi e BLE in setup()
  - Verificare correttezza funzione voltaggio batteria
  - Verificare correttezza funzione velocità vento
- - Verificare alimentazione ESP32: TP4056 output -> SH1.22
+ - Verificare alimentazione ESP32: TP4056 output -> SH1.25
  - Verificare alimentazione di tutti i sensori tramite il pin 3V3 dell'ESP32
 
 The External module is the set of all necessary sensors to detect weather data. It is able to detect the following measures:
