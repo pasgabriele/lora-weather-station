@@ -14,14 +14,14 @@
 #define RST 14
 #define DIO0 26
 #define LED 2
-#define WSPEED 23
+#define WSPEED 32
 
 //used analogic pins
 #define BATT 33
 
 //deep sleep configuration
 #define uS_TO_S_FACTOR 1000000      //conversion factor for micro seconds to seconds
-#define TIME_TO_SLEEP  10           //time ESP32 will go to sleep (in seconds) (900 = 15 minutes)
+#define TIME_TO_SLEEP  2           //time ESP32 will go to sleep (in seconds) (900 = 15 minutes)
 
 //global variables
 Adafruit_BME280 bme;
@@ -134,6 +134,14 @@ boolean bmeReading(){
 
 }
 
+void windSetup(){
+  
+}
+
+void readWind(){
+
+}
+
 //function to read battery level
 void batteryLevel(){
   int analogValue = 0;
@@ -182,8 +190,9 @@ void setup() {
   pinMode(LED, OUTPUT);
   digitalWrite(LED, HIGH);
 
+  //disable BLE and WiFi
   btStop();
-  WiFi.mode( WIFI_MODE_NULL );
+  WiFi.mode(WIFI_MODE_NULL);
 
   //initialize Serial Monitor
   Serial.begin(9600);
@@ -206,6 +215,9 @@ void setup() {
 
   //read battery voltage
   batteryLevel();
+
+  //read windspeed and direction
+  readWind();
 
   //send packet to LoRa Receiver using componeJson function as input
   lora_send(componeJson());
