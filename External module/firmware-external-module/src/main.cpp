@@ -75,6 +75,19 @@ void print_wakeup_reason(){
 	}
 }
 
+//Takes an average of readings on a given pin
+//Returns the average
+int averageAnalogRead(int pinToRead){
+	byte numberOfReadings = 8;
+	unsigned int runningValue = 0;
+
+	for(int x = 0 ; x < numberOfReadings ; x++)
+		runningValue += analogRead(pinToRead);
+	runningValue /= numberOfReadings;
+
+	return(runningValue);
+}
+
 //function to read BME280 data
 boolean bmeReading(){
   //setup BME280
@@ -125,13 +138,14 @@ boolean bmeReading(){
 void batteryLevel(){
   int analogValue = 0;
   //read analogValue
-  analogValue = analogRead(BATT);
+  analogValue = averageAnalogRead(BATT);
   Serial.print(F("INFO: Analogic Pin Reading: "));
   Serial.print(analogValue);
   Serial.println(F("/4095"));
 
   //mapping analogic value to voltage level
-  volt = (analogValue - 0) * (4.2 - 0.0) / (4095 - 0) + 0.0;
+  //volt = analogValue;
+  volt = (analogValue - 0) * (4.1 - 0.0) / (4095 - 0) + 0.0;
   //volt = map(analogValue, 0, 4095, 0.0f, 4.2f);
   Serial.print(F("INFO: Battery Voltage: "));
   Serial.print(volt);
