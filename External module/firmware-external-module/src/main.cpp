@@ -21,7 +21,7 @@
 
 //deep sleep configuration
 #define uS_TO_S_FACTOR 1000000      //conversion factor for micro seconds to seconds
-#define TIME_TO_SLEEP  60           //time ESP32 will go to sleep (in seconds) (900 = 15 minutes)
+#define TIME_TO_SLEEP  10           //time ESP32 will go to sleep (in seconds) (900 = 15 minutes)
 
 //global variables
 Adafruit_BME280 bme;
