@@ -17,6 +17,8 @@ float BMEHumidity = 0.0;
 float BMEPressure = 0.0;
 int id = 0;
 float volt = 0;
+float windspdkmh_avg10s = 0.0;
+float windgustkmh = 0.0;
 
 //function to connect to lora
 void lora_connection() {
@@ -67,6 +69,8 @@ void onReceive(int packetSize) {
   BMEPressure = jsonExtract(received, "BMEPressure").toFloat();
   id = jsonExtract(received, "id").toInt();
   volt = jsonExtract(received, "battery").toFloat();
+  windspdkmh_avg10s = jsonExtract(received, "indspdkmh_avg10s").toFloat();
+  windgustkmh = jsonExtract(received, "windgustkmh").toFloat();
   Serial.print("INFO: ID mes: ");
   Serial.println(id);
   Serial.print("INFO: Battery: ");
@@ -77,6 +81,10 @@ void onReceive(int packetSize) {
   Serial.println(BMEHumidity);
   Serial.print("INFO: BME Press: ");
   Serial.println(BMEPressure);
+  Serial.print("INFO: AVG Wind speed 10s: ");
+  Serial.println(windspdkmh_avg10s);
+  Serial.print("INFO: Wind gust: ");
+  Serial.println(windgustkmh);
 
   //TODO: verificare attendibilita' dati parsati prima di invio a MQTT.
   //      Se 0 scarta, se -50 scarta, se BMEAltitude == 44330 scarta
