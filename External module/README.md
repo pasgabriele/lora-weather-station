@@ -30,6 +30,11 @@ The External module is fully self powered via 2 li-ion 18650 batteries and a sol
 
 then goes in Deep Sleep mode for a configurable time (default is 15 minutes). Of couse, the batteries saving necessity affects the weather data update frequency. With 15 minutes of Deep Sleep mode you do not have a real time weather situation. This is insignificant for some weather data (for example temperature, humdity and preassure) because this measures don't have great variations in 15 minutes, but it could be significant for other weather data (for example wind speed and direction). For this reason you can set the Deep Sleep time based on your necessities.
 
+### Wind speed measurement
+The wind speed measurement is ereditated by [Sparkfun Weather Shield GitHub page](https://github.com/sparkfun/Weather_Shield/blob/master/Firmware/Weather_Shield_Weather_Station_V12/Weather_Shield_Weather_Station_V12.ino), but it has been adjusted to compatibility with the Deep Sleep mode. It works as following: 
+
+As described above, the External module starts, reads the sensors values, compones the json string, sends it to the Gateway and goes to Deep Sleep. For the specific wind speed measurements, when the External module executes the readWind function, it reads for 10 seconds (1 read for seconds (10 reads)) the wind speed values from the anemometer and puts this values in an array. Once the readings are finished, it returns the average wind speed for this 10 seconds and it inserts this avg in the json string. Therefore the External module does not return the instantaneous wind speed at the moment of the measure, but it returns a avg wind speed calculated on 10 readings over 10 seconds.
+
 ## Hardware
 The External module is composed by following hardware components:
 
