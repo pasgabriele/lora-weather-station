@@ -12,7 +12,7 @@ The External module is the set of all necessary sensors to detect weather data. 
 - Temperature ![](https://img.shields.io/badge/status-ok-green)
 - Humidity ![](https://img.shields.io/badge/status-ok-green)
 - Pressure ![](https://img.shields.io/badge/status-ok-green)
-- Wind speed ![](https://img.shields.io/badge/status-todo-red)
+- Wind speed ![](https://img.shields.io/badge/status-ok-green)
 - Wind direction ![](https://img.shields.io/badge/status-todo-red)
 - UV index ![](https://img.shields.io/badge/status-todo-red)
 - Rain accumulation ![](https://img.shields.io/badge/status-todo-red)
