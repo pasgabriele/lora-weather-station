@@ -273,8 +273,8 @@ String componeJson(){
   data["BMETemperature"] = BMETemperature;
   data["BMEHumidity"] = BMEHumidity;
   data["BMEPressure"] = BMEPressure;
-  data["Windgustkmh"] = windgustkmh;
-  data["Windspdkmh_avg10s"] = windspdkmh_avg10s;
+  data["WindGustKMH"] = windgustkmh;
+  data["WindSpdKMH_avg10s"] = windspdkmh_avg10s;
 
   //copy JsonFormat to string
   serializeJson(data, string);
