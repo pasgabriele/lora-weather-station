@@ -45,66 +45,6 @@ void lora_connection() {
   delay(2000);
 }
 
-void onReceive(int packetSize) {
-  //print incoming packet size
-  Serial.print("INFO: Incoming packet size: ");
-  Serial.println(packetSize);
-
-  String received = "";
-
-  //read the incoming packet
-  for (int i = 0; i < packetSize; i++) {
-    received = received + (char)LoRa.read();
-  }
-
-  //print the incoming packet with RSSI
-  Serial.print("INFO: Received packet '");
-  Serial.print(received);
-  Serial.print("' with RSSI ");
-  Serial.println(LoRa.packetRssi());
-
-  //parse the received string using lib/jsonlib.h to extract sensors value
-  id = jsonExtract(received, "id").toInt();
-  volt = jsonExtract(received, "battery").toFloat();
-  BMETemperature = jsonExtract(received, "BMETemperature").toFloat();
-  BMEHumidity = jsonExtract(received, "BMEHumidity").toFloat();
-  BMEPressure = jsonExtract(received, "BMEPressure").toFloat();
-  windspdkmh_avg10s = jsonExtract(received, "WindSpdKMH_avg10s").toFloat();
-  windgustkmh = jsonExtract(received, "WindGustKMH").toFloat();
-  Serial.print("INFO: ID mes: ");
-  Serial.println(id);
-  Serial.print("INFO: Battery: ");
-  Serial.println(volt);
-  Serial.print("INFO: BME Temp: ");
-  Serial.println(BMETemperature);
-  Serial.print("INFO: BME Hum: ");
-  Serial.println(BMEHumidity);
-  Serial.print("INFO: BME Press: ");
-  Serial.println(BMEPressure);
-  Serial.print("INFO: AVG Wind speed 10s: ");
-  Serial.println(windspdkmh_avg10s);
-  Serial.print("INFO: Wind gust: ");
-  Serial.println(windgustkmh);
-
-  //TODO: perform semantic verification on parsed data before sending via MQTT
-  //for example, no send MQTT message when External module send json message with:
-  //  BMETemperature == null
-  //  BMETemperature != [-20;+50]
-  //  BMEHumidity == null
-  //  BMEHumidity != [0;100]
-  //  BMEPressure == null
-  //  BMEPressure != [....]
-  //  etc...
-
-  //send parsed data to WeeWX via MQTT protocol
-  //sendToMQTTBroker();
-
-  //debug counter
-  Serial.print("INFO: Received packet: ");
-  Serial.println(counter);
-  counter++;
-}
-
 void setup() {
   //initialize Serial Monitor
   Serial.begin(9600);
@@ -117,14 +57,6 @@ void setup() {
 
   //wifi connection
   //wifi_connection();
-
-  //TODO: inviare un messaggio MQTT, contenente tutti i valori ricevuti dai sensori e memorizzati nell'oggetto Json, al broker MQTT.
-
-  //register the receive callback
-  LoRa.onReceive(onReceive);
-
-  //put the radio into receive mode
-  LoRa.receive();
 }
 
 void loop() {
@@ -154,8 +86,9 @@ void loop() {
     BMETemperature = jsonExtract(received, "BMETemperature").toFloat();
     BMEHumidity = jsonExtract(received, "BMEHumidity").toFloat();
     BMEPressure = jsonExtract(received, "BMEPressure").toFloat();
-    windspdkmh_avg10s = jsonExtract(received, "WindSpdKMH_avg10s").toFloat();
-    windgustkmh = jsonExtract(received, "WindGustKMH").toFloat();
+    windgustkmh = jsonExtract(received, "windGustKMH").toFloat();
+    windspdkmh_avg10s = jsonExtract(received, "windSpdKMH_avg10s").toFloat();
+
     Serial.print("INFO: ID mes: ");
     Serial.println(id);
     Serial.print("INFO: Battery: ");
@@ -166,10 +99,15 @@ void loop() {
     Serial.println(BMEHumidity);
     Serial.print("INFO: BME Press: ");
     Serial.println(BMEPressure);
-    Serial.print("INFO: AVG Wind speed 10s: ");
-    Serial.println(windspdkmh_avg10s);
     Serial.print("INFO: Wind gust: ");
     Serial.println(windgustkmh);
+    Serial.print("INFO: AVG Wind speed 10s: ");
+    Serial.println(windspdkmh_avg10s);
+
+    //debug counter
+    Serial.print("INFO: Received packet: ");
+    Serial.println(counter);
+    counter++;
 
     //TODO: perform semantic verification on parsed data before sending via MQTT
     //for example, no send MQTT message when External module send json message with:
@@ -183,10 +121,5 @@ void loop() {
 
     //send parsed data to WeeWX via MQTT protocol
     //sendToMQTTBroker();
-
-    //debug counter
-    Serial.print("INFO: Received packet: ");
-    Serial.println(counter);
-    counter++;
   }
 }
