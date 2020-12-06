@@ -29,30 +29,22 @@ float BMETemperature = -50.0;
 float BMEHumidity = 0.0;
 float BMEPressure = 0.0;
 float volt = 0.0;
-long lastSecond; //The millis counter to see when a second rolls by
-byte seconds; //When it hits 60, increase the current minute
-byte seconds_10s; //Keeps track of the "wind speed/dir avg" over last 10 seconds array of data
+long lastSecond;                    //The millis counter to see when a second rolls by
+byte seconds;                       //When it hits 60, increase the current minute
+byte seconds_10s;                   //Keeps track of the "wind speed/dir avg" over last 10 seconds array of data
 long lastWindCheck = 0;
 volatile long lastWindIRQ = 0;
 volatile byte windClicks = 0;
-
-//We need to keep track of the following variables:
-//Wind speed each update (no storage)
-//Wind gust over the day (no storage)
-//Wind speed, avg over 10 seconds (store 1 per second)
-//Wind gust over last 10 minutes (store 1 per minute)
-byte windspdavg[10]; //10 bytes to keep track of 10s average
-
-//These are all the weather values that wunderground expects:
-float windspeedmph = 0; // [mph instantaneous wind speed]
-float windgustmph = 0; // [mph current wind gust, using software specific time period]
-float windspdmph_avg10s = 0; // [mph 10 second average wind speed mph]
-float windspeedkmh = 0; // [km/h instantaneous wind speed]
-float windgustkmh = 0; // [km/h current wind gust, using software specific time period]
-float windspdkmh_avg10s = 0; // [km/h 10 second average wind speed km/h]
-float windspeedms = 0; // [m/s instantaneous wind speed]
-float windgustms = 0; // [m/s current wind gust, using software specific time period]
-float windspdms_avg10s = 0; // [m/s 10 second average wind speed m/s]
+byte windspdavg[10];                //10 bytes to keep track of 10s average
+float windspeedmph = 0;             //[mph instantaneous wind speed]
+float windgustmph = 0;              //[mph current wind gust, using software specific time period]
+float windspdmph_avg10s = 0;        //[mph 10 second average wind speed mph]
+float windspeedkmh = 0;             //[km/h instantaneous wind speed]
+float windgustkmh = 0;              //[km/h current wind gust, using software specific time period]
+float windspdkmh_avg10s = 0;        //[km/h 10 second average wind speed km/h]
+float windspeedms = 0;              //[m/s instantaneous wind speed]
+float windgustms = 0;               //[m/s current wind gust, using software specific time period]
+float windspdms_avg10s = 0;         //[m/s 10 second average wind speed m/s]
 
 //RTC variables. These will be preserved during the deep sleep.
 RTC_DATA_ATTR int bootCount = 0;
@@ -99,7 +91,7 @@ void print_wakeup_reason(){
 	}
 }
 
-//Takes an average of readings on a given pin
+//Takes an average of readings on a given analog pin
 //Returns the average
 int averageAnalogRead(int pinToRead){
 	byte numberOfReadings = 8;
@@ -119,7 +111,7 @@ boolean bmeReading(){
 
   int i = 0;
   while(i < 3){
-    if (! bme.begin(0x76)) {            // Set to 0x77 for some BME280
+    if (! bme.begin(0x76)){         //Set to 0x77 for some BME280
       Serial.print(".");
       delay(1000);
     }
@@ -155,23 +147,19 @@ boolean bmeReading(){
     Serial.println("ERROR: Couldn't find BME280");
     return false;
   }
-
 }
 
 //Interrupt routines (these are called by the hardware interrupts, not by the main code)
-void wspeedIRQ()
-// Activated by the magnet in the anemometer (2 ticks per rotation), attached to input 23
-{
-  if (millis() - lastWindIRQ > 10) // Ignore switch-bounce glitches less than 10ms (142MPH max reading) after the reed switch closes
-  {
-    lastWindIRQ = millis(); //Grab the current time
-    windClicks++; //There is 1.492MPH for each click per second.
+void wspeedIRQ(){
+  //Activated by the magnet in the anemometer (2 ticks per rotation), attached to input WSPEED
+  if (millis() - lastWindIRQ > 10){ //Ignore switch-bounce glitches less than 10ms (142MPH max reading) after the reed switch closes
+    lastWindIRQ = millis();         //Grab the current time
+    windClicks++;                   //There is 1.492MPH for each click per second.
   }
 }
 
 //Calculates each of the variables that wunderground is expecting
-void calcWeather()
-{
+void calcWeather(){
   //Calc windspdmph_avg10s
   float temp = 0;
   for (int i = 0 ; i < 10 ; i++)
@@ -181,23 +169,21 @@ void calcWeather()
 }
 
 //Returns the instataneous wind speed
-float get_wind_speed()
-{
-  float deltaTime = millis() - lastWindCheck; //750ms
+float get_wind_speed(){
+  float deltaTime = millis() - lastWindCheck;       //750ms
 
-  deltaTime /= 1000.0; //Covert to seconds
+  deltaTime /= 1000.0;                              //Covert to seconds
 
-  float windSpeed = (float)windClicks / deltaTime; //3 / 0.750s = 4
+  float windSpeed = (float)windClicks / deltaTime;  //3 / 0.750s = 4
 
-  windClicks = 0; //Reset and start watching for new wind
+  windClicks = 0;                                   //Reset and start watching for new wind
   lastWindCheck = millis();
 
-  windSpeed *= 1.492; //4 * 1.492 = 5.968MPH
+  windSpeed *= 1.492;                               //4 * 1.492 = 5.968MPH
 
   /* Serial.println();
     Serial.print("Windspeed:");
     Serial.println(windSpeed);*/
-
   return (windSpeed);
 }
 
@@ -216,29 +202,28 @@ void convertMPHtoMS(){
 //Prints the various variables directly to the port
 //I don't like the way this function is written but Arduino doesn't support floats under sprintf
 void printWeather(){
-  calcWeather(); //Go calc all the various sensors
+  calcWeather();                    //Go calc all the various sensors
   convertMPHtoKMH();
   convertMPHtoMS();
 }
 
 void readWind(){
-  pinMode(WSPEED, INPUT_PULLUP); // input from wind meters windspeed sensor
+  pinMode(WSPEED, INPUT_PULLUP);    //input from wind meters windspeed sensor
 
   seconds = 0;
   lastSecond = millis();
 
-  // attach external interrupt pins to IRQ functions
+  //attach external interrupt pins to IRQ functions
   attachInterrupt(WSPEED, wspeedIRQ, FALLING);
 
-  // turn on interrupts
+  //turn on interrupts
   interrupts();
 
   long startTime = millis();
   long endTime = millis();
   while(endTime - startTime < 10000){
     //Keep track of which minute it is
-    if (millis() - lastSecond >= 1000)
-    {
+    if (millis() - lastSecond >= 1000){
       lastSecond += 1000;
 
       //Take a speed reading every second for 10 second average
@@ -246,10 +231,8 @@ void readWind(){
 
       //Calc the wind speed and direction every second for 10 second to get 10 second average
       float currentSpeed = get_wind_speed();
-      windspeedmph = currentSpeed;//update global variable for windspeed when using the printWeather() function
-      //float currentSpeed = random(5); //For testing
+      windspeedmph = currentSpeed;          //update global variable for windspeed when using the printWeather() function
       windspdavg[seconds_10s] = (int)currentSpeed;
-      //if(seconds_10s % 10 == 0) displayArrays(); //For testing
 
       //Check to see if this is a gust for the day
       if (currentSpeed > windgustmph)
@@ -272,8 +255,7 @@ void batteryLevel(){
   Serial.print(analogValue);
   Serial.println(F("/4095"));
 
-  //mapping analogic value to voltage level
-  //volt = analogValue;
+  //mapping analogic value to voltage battery level
   volt = (analogValue - 0) * (4.2 - 0.0) / (4095 - 0) + 0.0;
   //volt = map(analogValue, 0, 4095, 0.0f, 4.2f);
   Serial.print(F("INFO: Battery Voltage: "));
