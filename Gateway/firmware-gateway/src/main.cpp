@@ -64,11 +64,11 @@ void onReceive(int packetSize) {
   Serial.println(LoRa.packetRssi());
 
   //parse the received string using lib/jsonlib.h to extract sensors value
+  id = jsonExtract(received, "id").toInt();
+  volt = jsonExtract(received, "battery").toFloat();
   BMETemperature = jsonExtract(received, "BMETemperature").toFloat();
   BMEHumidity = jsonExtract(received, "BMEHumidity").toFloat();
   BMEPressure = jsonExtract(received, "BMEPressure").toFloat();
-  id = jsonExtract(received, "id").toInt();
-  volt = jsonExtract(received, "battery").toFloat();
   windspdkmh_avg10s = jsonExtract(received, "WindSpdKMH_avg10s").toFloat();
   windgustkmh = jsonExtract(received, "WindGustKMH").toFloat();
   Serial.print("INFO: ID mes: ");
