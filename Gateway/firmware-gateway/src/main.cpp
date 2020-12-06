@@ -87,7 +87,14 @@ void onReceive(int packetSize) {
   Serial.println(windgustkmh);
 
   //TODO: perform semantic verification on parsed data before sending via MQTT
-  //for example when External module send json message with BMETemperature = null
+  //for example, no send MQTT message when External module send json message with:
+  //  BMETemperature == null
+  //  BMETemperature != [-20;+50]
+  //  BMEHumidity == null
+  //  BMEHumidity != [0;100]
+  //  BMEPressure == null
+  //  BMEPressure != [....]
+  //  etc...
 
   //send parsed data to WeeWX via MQTT protocol
   //sendToMQTTBroker();
