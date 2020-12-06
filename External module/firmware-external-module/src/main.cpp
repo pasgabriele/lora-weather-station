@@ -274,7 +274,7 @@ void batteryLevel(){
 
   //mapping analogic value to voltage level
   //volt = analogValue;
-  volt = (analogValue - 0) * (4.1 - 0.0) / (4095 - 0) + 0.0;
+  volt = (analogValue - 0) * (4.2 - 0.0) / (4095 - 0) + 0.0;
   //volt = map(analogValue, 0, 4095, 0.0f, 4.2f);
   Serial.print(F("INFO: Battery Voltage: "));
   Serial.print(volt);
