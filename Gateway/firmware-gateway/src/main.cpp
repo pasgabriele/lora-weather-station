@@ -69,8 +69,8 @@ void onReceive(int packetSize) {
   BMEPressure = jsonExtract(received, "BMEPressure").toFloat();
   id = jsonExtract(received, "id").toInt();
   volt = jsonExtract(received, "battery").toFloat();
-  windspdkmh_avg10s = jsonExtract(received, "indspdkmh_avg10s").toFloat();
-  windgustkmh = jsonExtract(received, "windgustkmh").toFloat();
+  windspdkmh_avg10s = jsonExtract(received, "WindSpdKMH_avg10s").toFloat();
+  windgustkmh = jsonExtract(received, "WindGustKMH").toFloat();
   Serial.print("INFO: ID mes: ");
   Serial.println(id);
   Serial.print("INFO: Battery: ");
@@ -86,10 +86,10 @@ void onReceive(int packetSize) {
   Serial.print("INFO: Wind gust: ");
   Serial.println(windgustkmh);
 
-  //TODO: verificare attendibilita' dati parsati prima di invio a MQTT.
-  //      Se 0 scarta, se -50 scarta, se BMEAltitude == 44330 scarta
+  //TODO: perform semantic verification on parsed data before sending via MQTT
+  //for example when External module send json message with BMETemperature = null
 
-  //invia i dati letti via mqtt a weewx
+  //send parsed data to WeeWX via MQTT protocol
   //sendToMQTTBroker();
 
   //debug counter
