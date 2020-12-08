@@ -6,23 +6,31 @@
 #include <Adafruit_BME280.h>
 #include <WiFi.h>
 
-//used digital pins
+//used digital pins:
+//for lora module
 #define SCK 5
 #define MISO 19
 #define MOSI 27
 #define SS 18
 #define RST 14
 #define DIO0 26
+
+//for led onboard
 #define LED 2
+
+//for wind sensor
 #define WSPEED 23
 
-//used analogic pins
+//used analogic pins:
+//for battery monitoring
 #define BATT 33
+
+//for wind sensor
 #define WDIR 32
 
 //deep sleep configuration
 #define uS_TO_S_FACTOR 1000000      //conversion factor for micro seconds to seconds
-#define TIME_TO_SLEEP  2           //time ESP32 will go to sleep (in seconds) (900 = 15 minutes)
+#define TIME_TO_SLEEP  2            //time ESP32 will go to sleep (in seconds) (900 = 15 minutes)
 
 //global variables
 volatile long lastWindIRQ = 0;
