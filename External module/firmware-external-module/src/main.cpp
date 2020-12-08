@@ -203,7 +203,7 @@ void readWind(){
 
   windClicks = 0;           //set windClicks count to 0 ready for calculations
   interrupts();             //turn on interrupts
-  delay (3000);             //wait 3 seconds to average
+  delay (5000);             //wait 5 seconds to average
   noInterrupts();           //turn off interrupts
 
   //as described in Sparkfun Weather Meter Kit (SEN-15901)(https://cdn.sparkfun.com/assets/d/1/e/0/6/DS-15901-Weather_Meter.pdf),
@@ -213,8 +213,8 @@ void readWind(){
   //windspeed = #_pulses / interval_time * 2,401
   //
   //convert to km/h using the above formula
-  //V = P(2.401/3) = P * 0,8
-  windSpeed = windClicks * 0.8;
+  //V = P(2.401/5) = P * 0,4802
+  windSpeed = windClicks * 0.4802;
 
   Serial.print(windClicks);
   Serial.print("\t\t");
