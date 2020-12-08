@@ -14,43 +14,25 @@
 #define RST 14
 #define DIO0 26
 #define LED 2
-#define WSPEED 32
+#define WSPEED 13
 
 //used analogic pins
 #define BATT 33
-#define WDIR 35                     //to modify because GPIO35 in ESP32 is output only
-
-#define WIND_DIR_AVG_SIZE 5
+#define WDIR 32
 
 //deep sleep configuration
 #define uS_TO_S_FACTOR 1000000      //conversion factor for micro seconds to seconds
 #define TIME_TO_SLEEP  2           //time ESP32 will go to sleep (in seconds) (900 = 15 minutes)
 
 //global variables
+volatile long lastWindIRQ = 0;
+volatile byte windClicks = 0;
 Adafruit_BME280 bme;
 float BMETemperature = -50.0;
 float BMEHumidity = 0.0;
 float BMEPressure = 0.0;
 float volt = 0.0;
-long lastSecond;                    //The millis counter to see when a second rolls by
-byte seconds_5s;                   //Keeps track of the "wind speed/dir avg" over last 5 seconds array of data
-long lastWindCheck = 0;
-volatile long lastWindIRQ = 0;
-volatile byte windClicks = 0;
-int winddiravg[WIND_DIR_AVG_SIZE];  //5 ints to keep track of 5 seconds average
-float windspdavg[5];                //array 5 float to keep track of 5s average
-float windspeedmph = 0;             //[mph instantaneous wind speed]
-float windgustmph = 0;              //[mph current wind gust, using software specific time period]
-float windspdmph_avg5s = 0;         //[mph 10 second average wind speed mph]
-float windspeedkmh = 0;             //[km/h instantaneous wind speed]
-float windgustkmh = 0;              //[km/h current wind gust, using software specific time period]
-float windspdkmh_avg10s = 0;        //[km/h 10 second average wind speed km/h]
-float windspeedms = 0;              //[m/s instantaneous wind speed]
-float windgustms = 0;               //[m/s current wind gust, using software specific time period]
-float windspdms_avg10s = 0;         //[m/s 10 second average wind speed m/s]
-int winddir = 0;                    //[0-360 instantaneous wind direction]
-int windgustdir = 0;                //[0-360 using software specific time period]
-int winddir_avg5s = 0;              //[0-360 5 second average wind direction]
+float windSpeed; //wind speed in km/h
 
 //RTC variables. These will be preserved during the deep sleep.
 RTC_DATA_ATTR int bootCount = 0;
@@ -195,128 +177,40 @@ int get_wind_direction(){
   return (-1); // error, disconnected?
 }
 
-//Interrupt routines (these are called by the hardware interrupts, not by the main code)
+//interrupt routines (these are called by the hardware interrupts, not by the main code)
 void wspeedIRQ(){
-  //Activated by the magnet in the anemometer (2 ticks per rotation), attached to input WSPEED
-  if (millis() - lastWindIRQ > 10){ //Ignore switch-bounce glitches less than 10ms (142MPH max reading) after the reed switch closes
-    lastWindIRQ = millis();         //Grab the current time
-    windClicks++;                   //There is 1.492MPH for each click per second.
+  //activated by the magnet in the anemometer (2 ticks per rotation), attached to input 13
+  if (millis() - lastWindIRQ > 10) //ignore switch-bounce glitches less than 10ms (142MPH max reading) after the reed switch closes
+  {
+    lastWindIRQ = millis(); //grab the current time
+    windClicks++; //there is 2.401KMH(1.492MPH) for each click per second.
   }
-}
-
-//Calculates each of the variables that wunderground is expecting
-void calcWeather(){
-  winddir = get_wind_direction();
-
-  //Calc windspdmph_avg5s
-  float temp = 0;
-  for (int i = 0 ; i < 5 ; i++)
-    temp += windspdavg[i];
-  temp /= 5.0;
-  windspdmph_avg5s = temp;
-
-  //Calc winddir_avg10s, Wind Direction
-  //You can't just take the average. Google "mean of circular quantities" for more info
-  //We will use the Mitsuta method because it doesn't require trig functions
-  //And because it sounds cool.
-  //Based on: http://abelian.org/vlf/bearings.html
-  //Based on: http://stackoverflow.com/questions/1813483/averaging-angles-again
-  long sum = winddiravg[0];
-  int D = winddiravg[0];
-  for (int i = 1 ; i < WIND_DIR_AVG_SIZE ; i++){
-    int delta = winddiravg[i] - D;
-
-    if (delta < -180)
-      D += delta + 360;
-    else if (delta > 180)
-      D += delta - 360;
-    else
-      D += delta;
-
-    sum += D;
-  }
-  winddir_avg5s = sum / WIND_DIR_AVG_SIZE;
-  if (winddir_avg5s >= 360) winddir_avg5s -= 360;
-  if (winddir_avg5s < 0) winddir_avg5s += 360;
-}
-
-//Returns the instataneous wind speed
-float get_wind_speed(){
-  float deltaTime = millis() - lastWindCheck;       //750ms
-
-  deltaTime /= 1000.0;                              //Covert to seconds
-
-  float windSpeed = (float)windClicks / deltaTime;  //3 / 0.750s = 4
-
-  windClicks = 0;                                   //Reset and start watching for new wind
-  lastWindCheck = millis();
-
-  windSpeed *= 1.492;                               //4 * 1.492 = 5.968MPH
-
-  /* Serial.println();
-    Serial.print("Windspeed:");
-    Serial.println(windSpeed);*/
-  return (windSpeed);
-}
-
-void convertMPHtoKMH(){
-  windspeedkmh = windspeedmph * 1.60934;
-  windgustkmh = windgustmph * 1.60934;
-  windspdkmh_avg10s = windspdmph_avg5s * 1.60934;
-}
-
-void convertMPHtoMS(){
-  windspeedms = windspeedmph * 0.44704;
-  windgustms = windgustmph * 0.44704;
-  windspdms_avg10s = windspdmph_avg5s * 0.44704;
-}
-
-//Prints the various variables directly to the port
-//I don't like the way this function is written but Arduino doesn't support floats under sprintf
-void printWeather(){
-  calcWeather();                    //Go calc all the various sensors
-  convertMPHtoKMH();
-  convertMPHtoMS();
 }
 
 void readWind(){
-  pinMode(WSPEED, INPUT_PULLUP);    //input from wind meters windspeed sensor
-
-  lastSecond = millis();
+  pinMode(WSPEED, INPUT_PULLUP); //input from wind meters windspeed sensor
 
   //attach external interrupt pins to IRQ functions
   attachInterrupt(WSPEED, wspeedIRQ, FALLING);
 
-  //turn on interrupts
-  interrupts();
+  windClicks = 0;           //set windClicks count to 0 ready for calculations
+  interrupts();             //turn on interrupts
+  delay (3000);             //wait 3 seconds to average
+  noInterrupts();           //turn off interrupts
 
-  long startTime = millis();
-  long endTime = millis();
-  while(endTime - startTime < 5000){
-    //Keep track of which minute it is
-    if (millis() - lastSecond >= 1000){
-      lastSecond += 1000;
+  //as described in Sparkfun Weather Meter Kit (SEN-15901)(https://cdn.sparkfun.com/assets/d/1/e/0/6/DS-15901-Weather_Meter.pdf),
+  //a wind speed of 2.401km/h causes the switch to close once per second.
+  //then we can use the following formula:
+  //
+  //windspeed = #_pulses / interval_time * 2,401
+  //
+  //convert to km/h using the above formula
+  //V = P(2.401/3) = P * 0,8
+  windSpeed = windClicks * 0.8;
 
-      //Take a speed reading every second for 5 second average
-      if (++seconds_5s > 4) seconds_5s = 0;
-
-      //Calc the wind speed and direction every second for 5 second to get 5 second average
-      float currentSpeed = get_wind_speed();
-      windspeedmph = currentSpeed;          //update global variable for windspeed when using the printWeather() function
-      int currentDirection = get_wind_direction();
-      windspdavg[seconds_5s] = currentSpeed;
-      winddiravg[seconds_5s] = currentDirection;
-
-      //Check to see if this is a gust for the day
-      if (currentSpeed > windgustmph)
-      {
-        windgustmph = currentSpeed;
-        windgustdir = currentDirection;
-      }
-    }
-    endTime = millis();
-  }
-  printWeather();
+  Serial.print(windClicks);
+  Serial.print("\t\t");
+  Serial.println(windSpeed);
 }
 
 //function to read battery level
@@ -346,8 +240,7 @@ String componeJson(){
   data["BMETemperature"] = BMETemperature;
   data["BMEHumidity"] = BMEHumidity;
   data["BMEPressure"] = BMEPressure;
-  data["windGustKMH"] = windgustkmh;
-  data["windSpdKMH_avg10s"] = windspdkmh_avg10s;
+  data["windSpeed"] = windSpeed;
 
   //copy JsonFormat to string
   serializeJson(data, string);
