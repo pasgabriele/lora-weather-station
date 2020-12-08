@@ -6,10 +6,7 @@
  - Verify battery voltage measurement
  - Verify ESP32 powered from TP4056 output to SH1.25 input
  - Verify sensors powered from ESP32 3V3 pin
- - Modify rain and wind wiring (update source code and PCB!!). GPIO35 and GPIO34 cannot be used. They are pin input only!!! Use the following GPIO:
-   - GPIO23 (digital): for windspeed (tested)
-   - GPIO32 (analog): for windir (tested)
-   - GPIO17 (digital): for rain (to be tested)
+ - Verify GPIO17 (digital): for rain
 
 The External module is the set of all necessary sensors to detect weather data. It is able to detect the following measures:
 - Temperature ![](https://img.shields.io/badge/status-ok-green)
