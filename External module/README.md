@@ -6,14 +6,14 @@
  - Verify battery voltage measurement
  - Verify ESP32 powered from TP4056 output to SH1.25 input
  - Verify sensors powered from ESP32 3V3 pin
- - Modify rain and wind wiring. GPIO35 and GPIO34 cannot be used. They are pin input only!!!
+ - Modify rain and wind wiring. GPIO35 and GPIO34 cannot be used. They are pin input only!!! Test GPIO13 (analog) for Wind Direction GPIO32 (analog) for Rain and GPIO23 (digital) for Wind Speed
 
 The External module is the set of all necessary sensors to detect weather data. It is able to detect the following measures:
 - Temperature ![](https://img.shields.io/badge/status-ok-green)
 - Humidity ![](https://img.shields.io/badge/status-ok-green)
 - Pressure ![](https://img.shields.io/badge/status-ok-green)
 - Wind speed ![](https://img.shields.io/badge/status-toverify-yellow)
-- Wind direction ![](https://img.shields.io/badge/status-toverify-yellow)
+- Wind direction ![](https://img.shields.io/badge/status-todo-red)
 - UV index ![](https://img.shields.io/badge/status-todo-red)
 - Rain accumulation ![](https://img.shields.io/badge/status-todo-red)
 - Drew point ![](https://img.shields.io/badge/status-todo-red)
@@ -31,9 +31,9 @@ The External module is fully self powered via 2 li-ion 18650 batteries and a sol
 then goes in Deep Sleep mode for a configurable time (default is 15 minutes). Of couse, the batteries saving necessity affects the weather data update frequency. With 15 minutes of Deep Sleep mode you do not have a real time weather situation. This is insignificant for some weather data (for example temperature, humdity and preassure) because this measures don't have great variations in 15 minutes, but it could be significant for other weather data (for example wind speed and direction). For this reason you can set the Deep Sleep time based on your necessities.
 
 ### Wind speed measurement
-The wind speed measurement is ereditated by [Sparkfun Weather Shield GitHub page](https://github.com/sparkfun/Weather_Shield/blob/master/Firmware/Weather_Shield_Weather_Station_V12/Weather_Shield_Weather_Station_V12.ino), but it has been adjusted to compatibility with the Deep Sleep mode. It works as following: 
+The wind speed measurement is ereditated by [cactus.io web site](http://cactus.io/hookups/weather/anemometer/davis/hookup-arduino-to-davis-anemometer-wind-speed). It works as following:
 
-As described above, the External module starts, reads the sensors values, compones the json string, sends it to the Gateway and goes to Deep Sleep. For the specific wind speed measurement, when the External module executes the readWind function, it reads for 10 seconds (1 read per seconds (10 reads)) the wind speed values from the anemometer and puts this values in an array. Once the readings are finished, it returns the average wind speed for this 10 seconds and it inserts this avg in the json string. Therefore the External module does not return the instantaneous wind speed at the moment of the measure, but it returns a avg wind speed calculated on 10 readings over 10 seconds.
+As described above, the External module starts, reads the sensors values, compones the json string, sends it to the Gateway and goes to Deep Sleep. For the specific wind speed measurement, when the External module executes the readWind function, it actives the pulse measurement (via interrupt) for 3 seconds (via delay), then stop the pulse measurement (disabing the interrupt) and calculates the windspeed AVG in the 3 seconds.
 
 ## Hardware
 The External module is composed by following hardware components:
