@@ -11,8 +11,6 @@
    - GPIO32 (analog): for windir (tested)
    - GPIO12 (digital): for rain (to be tested)
 
- Test GPIO13 (analog) for Wind Direction GPIO32 (analog) for Rain
-
 The External module is the set of all necessary sensors to detect weather data. It is able to detect the following measures:
 - Temperature ![](https://img.shields.io/badge/status-ok-green)
 - Humidity ![](https://img.shields.io/badge/status-ok-green)
@@ -38,7 +36,7 @@ then goes in Deep Sleep mode for a configurable time (default is 15 minutes). Of
 ### Wind speed measurement
 The wind speed measurement is ereditated by [cactus.io web site](http://cactus.io/hookups/weather/anemometer/davis/hookup-arduino-to-davis-anemometer-wind-speed). It works as following:
 
-As described above, the External module starts, reads the sensors values, compones the json string, sends it to the Gateway and goes to Deep Sleep. For the specific wind speed measurement, when the External module executes the readWind function, it actives the pulse measurement (via interrupt) for 3 seconds (via delay), then stop the pulse measurement (disabing the interrupt) and calculates the windspeed AVG in the 3 seconds.
+For the specific wind speed measurement, when the External module executes the readWind function, it actives the pulses measurement (via interrupt) for 3 seconds (via delay), then stop the pulses measurement (disabling the interrupt) and calculates the windspeed AVG in the 3 seconds.
 
 ## Hardware
 The External module is composed by following hardware components:
