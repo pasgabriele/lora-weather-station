@@ -6,7 +6,7 @@
  - Verify battery voltage measurement
  - Verify ESP32 powered from TP4056 output to SH1.25 input
  - Verify sensors powered from ESP32 3V3 pin
- - Modify rain and wind wiring. GPIO35 and GPIO34 cannot be used. They are pin input only!!! Use the following GPIO:
+ - Modify rain and wind wiring (update source code and PCB!!). GPIO35 and GPIO34 cannot be used. They are pin input only!!! Use the following GPIO:
    - GPIO23 (digital): for windspeed (tested)
    - GPIO32 (analog): for windir (tested)
    - GPIO17 (digital): for rain (to be tested)
@@ -31,12 +31,12 @@ The External module is fully self powered via 2 li-ion 18650 batteries and a sol
 - compones the json string
 - sends the json string to Gateway
 
-then goes in Deep Sleep mode for a configurable time (default is 15 minutes). Of couse, the batteries saving necessity affects the weather data update frequency. With 15 minutes of Deep Sleep mode you do not have a real time weather situation. This is insignificant for some weather data (for example temperature, humdity and preassure) because this measures don't have great variations in 15 minutes, but it could be significant for other weather data (for example wind speed and direction). For this reason you can set the Deep Sleep time based on your necessities.
+then goes in Deep Sleep mode for a configurable time (default is 5 minutes). Of couse, the batteries saving necessity affects the weather data update frequency. With 5 minutes of Deep Sleep mode you do not have a real time weather situation. This is insignificant for some weather data (for example temperature, humdity and preassure) because this measures don't have great variations in 5 minutes, but it could be significant for other weather data (for example wind speed and direction). For this reason you can set the Deep Sleep time based on your necessities.
 
 ### Wind speed measurement
 The wind speed measurement is ereditated by [cactus.io web site](http://cactus.io/hookups/weather/anemometer/davis/hookup-arduino-to-davis-anemometer-wind-speed). It works as following:
 
-For the specific wind speed measurement, when the External module executes the readWind function, it actives the pulses measurement (via interrupt) for 3 seconds (via delay), then stop the pulses measurement (disabling the interrupt) and calculates the windspeed AVG in the 3 seconds.
+When the External module executes the readWind function, it actives the pulses measurement (via interrupt) for 5 seconds (sample window for wind measurement) (via delay), then stop the pulses measurement (disabling the interrupt) and calculates the windspeed in this 5 seconds window.
 
 ## Hardware
 The External module is composed by following hardware components:
