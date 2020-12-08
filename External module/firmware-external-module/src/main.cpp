@@ -14,7 +14,7 @@
 #define RST 14
 #define DIO0 26
 #define LED 2
-#define WSPEED 13
+#define WSPEED 23
 
 //used analogic pins
 #define BATT 33
