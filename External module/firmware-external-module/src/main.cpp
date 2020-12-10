@@ -210,8 +210,8 @@ void wspeedIRQ(){
       // If the period is the shortest (and therefore fastest windspeed) seen, capture it
       gustPeriod = period;
     }
-    windClicks++;
   }
+  windClicks++;
   lastWindIRQ = timeAnemometerEvent; // set up for next event
 }
 
@@ -223,6 +223,7 @@ void readWind(){
 
   windClicks = 0;           //reset windClicks count for new calculation
   gustPeriod = UINT_MAX;    //reset gustPeriod  for new calculation
+  lastWindIRQ = 0;
   interrupts();             //turn on interrupts
   delay (WINDSPEED_PERIOD * 1000);             //wait 5 seconds to average
   noInterrupts();           //turn off interrupts
@@ -235,6 +236,10 @@ void readWind(){
   //
   windSpeed = windClicks * WINDSPEED_SCALE / WINDSPEED_PERIOD;
   gustSpeed = WINDSPEED_SCALE * 1000.0 / float(gustPeriod);
+
+  if(windClicks == 1){
+    gustSpeed = windSpeed;
+  }
 
   Serial.print(F("INFO: Wind Speed: "));
   Serial.print(windSpeed);
