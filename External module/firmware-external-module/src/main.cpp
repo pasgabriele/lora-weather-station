@@ -234,6 +234,8 @@ void readWind(){
   //windspeed = 2.401 * #_pulses / interval_time
   //
   windSpeed = windClicks * WINDSPEED_SCALE / WINDSPEED_PERIOD;
+  
+  //wind gust is:
   gustSpeed = WINDSPEED_SCALE * 1000.0 / float(gustPeriod);
 
   if(windClicks == 1){
