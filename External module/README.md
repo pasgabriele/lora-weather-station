@@ -3,37 +3,32 @@
 
 ## TODO ![](https://img.shields.io/badge/status-todo-red)
 
- - Verify battery voltage measurement
- - Verify ESP32 powered from TP4056 output to SH1.25 input
- - Verify sensors powered from ESP32 3V3 pin
- - Verify GPIO17 (digital): for rain
+- Verify battery voltage measurement
+- Verify ESP32 powered from TP4056 output to SH1.25 input
+- Verify sensors powered from ESP32 3V3 pin
+- Verify GPIO17 (digital): for rain
 
-The External module is the set of all necessary sensors to detect weather data. It is able to detect the following measures:
-- Temperature ![](https://img.shields.io/badge/status-ok-green)
-- Humidity ![](https://img.shields.io/badge/status-ok-green)
-- Pressure ![](https://img.shields.io/badge/status-ok-green)
-- Wind speed ![](https://img.shields.io/badge/status-ok-green)
-- Wind direction ![](https://img.shields.io/badge/status-todo-red)
-- UV index ![](https://img.shields.io/badge/status-todo-red)
-- Rain accumulation ![](https://img.shields.io/badge/status-todo-red)
-- Drew point ![](https://img.shields.io/badge/status-todo-red)
-- Wind chill ![](https://img.shields.io/badge/status-todo-red)
-- Heat index ![](https://img.shields.io/badge/status-todo-red)
-
-All weather data coming from sensors are processed by the External module, inserted in json string (for example `{"temp":27.23, "humi":62.05, "pres":1013.25}`) and sended, via LoRa wireless communication (433Mhz), to the Gateway.
-
-The External module is fully self powered via 2 li-ion 18650 batteries and a solar panel charger. To optimize the batteries life, the External module has been projected to work as following:
-
-- reads sensors values
-- compones the json string
-- sends the json string to Gateway
-
-then goes in Deep Sleep mode for a configurable time (default is 5 minutes). Of couse, the batteries saving necessity affects the weather data update frequency. With 5 minutes of Deep Sleep mode you do not have a real time weather situation. This is insignificant for some weather data (for example temperature, humdity and preassure) because this measures don't have great variations in 5 minutes, but it could be significant for other weather data (for example wind speed and direction). For this reason you can set the Deep Sleep time based on your necessities.
-
-### Wind speed measurement
-The wind speed measurement is ereditated by [cactus.io web site](http://cactus.io/hookups/weather/anemometer/davis/hookup-arduino-to-davis-anemometer-wind-speed). It works as following:
-
-When the External module executes the readWind function, it actives the pulses measurement (via interrupt) for 5 seconds (sample window for wind measurement) (via delay), then stop the pulses measurement (disabling the interrupt) and calculates the windspeed in this 5 seconds window.
+## Features
+Below a list of External module main features:
+- It is able to detect the following measures:
+  - Temperature ![](https://img.shields.io/badge/status-ok-green)
+  - Humidity ![](https://img.shields.io/badge/status-ok-green)
+  - Pressure ![](https://img.shields.io/badge/status-ok-green)
+  - Wind speed ![](https://img.shields.io/badge/status-ok-green)
+  - Wind gust ![](https://img.shields.io/badge/status-ok-green)
+  - Wind direction ![](https://img.shields.io/badge/status-todo-red)
+  - Time ![](https://img.shields.io/badge/status-todo-red)
+  - UV index ![](https://img.shields.io/badge/status-todo-red)
+  - Rain accumulation ![](https://img.shields.io/badge/status-todo-red)
+  - Drew point ![](https://img.shields.io/badge/status-todo-red)
+  - Wind chill ![](https://img.shields.io/badge/status-todo-red)
+  - Heat index ![](https://img.shields.io/badge/status-todo-red)
+- weather data reading every 5 minutes
+- weather data encapsulation in json string
+- Long distance and low energy LoRa communication with the Gateway
+- Deep sleep mode
+- batteries powered
+- solar charging
 
 ## Hardware
 The External module is composed by following hardware components:
@@ -61,8 +56,6 @@ The External module is composed by following hardware components:
 |1|[Sensors shield](https://www.aliexpress.com/item/32969306380.html)|Shield for temperature, humidity and preassure sensor||
 |1|Junction box|Outdoor PVC waterproof electrical junction boxe to store the assemblated PCB, UV index sensor, real time clock and solar panel||
 
-
-
 ### Wiring schema and PCB
 In the following the wiring schema for External module:
 
@@ -79,6 +72,23 @@ and the PCB created to merge all External module components:
 ## Software
 The External module source code is uploaded in [firmware-external-module](https://github.com/pasgabriele/lora-weather-station/tree/main/External%20module/firmware-external-module) folder.
 The code has been written using [Atom IDE](https://atom.io/) and the [PlatformIO plugin](https://platformio.org/), therefore you can clone this repository directly on the above plaftorm.
+
+### Description
+
+All weather data readed from sensors are processed by the External module, inserted in json string (for example `{"temp":27.23, "humi":62.05, "pres":1013.25}`) and sended, via LoRa wireless communication (433Mhz), to the Gateway.
+
+The External module is fully self powered via 2 li-ion 18650 batteries and a solar panel charger. To optimize the batteries life, the External module has been projected to work as following:
+
+- reads sensors values
+- compones the json string
+- sends the json string to Gateway
+
+then goes in Deep Sleep mode for a configurable time (default is 5 minutes). Of couse, the batteries saving necessity affects the weather data update frequency. With 5 minutes of Deep Sleep mode you do not have a real time weather situation. This is insignificant for some weather data (for example temperature, humdity and preassure) because this measures don't have great variations in 5 minutes, but it could be significant for other weather data (for example wind speed and direction). For this reason you can set the Deep Sleep time based on your necessities.
+
+### Wind speed measurement
+The wind speed measurement is derived by:(http://cactus.io/hookups/weather/anemometer/davis/hookup-arduino-to-davis-anemometer-wind-speed), (https://github.com/rpurser47/weatherstation) and (https://github.com/switchdoclabs/SDL_Weather_80422). It works as following:
+
+When the External module executes the readWind function, it actives the pulses measurement (via interrupt) for 5 seconds (sample window for wind measurement) (using delay function), then stops the pulses measurement (disabling the interrupt) and calculates the wind speed and gust in this 5 seconds window.
 
 ### Requirements
 To compile correctly the source code is required to install the following board and libraries from PlatformIO interface in Atom:
