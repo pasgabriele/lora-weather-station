@@ -28,7 +28,7 @@ Below a list of External module main features:
 - Long distance and low energy LoRa communication with the Gateway
 - Deep sleep mode
 - Batteries powered
-- Batteries voltage monitoring
+- Batteries voltage monitoring ![](https://img.shields.io/badge/status-toverify-yellow)
 - Solar charging
 
 ## Hardware
