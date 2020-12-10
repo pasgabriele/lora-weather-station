@@ -23,12 +23,12 @@ Below a list of External module main features:
   - Drew point ![](https://img.shields.io/badge/status-todo-red)
   - Wind chill ![](https://img.shields.io/badge/status-todo-red)
   - Heat index ![](https://img.shields.io/badge/status-todo-red)
-- weather data reading every 5 minutes
-- weather data encapsulation in json string
+- Weather data reading every 5 minutes
+- Weather data encapsulation in json string
 - Long distance and low energy LoRa communication with the Gateway
 - Deep sleep mode
-- batteries powered
-- solar charging
+- Batteries powered
+- Solar charging
 
 ## Hardware
 The External module is composed by following hardware components:
