@@ -28,19 +28,27 @@
 //for wind sensor
 #define WDIR 32
 
+//constant defined
 //deep sleep configuration
 #define uS_TO_S_FACTOR 1000000      //conversion factor for micro seconds to seconds
 #define TIME_TO_SLEEP  2            //time ESP32 will go to sleep (in seconds) (900 = 15 minutes)
 
+//wind sensor configuration
+const float WINDSPEED_SCALE = 2.401;
+const float WINDSPEED_PERIOD = 5.0;        //in seconds
+
 //global variables
 volatile long lastWindIRQ = 0;
 volatile byte windClicks = 0;
+volatile unsigned int gustPeriod = UINT_MAX;
 Adafruit_BME280 bme;
 float BMETemperature = -50.0;
 float BMEHumidity = 0.0;
 float BMEPressure = 0.0;
 float volt = 0.0;
 float windSpeed; //wind speed in km/h
+float gustSpeed; //wind gust speed km/h
+
 
 //RTC variables. These will be preserved during the deep sleep.
 RTC_DATA_ATTR int bootCount = 0;
@@ -187,12 +195,24 @@ int get_wind_direction(){
 
 //interrupt routines (these are called by the hardware interrupts, not by the main code)
 void wspeedIRQ(){
-  //activated by the magnet in the anemometer (2 ticks per rotation), attached to input 13
-  if (millis() - lastWindIRQ > 10) //ignore switch-bounce glitches less than 10ms (142MPH max reading) after the reed switch closes
-  {
-    lastWindIRQ = millis(); //grab the current time
-    windClicks++; //there is 2.401KMH(1.492MPH) for each click per second.
+  // Activated by the magnet in the anemometer (2 ticks per rotation), attached to input 23
+  unsigned int timeAnemometerEvent = millis(); // grab current time
+
+  //If there's never been an event before (first time through), then just capture it
+  if(lastWindIRQ != 0) {
+    // Calculate time since last event
+    unsigned int period = timeAnemometerEvent - lastWindIRQ;
+    // ignore switch-bounce glitches less than 10mS after initial edge (which implies a max windspeed of 149mph)
+    if(period < 10) {
+      return;
+    }
+    if(period < gustPeriod) {
+      // If the period is the shortest (and therefore fastest windspeed) seen, capture it
+      gustPeriod = period;
+    }
+    windClicks++;
   }
+  lastWindIRQ = timeAnemometerEvent; // set up for next event
 }
 
 void readWind(){
@@ -201,24 +221,27 @@ void readWind(){
   //attach external interrupt pins to IRQ functions
   attachInterrupt(WSPEED, wspeedIRQ, FALLING);
 
-  windClicks = 0;           //set windClicks count to 0 ready for calculations
+  windClicks = 0;           //reset windClicks count for new calculation
+  gustPeriod = UINT_MAX;    //reset gustPeriod  for new calculation
   interrupts();             //turn on interrupts
-  delay (5000);             //wait 5 seconds to average
+  delay (WINDSPEED_PERIOD * 1000);             //wait 5 seconds to average
   noInterrupts();           //turn off interrupts
 
   //as described in Sparkfun Weather Meter Kit (SEN-15901)(https://cdn.sparkfun.com/assets/d/1/e/0/6/DS-15901-Weather_Meter.pdf),
   //a wind speed of 2.401km/h causes the switch to close once per second.
   //then we can use the following formula:
   //
-  //windspeed = #_pulses / interval_time * 2,401
+  //windspeed = 2.401 * #_pulses / interval_time
   //
-  //convert to km/h using the above formula
-  //V = P(2.401/5) = P * 0,4802
-  windSpeed = windClicks * 0.4802;
+  windSpeed = windClicks * WINDSPEED_SCALE / WINDSPEED_PERIOD;
+  gustSpeed = WINDSPEED_SCALE * 1000.0 / float(gustPeriod);
 
-  Serial.print(windClicks);
-  Serial.print("\t\t");
-  Serial.println(windSpeed);
+  Serial.print(F("INFO: Wind Speed: "));
+  Serial.print(windSpeed);
+  Serial.println(F("km/h"));
+  Serial.print(F("INFO: Gust Speed: "));
+  Serial.print(gustSpeed);
+  Serial.println(F("km/h"));
 }
 
 //function to read battery level
@@ -249,6 +272,7 @@ String componeJson(){
   data["BMEHumidity"] = BMEHumidity;
   data["BMEPressure"] = BMEPressure;
   data["windSpeed"] = windSpeed;
+  data["gustSpeed"] = gustSpeed;
 
   //copy JsonFormat to string
   serializeJson(data, string);
