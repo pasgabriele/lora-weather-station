@@ -197,15 +197,14 @@ int get_wind_direction(){
 void wspeedIRQ(){
   // Activated by the magnet in the anemometer (2 ticks per rotation), attached to input 23
   unsigned int timeAnemometerEvent = millis(); // grab current time
-
+  // Calculate time since last event
+  unsigned int period = timeAnemometerEvent - lastWindIRQ;
+  // ignore switch-bounce glitches less than 10mS after initial edge (which implies a max windspeed of 149mph)
+  if(period < 10) {
+    return;
+  }
   //If there's never been an event before (first time through), then just capture it
   if(lastWindIRQ != 0) {
-    // Calculate time since last event
-    unsigned int period = timeAnemometerEvent - lastWindIRQ;
-    // ignore switch-bounce glitches less than 10mS after initial edge (which implies a max windspeed of 149mph)
-    if(period < 10) {
-      return;
-    }
     if(period < gustPeriod) {
       // If the period is the shortest (and therefore fastest windspeed) seen, capture it
       gustPeriod = period;
