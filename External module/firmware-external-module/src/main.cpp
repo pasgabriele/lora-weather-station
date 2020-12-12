@@ -216,15 +216,14 @@ void wspeedIRQ(){
 void readWind(){
   pinMode(WSPEED, INPUT_PULLUP); //input from wind meters windspeed sensor
 
-  //attach external interrupt pins to IRQ functions
-  attachInterrupt(WSPEED, wspeedIRQ, FALLING);
-
   windClicks = 0;           //reset windClicks count for new calculation
   gustPeriod = UINT_MAX;    //reset gustPeriod  for new calculation
   lastWindIRQ = 0;
-  interrupts();             //turn on interrupts
+  
+  //attach external interrupt pins to IRQ functions
+  attachInterrupt(WSPEED, wspeedIRQ, FALLING);
   delay (WINDSPEED_PERIOD * 1000);             //wait 5 seconds to average
-  noInterrupts();           //turn off interrupts
+  detachInterrupt(WSPEED);
 
   //as described in Sparkfun Weather Meter Kit (SEN-15901)(https://cdn.sparkfun.com/assets/d/1/e/0/6/DS-15901-Weather_Meter.pdf),
   //a wind speed of 2.401km/h causes the switch to close once per second.
