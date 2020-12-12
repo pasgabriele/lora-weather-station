@@ -4,7 +4,6 @@
 #include <ArduinoJson.h>
 #include <Wire.h>
 #include <Adafruit_BME280.h>
-#include <WiFi.h>
 
 //used digital pins:
 //for lora module
