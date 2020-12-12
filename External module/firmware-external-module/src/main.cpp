@@ -234,7 +234,7 @@ void readWind(){
   //windspeed = 2.401 * #_pulses / interval_time
   //
   windSpeed = windClicks * WINDSPEED_SCALE / WINDSPEED_PERIOD;
-  
+
   //wind gust is:
   gustSpeed = WINDSPEED_SCALE * 1000.0 / float(gustPeriod);
 
@@ -298,10 +298,6 @@ void setup() {
   //turn on ESP32 onboard LED
   pinMode(LED, OUTPUT);
   digitalWrite(LED, HIGH);
-
-  //disable BLE and WiFi
-  btStop();
-  WiFi.mode(WIFI_MODE_NULL);
 
   //initialize Serial Monitor
   Serial.begin(9600);
