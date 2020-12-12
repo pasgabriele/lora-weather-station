@@ -6,7 +6,7 @@
 - Verify battery voltage measurement
 - Verify ESP32 powered from TP4056 output to SH1.25 input
 - Verify sensors powered from ESP32 3V3 pin
-- Verify GPIO17 (digital): for rain
+- Verify GPIO12 (digital): for rain (REMEMBER TO CORRECT THE SCHEMA AND PCB!!!!)
 
 ## Features
 Below a list of External module main features:
