@@ -6,35 +6,24 @@
 #include <Adafruit_BME280.h>
 
 //used digital pins:
-//for lora module
-#define SCK 5
-#define MISO 19
-#define MOSI 27
-#define SS 18
-#define RST 14
-#define DIO0 26
-
-//for led onboard
-#define LED 2
-
-//for wind sensor
-#define WSPEED 23
+#define SCK 5                       //for lora module
+#define MISO 19                     //for lora module
+#define MOSI 27                     //for lora module
+#define SS 18                       //for lora module
+#define RST 14                      //for lora module
+#define DIO0 26                     //for lora module
+#define LED 2                       //for led onboard
+#define WSPEED 23                   //for wind sensor
 
 //used analogic pins:
-//for battery monitoring
-#define BATT 33
-
-//for wind sensor
-#define WDIR 32
+#define BATT 33                     //for battery monitoring
+#define WDIR 32                     //for wind sensor
 
 //constant defined
-//deep sleep configuration
 #define uS_TO_S_FACTOR 1000000      //conversion factor for micro seconds to seconds
 #define TIME_TO_SLEEP  2            //time ESP32 will go to sleep (in seconds) (900 = 15 minutes)
-
-//wind sensor configuration
-const float WINDSPEED_SCALE = 2.401;
-const float WINDSPEED_PERIOD = 5.0;        //in seconds
+const float WINDSPEED_SCALE = 2.401;//anemometer coefficient (at 2.401 km/h the anemometer pulse once per second)
+const float WINDSPEED_PERIOD = 5.0; //sample time for wind speed measurement
 
 //global variables
 volatile long lastWindIRQ = 0;
@@ -47,7 +36,6 @@ float BMEPressure = 0.0;
 float volt = 0.0;
 float windSpeed; //wind speed in km/h
 float gustSpeed; //wind gust speed km/h
-
 
 //RTC variables. These will be preserved during the deep sleep.
 RTC_DATA_ATTR int bootCount = 0;
@@ -65,7 +53,7 @@ void lora_connection(){
   while (!LoRa.begin(433E6)) {
     Serial.println("INFO: Wait LoRa Begin...");
     Serial.println(".");
-    delay(1000);
+    delay(500);
   }
 
   //change sync word (0xF3) to match the receiver
@@ -73,10 +61,10 @@ void lora_connection(){
   //ranges from 0-0xFF
   LoRa.setSyncWord(0xF3);
 
-  //IMPORTANT: enableCrc() on LoRa Receiver too. This will discard wrong packets received on LoRa Receiver
+  //IMPORTANT: enableCrc() on Gateway too. This will discard wrong packets received on Gateway
   LoRa.enableCrc();
   Serial.println("INFO: LoRa Initializing OK!");
-  delay(2000);
+  delay(500);
 }
 
 //function that prints the reason by which ESP32 has been awaken from sleep
@@ -94,8 +82,8 @@ void print_wakeup_reason(){
 	}
 }
 
-//Takes an average of readings on a given analog pin
-//Returns the average
+//takes an average of readings on a given analog pin
+//returns the average
 int averageAnalogRead(int pinToRead){
 	byte numberOfReadings = 8;
 	unsigned int runningValue = 0;
@@ -114,9 +102,9 @@ boolean bmeReading(){
 
   int i = 0;
   while(i < 3){
-    if (! bme.begin(0x76)){         //Set to 0x77 for some BME280
+    if (! bme.begin(0x76)){         //set to 0x77 for some BME280
       Serial.print(".");
-      delay(1000);
+      delay(500);
     }
     i++;
   }
@@ -148,16 +136,17 @@ boolean bmeReading(){
   else {
     Serial.println();
     Serial.println("ERROR: Couldn't find BME280");
+
     return false;
   }
 }
 
-//Read the wind direction sensor, return heading in degrees
+//read the wind direction sensor, return heading in degrees
 int get_wind_direction(){
   unsigned int adc;
   float pinVoltage;
 
-  adc = analogRead(WDIR); // get the current reading from the sensor
+  adc = analogRead(WDIR); //get the current reading from the sensor
   pinVoltage = adc * (3.3 / 4096.0);
   /*
   Serial.print("Analogic pin: ");
@@ -166,9 +155,9 @@ int get_wind_direction(){
   Serial.print("Pin voltage: ");
   Serial.println(pinVoltage);
   */
-  // The following table is ADC readings for the wind direction sensor output, sorted from low to high.
-  // Each threshold is the midpoint between adjacent headings. The output is degrees for that ADC reading.
-  // Note that these are not in compass degree order! See Weather Meters datasheet for more information.
+  //the following table is ADC readings for the wind direction sensor output, sorted from low to high.
+  //each threshold is the midpoint between adjacent headings. The output is degrees for that ADC reading.
+  //note that these are not in compass degree order! See Weather Meters datasheet for more information.
   //la seguente tabella vale quando il sensore di dir vento è collegato come segue:
   //pin1 rj11 --------> GND
   //pin4 rj11 --+-----> GPIO32
@@ -194,23 +183,23 @@ int get_wind_direction(){
 
 //interrupt routines (these are called by the hardware interrupts, not by the main code)
 void wspeedIRQ(){
-  // Activated by the magnet in the anemometer (2 ticks per rotation), attached to input 23
+  //activated by the magnet in the anemometer (2 ticks per rotation), attached to input 23
   unsigned int timeAnemometerEvent = millis(); // grab current time
-  // Calculate time since last event
+  //calculate time since last event
   unsigned int period = timeAnemometerEvent - lastWindIRQ;
-  // ignore switch-bounce glitches less than 10mS after initial edge (which implies a max windspeed of 149mph)
+  //ignore switch-bounce glitches less than 10mS after initial edge (which implies a max windspeed of 149mph)
   if(period < 10) {
     return;
   }
-  //If there's never been an event before (first time through), then just capture it
+  //if there's never been an event before (first time through), then just capture it
   if(lastWindIRQ != 0) {
     if(period < gustPeriod) {
-      // If the period is the shortest (and therefore fastest windspeed) seen, capture it
+      //ff the period is the shortest (and therefore fastest windspeed) seen, capture it
       gustPeriod = period;
     }
   }
   windClicks++;
-  lastWindIRQ = timeAnemometerEvent; // set up for next event
+  lastWindIRQ = timeAnemometerEvent; //set up for next event
 }
 
 void readWind(){
@@ -219,10 +208,11 @@ void readWind(){
   windClicks = 0;           //reset windClicks count for new calculation
   gustPeriod = UINT_MAX;    //reset gustPeriod  for new calculation
   lastWindIRQ = 0;
-  
+
   //attach external interrupt pins to IRQ functions
   attachInterrupt(WSPEED, wspeedIRQ, FALLING);
   delay (WINDSPEED_PERIOD * 1000);             //wait 5 seconds to average
+  //detach external interrupt pins to IRQ functions
   detachInterrupt(WSPEED);
 
   //as described in Sparkfun Weather Meter Kit (SEN-15901)(https://cdn.sparkfun.com/assets/d/1/e/0/6/DS-15901-Weather_Meter.pdf),
@@ -259,7 +249,6 @@ void batteryLevel(){
 
   //mapping analogic value to voltage battery level
   volt = (analogValue - 0) * (4.2 - 0.0) / (4095 - 0) + 0.0;
-  //volt = map(analogValue, 0, 4095, 0.0f, 4.2f);
   Serial.print(F("INFO: Battery Voltage: "));
   Serial.print(volt);
   Serial.println(F("V"));
@@ -297,7 +286,7 @@ void setup() {
   pinMode(LED, OUTPUT);
   digitalWrite(LED, HIGH);
 
-  //initialize Serial Monitor
+  //initialize serial monitor
   Serial.begin(9600);
   while (!Serial);
   Serial.println();
