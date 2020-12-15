@@ -4,6 +4,7 @@
 #include <ArduinoJson.h>
 #include <Wire.h>
 #include <Adafruit_BME280.h>
+#include <Adafruit_VEML6075.h>
 
 //used digital pins:
 #define SCK 5                       //for lora module
@@ -30,9 +31,11 @@ volatile long lastWindIRQ = 0;
 volatile byte windClicks = 0;
 volatile unsigned int gustPeriod = UINT_MAX;
 Adafruit_BME280 bme;
+Adafruit_VEML6075 uv = Adafruit_VEML6075();
 float BMETemperature = -50.0;
 float BMEHumidity = 0.0;
 float BMEPressure = 0.0;
+float uvIndex = 0.0;
 float volt = 0.0;
 float windSpeed; //wind speed in km/h
 float gustSpeed; //wind gust speed km/h
@@ -141,6 +144,39 @@ boolean bmeReading(){
   }
 }
 
+//function to read VEML6075 data (UV index)
+boolean uvReading(){
+  //setup VEML6075
+  Serial.print("INFO: VEML6075 Initilizing.");
+
+  int i = 0;
+  while(i < 3){
+    if (! uv.begin()){
+      Serial.print(".");
+      delay(500);
+    }
+    i++;
+  }
+
+  if (uv.begin()){
+    Serial.println();
+    Serial.println("INFO: VEML6075 Initilizing OK!");
+
+    //VEML6075 read UV index
+    uvIndex = uv.readUVI();
+    Serial.print(F("INFO: VEML6075 Reading UV Index: "));
+    Serial.println(uvIndex);
+
+    return true;
+  }
+  else {
+    Serial.println();
+    Serial.println("ERROR: Couldn't find VEML6075");
+
+    return false;
+  }
+}
+
 //read the wind direction sensor, return heading in degrees
 int get_wind_direction(){
   unsigned int adc;
@@ -230,6 +266,11 @@ void readWind(){
     gustSpeed = windSpeed;
   }
 
+  if(windClicks == 0){
+    gustSpeed = 0;
+    windSpeed = 0;
+  }
+
   Serial.print(F("INFO: Wind Speed: "));
   Serial.print(windSpeed);
   Serial.println(F("km/h"));
@@ -266,6 +307,7 @@ String componeJson(){
   data["BMEPressure"] = BMEPressure;
   data["windSpeed"] = windSpeed;
   data["gustSpeed"] = gustSpeed;
+  data["UVIndex"] = uvIndex;
 
   //copy JsonFormat to string
   serializeJson(data, string);
@@ -304,6 +346,9 @@ void setup() {
 
   //read BME280 data
   bmeReading();
+
+  //read VEML6075 data
+  uvReading();
 
   //read battery voltage
   batteryLevel();
