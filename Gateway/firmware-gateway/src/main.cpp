@@ -17,8 +17,9 @@ float BMEHumidity = 0.0;
 float BMEPressure = 0.0;
 int id = 0;
 float volt = 0;
-float windspdkmh_avg10s = 0.0;
-float windgustkmh = 0.0;
+float windSpeed = 0.0;
+float windGust = 0.0;
+float UVIndex = 0.0;
 
 //function to connect to lora
 void lora_connection() {
@@ -82,12 +83,13 @@ void loop() {
 
     //parse the received string using lib/jsonlib.h to extract sensors value
     id = jsonExtract(received, "id").toInt();
-    volt = jsonExtract(received, "battery").toFloat();
-    BMETemperature = jsonExtract(received, "BMETemperature").toFloat();
-    BMEHumidity = jsonExtract(received, "BMEHumidity").toFloat();
-    BMEPressure = jsonExtract(received, "BMEPressure").toFloat();
-    windgustkmh = jsonExtract(received, "windGustKMH").toFloat();
-    windspdkmh_avg10s = jsonExtract(received, "windSpdKMH_avg10s").toFloat();
+    volt = jsonExtract(received, "supplyVoltage").toFloat();
+    BMETemperature = jsonExtract(received, "outTemp").toFloat();
+    BMEHumidity = jsonExtract(received, "outHumidity").toFloat();
+    BMEPressure = jsonExtract(received, "pressure").toFloat();
+    windGust = jsonExtract(received, "windGust").toFloat();
+    windSpeed = jsonExtract(received, "windSpeed").toFloat();
+    UVIndex = jsonExtract(received, "UV").toFloat();
 
     Serial.print("INFO: ID mes: ");
     Serial.println(id);
@@ -100,9 +102,11 @@ void loop() {
     Serial.print("INFO: BME Press: ");
     Serial.println(BMEPressure);
     Serial.print("INFO: Wind gust: ");
-    Serial.println(windgustkmh);
-    Serial.print("INFO: AVG Wind speed 10s: ");
-    Serial.println(windspdkmh_avg10s);
+    Serial.println(windGust);
+    Serial.print("INFO: Wind speed: ");
+    Serial.println(windSpeed);
+    Serial.print("INFO: UV Index: ");
+    Serial.println(UVIndex);
 
     //debug counter
     Serial.print("INFO: Received packet: ");
