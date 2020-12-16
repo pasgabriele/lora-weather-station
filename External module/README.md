@@ -72,7 +72,7 @@ The code has been written using [Atom IDE](https://atom.io/) and the [PlatformIO
 
 ### Description
 
-All weather data readed from sensors are processed by the External module, inserted in json string (for example `{"temp":27.23, "humi":62.05, "pres":1013.25}`) and sended, via LoRa wireless communication (433Mhz), to the Gateway.
+All weather data readed from sensors are processed by the External module, inserted in json string (for example `{outTemp:27.23,outHumidity:62.05,pressure:1013.25}`) and sended, via LoRa wireless communication (433Mhz), to the Gateway.
 
 The External module is fully self powered via 2 li-ion 18650 batteries and a solar panel charger. To optimize the batteries life, the External module has been projected to work as following:
 
