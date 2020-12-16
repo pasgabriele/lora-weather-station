@@ -35,7 +35,7 @@ Adafruit_VEML6075 uv = Adafruit_VEML6075();
 float BMETemperature = -50.0;
 float BMEHumidity = 0.0;
 float BMEPressure = 0.0;
-float uvIndex = 0.0;
+float UVIndex = 0.0;
 float volt = 0.0;
 float windSpeed; //wind speed in km/h
 float gustSpeed; //wind gust speed km/h
@@ -145,7 +145,7 @@ boolean bmeReading(){
 }
 
 //function to read VEML6075 data (UV index)
-boolean uvReading(){
+boolean UVReading(){
   //setup VEML6075
   Serial.print("INFO: VEML6075 Initilizing.");
 
@@ -163,9 +163,9 @@ boolean uvReading(){
     Serial.println("INFO: VEML6075 Initilizing OK!");
 
     //VEML6075 read UV index
-    uvIndex = uv.readUVI();
+    UVIndex = uv.readUVI();
     Serial.print(F("INFO: VEML6075 Reading UV Index: "));
-    Serial.println(uvIndex);
+    Serial.println(UVIndex);
 
     return true;
   }
@@ -238,7 +238,7 @@ void wspeedIRQ(){
   lastWindIRQ = timeAnemometerEvent; //set up for next event
 }
 
-void readWind(){
+void windReading(){
   pinMode(WSPEED, INPUT_PULLUP); //input from wind meters windspeed sensor
 
   windClicks = 0;           //reset windClicks count for new calculation
@@ -301,13 +301,13 @@ String componeJson(){
   String string;
   //populate JsonFormat
   data["id"] = bootCount;
-  data["battery"] = volt;
-  data["BMETemperature"] = BMETemperature;
-  data["BMEHumidity"] = BMEHumidity;
-  data["BMEPressure"] = BMEPressure;
+  data["supplyVoltage"] = volt;
+  data["outTemp"] = BMETemperature;
+  data["outHumidity"] = BMEHumidity;
+  data["pressure"] = BMEPressure;
   data["windSpeed"] = windSpeed;
-  data["gustSpeed"] = gustSpeed;
-  data["UVIndex"] = uvIndex;
+  data["windGust"] = gustSpeed;
+  data["UV"] = UVIndex;
 
   //copy JsonFormat to string
   serializeJson(data, string);
@@ -317,7 +317,7 @@ String componeJson(){
 }
 
 //function to send lora packet
-void lora_send(String packet){
+void LoRaSend(String packet){
   LoRa.beginPacket();
   LoRa.print(packet);
   LoRa.endPacket();
@@ -348,16 +348,16 @@ void setup() {
   bmeReading();
 
   //read VEML6075 data
-  uvReading();
+  UVReading();
 
   //read battery voltage
   batteryLevel();
 
   //read windspeed and direction
-  readWind();
+  windReading();
 
   //send packet to LoRa Receiver using componeJson function as input
-  lora_send(componeJson());
+  LoRaSend(componeJson());
 
   //set timer to deep sleep
   esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP * uS_TO_S_FACTOR);
