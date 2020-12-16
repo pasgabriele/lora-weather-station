@@ -82,10 +82,26 @@ The External module is fully self powered via 2 li-ion 18650 batteries and a sol
 
 then goes in Deep Sleep mode for a configurable time (default is 5 minutes). Of couse, the batteries saving necessity affects the weather data update frequency. With 5 minutes of Deep Sleep mode you do not have a real time weather situation. This is insignificant for some weather data (for example temperature, humdity and preassure) because this measures don't have great variations in 5 minutes, but it could be significant for other weather data (for example wind speed and direction). For this reason you can set the Deep Sleep time based on your necessities.
 
-### Wind speed measurement
-The wind speed measurement is derived by:(http://cactus.io/hookups/weather/anemometer/davis/hookup-arduino-to-davis-anemometer-wind-speed), (https://github.com/rpurser47/weatherstation) and (https://github.com/switchdoclabs/SDL_Weather_80422). It works as following:
+### Temperature, humidity and pressure measurement
+The temperature, humidity and pressure measurement is provided by BME280 sensor. The function used in the firmware is BMEReading: this function tries to begin the BME sensor and if done it reads the data and inserts them in the BMETemperature, BMEHumidity and BMEPressure variables. BMEReading function is called every wakeup.
 
-When the External module executes the readWind function, it actives the pulses measurement (via interrupt) for 5 seconds (sample window for wind measurement) (using delay function), then stops the pulses measurement (disabling the interrupt) and calculates the wind speed and gust in this 5 seconds window.
+### UV index measurement
+The UV index measurement is provided by VEML6075 sensor. The function used in the firmware is UVReading: this function tries to begin the VEML6075 sensor and if done it reads the data and inserts them in the UVIndex variable. UVReading function is called every wakeup.
+
+### Wind speed measurement
+The wind speed measurement is derived by: (http://cactus.io/hookups/weather/anemometer/davis/hookup-arduino-to-davis-anemometer-wind-speed), (https://github.com/rpurser47/weatherstation) and (https://github.com/switchdoclabs/SDL_Weather_80422).
+It works as following:
+
+As describe in Spurkfun Weather Meter Kit datasheet, a wind speed of 2.401km/h causes the switch to close once per second, then the wind speed measurament can be executed counting the numbers of switch closed in a sample time. Therefore, when the External module executes the windReading function, it actives the pulses measurement (activing the interrupt) for 5 seconds (sample window for wind measurement), then stops the pulses measurement (disabling the interrupt) and calculates the wind speed and gust in this 5 seconds window. windReading function is called every wakeup.
+
+### Battery voltage measurement
+The battery voltage measurement is provided by batteryLevel function. It reads the analog value from the PIN connected to battery and converts this raw value in voltage measurement. The analog value is a AVG on 8 consecutive reads. batteryLevel function is called every wakeup.
+
+### Json string creation
+
+
+### LoRa connection and send
+
 
 ### Requirements
 To compile correctly the source code is required to install the following board and libraries from PlatformIO interface in Atom:
