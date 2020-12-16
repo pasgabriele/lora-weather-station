@@ -90,6 +90,7 @@ The UV index measurement is provided by VEML6075 sensor. The function used in th
 
 ### Wind speed measurement
 The wind speed measurement is derived by: (http://cactus.io/hookups/weather/anemometer/davis/hookup-arduino-to-davis-anemometer-wind-speed), (https://github.com/rpurser47/weatherstation) and (https://github.com/switchdoclabs/SDL_Weather_80422).
+
 It works as following:
 
 As describe in Spurkfun Weather Meter Kit datasheet, a wind speed of 2.401km/h causes the switch to close once per second, then the wind speed measurament can be executed counting the numbers of switch closed in a sample time. Therefore, when the External module executes the windReading function, it actives the pulses measurement (activing the interrupt) for 5 seconds (sample window for wind measurement), then stops the pulses measurement (disabling the interrupt) and calculates the wind speed and gust in this 5 seconds window. windReading function is called every wakeup.
@@ -97,11 +98,8 @@ As describe in Spurkfun Weather Meter Kit datasheet, a wind speed of 2.401km/h c
 ### Battery voltage measurement
 The battery voltage measurement is provided by batteryLevel function. It reads the analog value from the PIN connected to battery and converts this raw value in voltage measurement. The analog value is a AVG on 8 consecutive reads. batteryLevel function is called every wakeup.
 
-### Json string creation
-
-
-### LoRa connection and send
-
+### Json string creation and LoRa sending
+When all weather data have been read, these are inserted in a json string using the componeJson function, then the string is sent to the Gateway using LoRaSend function via LoRa connection. After sending the string, the External module go in Deep Sleep for the configured time.
 
 ### Requirements
 To compile correctly the source code is required to install the following board and libraries from PlatformIO interface in Atom:
