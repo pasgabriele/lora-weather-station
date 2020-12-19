@@ -22,7 +22,7 @@
 
 //constant defined
 #define uS_TO_S_FACTOR 1000000      //conversion factor for micro seconds to seconds
-#define TIME_TO_SLEEP  2            //time ESP32 will go to sleep (in seconds) (900 = 15 minutes)
+#define TIME_TO_SLEEP  1            //time ESP32 will go to sleep (in seconds) (900 = 15 minutes)
 const float WINDSPEED_SCALE = 2.401;//anemometer coefficient (at 2.401 km/h the anemometer pulse once per second)
 const float WINDSPEED_PERIOD = 5.0; //sample time for wind speed measurement
 
@@ -289,7 +289,7 @@ void batteryLevel(){
   Serial.println(F("/4095"));
 
   //mapping analogic value to voltage battery level
-  volt = (analogValue - 0) * (4.2 - 0.0) / (4095 - 0) + 0.0;
+  volt = (analogValue - 0) * (4.15 - 0.0) / (4095 - 0) + 0.0;
   Serial.print(F("INFO: Battery Voltage: "));
   Serial.print(volt);
   Serial.println(F("V"));
@@ -368,7 +368,7 @@ void setup() {
 
   //go to deep sleep now
   Serial.println("Going to sleep now");
-  delay(1000);
+  delay(500);
   Serial.flush();
   esp_deep_sleep_start();
   Serial.println("This will never be printed");
