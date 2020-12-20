@@ -16,6 +16,7 @@ float BMETemperature = -50.0;
 float BMEHumidity = 0.0;
 float BMEPressure = 0.0;
 int id = 0;
+int batteryRaw = 0;
 float volt = 0;
 float windSpeed = 0.0;
 float windGust = 0.0;
@@ -84,6 +85,7 @@ void loop() {
     //parse the received string using lib/jsonlib.h to extract sensors value
     id = jsonExtract(received, "id").toInt();
     volt = jsonExtract(received, "supplyVoltage").toFloat();
+    batteryRaw = jsonExtract(received, "batteryRaw").toInt();
     BMETemperature = jsonExtract(received, "outTemp").toFloat();
     BMEHumidity = jsonExtract(received, "outHumidity").toFloat();
     BMEPressure = jsonExtract(received, "pressure").toFloat();
@@ -93,8 +95,12 @@ void loop() {
 
     Serial.print("INFO: ID mes: ");
     Serial.println(id);
+    Serial.print("INFO: Battery RAW: ");
+    Serial.println(batteryRaw);
     Serial.print("INFO: Battery: ");
     Serial.println(volt);
+    Serial.print("INFO: Battery with -0.04 correction (TEST): ");
+    Serial.println(volt-0.04);
     Serial.print("INFO: BME Temp: ");
     Serial.println(BMETemperature);
     Serial.print("INFO: BME Hum: ");
