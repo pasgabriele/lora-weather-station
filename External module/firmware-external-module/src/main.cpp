@@ -38,7 +38,7 @@ float BMEPressure = 0.0;
 float UVIndex = 0.0;
 int batteryRaw = 0;
 float volt = 0.0;
-float windSpeed; //wind speed in km/h
+float windSpeed; //wind speed km/h
 float gustSpeed; //wind gust speed km/h
 
 //RTC variables. These will be preserved during the deep sleep.
