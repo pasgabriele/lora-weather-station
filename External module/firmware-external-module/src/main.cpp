@@ -36,12 +36,13 @@ float BMETemperature = -50.0;
 float BMEHumidity = 0.0;
 float BMEPressure = 0.0;
 float UVIndex = 0.0;
+int batteryRaw = 0;
 float volt = 0.0;
 float windSpeed; //wind speed in km/h
 float gustSpeed; //wind gust speed km/h
 
 //RTC variables. These will be preserved during the deep sleep.
-RTC_DATA_ATTR int bootCount = 0;
+RTC_DATA_ATTR unsigned long bootCount = 0;
 
 //function to connect LoRa
 void lora_connection(){
@@ -283,13 +284,13 @@ void windReading(){
 void batteryLevel(){
   int analogValue = 0;
   //read analogValue
-  analogValue = averageAnalogRead(BATT);
+  batteryRaw = averageAnalogRead(BATT);
   Serial.print(F("INFO: Analogic Pin Reading: "));
-  Serial.print(analogValue);
+  Serial.print(batteryRaw);
   Serial.println(F("/4095"));
 
   //mapping analogic value to voltage battery level
-  volt = (analogValue - 0) * (4.15 - 0.0) / (4095 - 0) + 0.0;
+  volt = (batteryRaw - 0) * (4.20 - 0.0) / (4095 - 0) + 0.0;
   Serial.print(F("INFO: Battery Voltage: "));
   Serial.print(volt);
   Serial.println(F("V"));
@@ -301,6 +302,7 @@ String componeJson(){
   String string;
   //populate JsonFormat
   data["id"] = bootCount;
+  data["batteryRaw"] = batteryRaw;
   data["supplyVoltage"] = volt;
   data["outTemp"] = BMETemperature;
   data["outHumidity"] = BMEHumidity;
