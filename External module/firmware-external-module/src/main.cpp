@@ -15,6 +15,7 @@
 #define DIO0 26                     //for lora module
 #define LED 2                       //for led onboard
 #define WSPEED 23                   //for wind sensor
+#define RAIN 13                     //for rain sensor
 
 //used analogic pins:
 #define BATT 33                     //for battery monitoring
@@ -25,11 +26,15 @@
 #define TIME_TO_SLEEP  1            //time ESP32 will go to sleep (in seconds) (900 = 15 minutes)
 const float WINDSPEED_SCALE = 2.401;//anemometer coefficient (at 2.401 km/h the anemometer pulse once per second)
 const float WINDSPEED_PERIOD = 5.0; //sample time for wind speed measurement
+const float RAIN_SCALE = 0.2794;
 
 //global variables
 volatile long lastWindIRQ = 0;
 volatile byte windClicks = 0;
+unsigned int lastRainIRQ = 0;
 volatile unsigned int gustPeriod = UINT_MAX;
+int rainCounterDuringSleep = 0;
+int rainCounterDuringActive = 0;
 Adafruit_BME280 bme;
 Adafruit_VEML6075 uv = Adafruit_VEML6075();
 float BMETemperature = -50.0;
@@ -40,6 +45,7 @@ int batteryRaw = 0;
 float volt = 0.0;
 float windSpeed; //wind speed km/h
 float gustSpeed; //wind gust speed km/h
+float rain = 0.0;
 
 //RTC variables. These will be preserved during the deep sleep.
 RTC_DATA_ATTR unsigned long bootCount = 0;
@@ -77,7 +83,7 @@ void print_wakeup_reason(){
 	wakeup_reason = esp_sleep_get_wakeup_cause();
 	switch(wakeup_reason)
 	{
-		case ESP_SLEEP_WAKEUP_EXT0  : Serial.println("INFO: Wakeup caused by external signal using RTC_IO"); break;
+		case ESP_SLEEP_WAKEUP_EXT0  : Serial.println("INFO: Wakeup caused by external signal using RTC_IO"); rainCounterDuringSleep++; break;
 		case ESP_SLEEP_WAKEUP_EXT1  : Serial.println("INFO: Wakeup caused by external signal using RTC_CNTL"); break;
 		case ESP_SLEEP_WAKEUP_TIMER  : Serial.println("INFO: Wakeup caused by timer"); break;
 		case ESP_SLEEP_WAKEUP_TOUCHPAD  : Serial.println("INFO: Wakeup caused by touchpad"); break;
@@ -239,6 +245,20 @@ void wspeedIRQ(){
   lastWindIRQ = timeAnemometerEvent; //set up for next event
 }
 
+//interrupt routines (these are called by the hardware interrupts, not by the main code)
+void rainIRQ(){
+	//count rain gauge bucket tips as they occur
+  //activated by the magnet and reed switch in the rain gauge, attached to GPIO13
+  unsigned int timeRainEvent = millis(); //grab current time
+
+  //ignore switch-bounce glitches less than 0.5 sec after initial edge
+  if(timeRainEvent - lastRainIRQ < 500) {
+    return;
+  }
+	rainCounterDuringActive++;
+  lastRainIRQ = timeRainEvent; //set up for next event
+}
+
 void windReading(){
   pinMode(WSPEED, INPUT_PULLUP); //input from wind meters windspeed sensor
 
@@ -280,9 +300,28 @@ void windReading(){
   Serial.println(F("km/h"));
 }
 
+void rainReading(){
+	//as described in Sparkfun Weather Meter Kit (SEN-15901)(https://cdn.sparkfun.com/assets/d/1/e/0/6/DS-15901-Weather_Meter.pdf),
+  //each 0.2794mm of rain cause one momentary contact closure that can be recorded with a digital counter or microcontroller
+	//interrupt input.
+  //then we can use the following formula:
+  //
+  //rain = 0.2794 * #_pulses
+  //
+	rain = RAIN_SCALE * (rainCounterDuringSleep+rainCounterDuringActive);
+	Serial.println("INFO: Rain counter in active mode: " + String(rainCounterDuringActive));
+	Serial.println("INFO: Rain counter in sleep mode: " + String(rainCounterDuringSleep));
+	Serial.println("INFO: Total rain counter: " + String(rainCounterDuringSleep+rainCounterDuringActive));
+	Serial.print(F("INFO: Rain: "));
+  Serial.print(rain);
+  Serial.println(F("mm"));
+	rainCounterDuringActive = 0;
+	rainCounterDuringSleep = 0;
+}
+
 //function to read battery level
 void batteryLevel(){
-  int analogValue = 0;
+  //int analogValue = 0;
   //read analogValue
   batteryRaw = averageAnalogRead(BATT);
   Serial.print(F("INFO: Analogic Pin Reading: "));
@@ -310,6 +349,7 @@ String componeJson(){
   data["windSpeed"] = windSpeed;
   data["windGust"] = gustSpeed;
   data["UV"] = UVIndex;
+  data["rain"] = rain;
 
   //copy JsonFormat to string
   serializeJson(data, string);
@@ -330,11 +370,17 @@ void setup() {
   pinMode(LED, OUTPUT);
   digitalWrite(LED, HIGH);
 
+  //set mode rain GPIO
+  pinMode(RAIN, INPUT_PULLUP);
+
   //initialize serial monitor
   Serial.begin(9600);
   while (!Serial);
   Serial.println();
   Serial.println("External module - LoRa weather station by Pasgabriele");
+
+  //enable interrupt for "online" rain measurement
+  attachInterrupt(RAIN, rainIRQ, RISING);
 
   //increment boot number and print it every reboot
 	++bootCount;
@@ -358,12 +404,18 @@ void setup() {
   //read windspeed and direction
   windReading();
 
+  //read rain
+  rainReading();
+
   //send packet to LoRa Receiver using componeJson function as input
   LoRaSend(componeJson());
 
-  //set timer to deep sleep
+  //set wakeup for timer
   esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP * uS_TO_S_FACTOR);
   Serial.println("Setup ESP32 to sleep for every " + String(TIME_TO_SLEEP) + " Seconds");
+
+  //set wakeup for rain count
+  esp_sleep_enable_ext0_wakeup(GPIO_NUM_13, 0);
 
   //turn off ESP32 onboard LED
   digitalWrite(LED, LOW);
