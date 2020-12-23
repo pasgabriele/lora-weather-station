@@ -45,6 +45,7 @@ int batteryRaw = 0;
 float volt = 0.0;
 float windSpeed; //wind speed km/h
 float gustSpeed; //wind gust speed km/h
+int windDir = -1;
 float rain = 0.0;
 
 //RTC variables. These will be preserved during the deep sleep.
@@ -189,15 +190,15 @@ int get_wind_direction(){
   unsigned int adc;
   float pinVoltage;
 
-  adc = analogRead(WDIR); //get the current reading from the sensor
+  adc = averageAnalogRead(WDIR); //get the current reading from the sensor
   pinVoltage = adc * (3.3 / 4096.0);
-  /*
+  
   Serial.print("Analogic pin: ");
   Serial.print(adc);
   Serial.println("/4095");
   Serial.print("Pin voltage: ");
   Serial.println(pinVoltage);
-  */
+  
   //the following table is ADC readings for the wind direction sensor output, sorted from low to high.
   //each threshold is the midpoint between adjacent headings. The output is degrees for that ADC reading.
   //note that these are not in compass degree order! See Weather Meters datasheet for more information.
@@ -292,12 +293,17 @@ void windReading(){
     windSpeed = 0;
   }
 
+  windDir = get_wind_direction();
+
   Serial.print(F("INFO: Wind Speed: "));
   Serial.print(windSpeed);
-  Serial.println(F("km/h"));
+  Serial.println(F(" km/h"));
   Serial.print(F("INFO: Gust Speed: "));
   Serial.print(gustSpeed);
-  Serial.println(F("km/h"));
+  Serial.println(F(" km/h"));
+  Serial.print(F("INFO: Wind Direction: "));
+  Serial.print(windDir);
+  Serial.println(F(" degrees"));
 }
 
 void rainReading(){
@@ -348,6 +354,7 @@ String componeJson(){
   data["pressure"] = BMEPressure;
   data["windSpeed"] = windSpeed;
   data["windGust"] = gustSpeed;
+  data["windDir"] = windDir;
   data["UV"] = UVIndex;
   data["rain"] = rain;
 
