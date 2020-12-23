@@ -329,6 +329,7 @@ void rainReading(){
 void batteryLevel(){
   //int analogValue = 0;
   //read analogValue
+  pinMode(BATT, INPUT);
   batteryRaw = averageAnalogRead(BATT);
   Serial.print(F("INFO: Analogic Pin Reading: "));
   Serial.print(batteryRaw);
