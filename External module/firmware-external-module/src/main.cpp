@@ -343,8 +343,8 @@ void batteryLevel(){
   Serial.println(F(" Volt"));
 }
 
-//function to compone json string
-String componeJson(){
+//function to compose json string
+String composeJson(){
   StaticJsonDocument<300> data;
   String string;
   //populate JsonFormat
@@ -416,8 +416,8 @@ void setup() {
   //read rain
   rainReading();
 
-  //send packet to LoRa Receiver using componeJson function as input
-  LoRaSend(componeJson());
+  //send packet to LoRa Receiver using composeJson function as input
+  LoRaSend(composeJson());
 
   //set wakeup for timer
   esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP * uS_TO_S_FACTOR);
