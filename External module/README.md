@@ -72,15 +72,15 @@ The code has been written using [Atom IDE](https://atom.io/) and the [PlatformIO
 
 ### Description
 
-All weather data readed from sensors are processed by the External module, inserted in json string (for example `{outTemp:27.23,outHumidity:62.05,pressure:1013.25}`) and sended, via LoRa wireless communication (433Mhz), to the Gateway.
+All weather data read from sensors are processed by the External module, inserted in json string (for example `{outTemp:27.23,outHumidity:62.05,pressure:1013.25}`) and send, via LoRa wireless communication (433Mhz), to the Gateway.
 
 The External module is fully self powered via 2 li-ion 18650 batteries and a solar panel charger. To optimize the batteries life, the External module has been projected to work as following:
 
 - reads sensors values
-- compones the json string
+- composes the json string
 - sends the json string to Gateway
 
-then goes in Deep Sleep mode for a configurable time (default is 5 minutes). Of couse, the batteries saving necessity affects the weather data update frequency. With 5 minutes of Deep Sleep mode you do not have a real time weather situation. This is insignificant for some weather data (for example temperature, humdity and preassure) because this measures don't have great variations in 5 minutes, but it could be significant for other weather data (for example wind speed and direction). For this reason you can set the Deep Sleep time based on your necessities.
+then goes in Deep Sleep mode for a configurable time (default is 5 minutes). Of course, the batteries saving necessity affects the weather data update frequency. With 5 minutes of Deep Sleep mode you do not have a real time weather situation. This is insignificant for some weather data (for example temperature, humidity and pressure) because this measures don't have great variations in 5 minutes, but it could be significant for other weather data (for example wind speed and direction). For this reason you can set the Deep Sleep time based on your necessities.
 
 ### Temperature, humidity and pressure measurement
 The temperature, humidity and pressure measurement is provided by BME280 sensor. The function used in the firmware is BMEReading: this function tries to begin the BME sensor and if done it reads the data and inserts them in the BMETemperature, BMEHumidity and BMEPressure variables. BMEReading function is called every wakeup.
@@ -93,13 +93,13 @@ The wind speed measurement is derived by: (http://cactus.io/hookups/weather/anem
 
 It works as following:
 
-As describe in Spurkfun Weather Meter Kit datasheet, a wind speed of 2.401km/h causes the switch to close once per second, then the wind speed measurament can be executed counting the numbers of switch closed in a sample time. Therefore, when the External module executes the windReading function, it actives the pulses measurement (activing the interrupt) for 5 seconds (sample window for wind measurement), then stops the pulses measurement (disabling the interrupt) and calculates the wind speed and gust in this 5 seconds window. windReading function is called every wakeup.
+As describe in Spurkfun Weather Meter Kit datasheet, a wind speed of 2.401km/h causes the switch to close once per second, then the wind speed measurement can be executed counting the numbers of switch closed in a sample time. Therefore, when the External module executes the windReading function, it actives the pulses measurement (activating the interrupt) for 5 seconds (sample window for wind measurement), then stops the pulses measurement (disabling the interrupt) and calculates the wind speed and gust in this 5 seconds window. windReading function is called every wakeup.
 
 ### Wind direction measurement
 The wind direction measurement is provided by windDirectionReading function inserted in windReading function. It reads the analog value from the PIN connected to the Spurkfun Weather Meter Kit Wind Vane component (using the 10k ohm resistor) and converts this raw value in voltage measurement. As describe in the datasheet, a specified voltage value maps a specific wind direction. Therefore the windDirectionReading function maps the voltage to wind direction and return this in degrees value. The analog value is a AVG on 50 consecutive reads. windDirectionReading function is called every wakeup.
 
 ### Rain measurement
-The rain measurement is provided by rainReading function. As describe in Spurkfun Weather Meter Kit datasheet, every 0.2794mm of rain causes the switch to close once, then the rain measurament can be executed counting the numbers of switch closed. Due to the External Module go to sleep for a defined time, is neccessary to count the rain switch close during the normal mode and during the sleep mode too. To do this, there are 2 different counters:
+The rain measurement is provided by rainReading function. As describe in Spurkfun Weather Meter Kit datasheet, every 0.2794mm of rain causes the switch to close once, then the rain measurement can be executed counting the numbers of switch closed. Due to the External Module go to sleep for a defined time, is necessary to count the rain switch close during the normal mode and during the sleep mode too. To do this, there are 2 different counters:
  - rainCounterDuringSleep
  - rainCounterDuringActive 
 
@@ -113,7 +113,7 @@ Instead, during the sleep mode, the External module monitors the rain GPIO and i
 The battery voltage measurement is provided by batteryLevel function. It reads the analog value from the PIN connected to battery and converts this raw value in voltage measurement. The analog value is a AVG on 50 consecutive reads. batteryLevel function is called every wakeup.
 
 ### Json string creation and LoRa sending
-When all weather data have been read, these are inserted in a json string using the componeJson function, then the string is sent to the Gateway using LoRaSend function via LoRa connection. After sending the string, the External module go in Deep Sleep for the configured time.
+When all weather data have been read, these are inserted in a json string using the composeJson function, then the string is sent to the Gateway using LoRaSend function via LoRa connection. After sending the string, the External module go in Deep Sleep for the configured time.
 
 ### Requirements
 To compile correctly the source code is required to install the following board and libraries from PlatformIO interface in Atom:
