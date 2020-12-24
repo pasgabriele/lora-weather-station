@@ -15,10 +15,10 @@ Below a list of External module main features:
   - Pressure ![](https://img.shields.io/badge/status-ok-green)
   - Wind speed ![](https://img.shields.io/badge/status-ok-green)
   - Wind gust ![](https://img.shields.io/badge/status-ok-green)
-  - Wind direction ![](https://img.shields.io/badge/status-todo-red)
+  - Wind direction ![](https://img.shields.io/badge/status-ok-green)
   - Time ![](https://img.shields.io/badge/status-todo-red)
   - UV index ![](https://img.shields.io/badge/status-ok-green)
-  - Rain accumulation ![](https://img.shields.io/badge/status-todo-red)
+  - Rain accumulation ![](https://img.shields.io/badge/status-ok-green)
 - Weather data reading every 5 minutes
 - Weather data encapsulation in json string
 - Long distance and low energy LoRa communication with the Gateway
@@ -95,8 +95,22 @@ It works as following:
 
 As describe in Spurkfun Weather Meter Kit datasheet, a wind speed of 2.401km/h causes the switch to close once per second, then the wind speed measurament can be executed counting the numbers of switch closed in a sample time. Therefore, when the External module executes the windReading function, it actives the pulses measurement (activing the interrupt) for 5 seconds (sample window for wind measurement), then stops the pulses measurement (disabling the interrupt) and calculates the wind speed and gust in this 5 seconds window. windReading function is called every wakeup.
 
+### Wind direction measurement
+The wind direction measurement is provided by windDirectionReading function inserted in windReading function. It reads the analog value from the PIN connected to the Spurkfun Weather Meter Kit Wind Vane component (using the 10k ohm resistor) and converts this raw value in voltage measurement. As describe in the datasheet, a specified voltage value maps a specific wind direction. Therefore the windDirectionReading function maps the voltage to wind direction and return this in degrees value. The analog value is a AVG on 50 consecutive reads. windDirectionReading function is called every wakeup.
+
+### Rain measurement
+The rain measurement is provided by rainReading function. As describe in Spurkfun Weather Meter Kit datasheet, every 0.2794mm of rain causes the switch to close once, then the rain measurament can be executed counting the numbers of switch closed. Due to the External Module go to sleep for a defined time, is neccessary to count the rain switch close during the normal mode and during the sleep mode too. To do this, there are 2 different counters:
+ - rainCounterDuringSleep
+ - rainCounterDuringActive 
+
+It works as following:
+
+During the normal mode, at startup time, a interrupt function to monitor the rain switch close is enabled. If a rain switch close is detected, the interrupt function increments the rainCounterDuringActive counter, then, when the rainReading function is called, it uses the counter to calculate the rain amount.
+
+Instead, during the sleep mode, the External module monitors the rain GPIO and if it detects a rain switch close, wake-up the External module, increases the rainCounterDuringSleep counter and executes the normal mode above described.
+
 ### Battery voltage measurement
-The battery voltage measurement is provided by batteryLevel function. It reads the analog value from the PIN connected to battery and converts this raw value in voltage measurement. The analog value is a AVG on 8 consecutive reads. batteryLevel function is called every wakeup.
+The battery voltage measurement is provided by batteryLevel function. It reads the analog value from the PIN connected to battery and converts this raw value in voltage measurement. The analog value is a AVG on 50 consecutive reads. batteryLevel function is called every wakeup.
 
 ### Json string creation and LoRa sending
 When all weather data have been read, these are inserted in a json string using the componeJson function, then the string is sent to the Gateway using LoRaSend function via LoRa connection. After sending the string, the External module go in Deep Sleep for the configured time.
