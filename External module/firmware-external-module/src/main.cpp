@@ -23,10 +23,10 @@
 
 //constant defined
 #define uS_TO_S_FACTOR 1000000      //conversion factor for micro seconds to seconds
-#define TIME_TO_SLEEP  1            //time ESP32 will go to sleep (in seconds) (900 = 15 minutes)
+#define TIME_TO_SLEEP  1            //time ESP32 will go to sleep (in seconds) (300 = 5 minutes)
 const float WINDSPEED_SCALE = 2.401;//anemometer coefficient (at 2.401 km/h the anemometer pulse once per second)
 const float WINDSPEED_PERIOD = 5.0; //sample time for wind speed measurement
-const float RAIN_SCALE = 0.2794;
+const float RAIN_SCALE = 0.2794;    //rain bucket coefficient (every 0.2794mm of rain the rain bucket pulse once)
 
 //global variables
 volatile long lastWindIRQ = 0;
@@ -35,18 +35,18 @@ unsigned int lastRainIRQ = 0;
 volatile unsigned int gustPeriod = UINT_MAX;
 int rainCounterDuringSleep = 0;
 int rainCounterDuringActive = 0;
-Adafruit_BME280 bme;
-Adafruit_VEML6075 uv = Adafruit_VEML6075();
 float BMETemperature = -50.0;
 float BMEHumidity = 0.0;
 float BMEPressure = 0.0;
-float UVIndex = 0.0;
-int batteryRaw = 0;
+float UVIndex = -1.0;
+int batteryRaw = -1;
 float volt = 0.0;
-float windSpeed; //wind speed km/h
-float gustSpeed; //wind gust speed km/h
+float windSpeed = -1.0;
+float gustSpeed = -1.0;
 int windDir = -1;
-float rain = 0.0;
+float rain = -1.0;
+Adafruit_BME280 bme;
+Adafruit_VEML6075 uv = Adafruit_VEML6075();
 
 //RTC variables. These will be preserved during the deep sleep.
 RTC_DATA_ATTR unsigned long bootCount = 0;
@@ -96,7 +96,7 @@ void print_wakeup_reason(){
 //takes an average of readings on a given analog pin
 //returns the average
 int averageAnalogRead(int pinToRead){
-	byte numberOfReadings = 8;
+	byte numberOfReadings = 50;
 	unsigned int runningValue = 0;
 
 	for(int x = 0 ; x < numberOfReadings ; x++)
@@ -186,18 +186,19 @@ boolean UVReading(){
 }
 
 //read the wind direction sensor, return heading in degrees
-int get_wind_direction(){
+int windDirectionReading(){
   unsigned int adc;
   float pinVoltage;
 
   adc = averageAnalogRead(WDIR); //get the current reading from the sensor
   pinVoltage = adc * (3.3 / 4096.0);
   
-  Serial.print("Analogic pin: ");
+  Serial.print("INFO: Wind Dir analogic pin value: ");
   Serial.print(adc);
   Serial.println("/4095");
-  Serial.print("Pin voltage: ");
-  Serial.println(pinVoltage);
+  Serial.print("INFO: Wind Dir analogic pin voltage: ");
+  Serial.print(pinVoltage);
+  Serial.println(" Volt");
   
   //the following table is ADC readings for the wind direction sensor output, sorted from low to high.
   //each threshold is the midpoint between adjacent headings. The output is degrees for that ADC reading.
@@ -293,7 +294,7 @@ void windReading(){
     windSpeed = 0;
   }
 
-  windDir = get_wind_direction();
+  windDir = windDirectionReading();
 
   Serial.print(F("INFO: Wind Speed: "));
   Serial.print(windSpeed);
@@ -320,7 +321,7 @@ void rainReading(){
 	Serial.println("INFO: Total rain counter: " + String(rainCounterDuringSleep+rainCounterDuringActive));
 	Serial.print(F("INFO: Rain: "));
   Serial.print(rain);
-  Serial.println(F("mm"));
+  Serial.println(F(" mm"));
 	rainCounterDuringActive = 0;
 	rainCounterDuringSleep = 0;
 }
@@ -339,7 +340,7 @@ void batteryLevel(){
   volt = (batteryRaw - 0) * (4.20 - 0.0) / (4095 - 0) + 0.0;
   Serial.print(F("INFO: Battery Voltage: "));
   Serial.print(volt);
-  Serial.println(F("V"));
+  Serial.println(F(" Volt"));
 }
 
 //function to compone json string
