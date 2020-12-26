@@ -9,7 +9,6 @@
             "includePath": [
                 "/Users/gabrielepasqualitto/Documents/lora-weather-station/Gateway/firmware-gateway/include",
                 "/Users/gabrielepasqualitto/Documents/lora-weather-station/Gateway/firmware-gateway/src",
-                "/Users/gabrielepasqualitto/Documents/lora-weather-station/Gateway/firmware-gateway/lib/jsonlib",
                 "/Users/gabrielepasqualitto/Documents/lora-weather-station/Gateway/firmware-gateway/.pio/libdeps/esp32doit-devkit-v1/jsonlib",
                 "/Users/gabrielepasqualitto/Documents/lora-weather-station/Gateway/firmware-gateway/.pio/libdeps/esp32doit-devkit-v1/LoRa/src",
                 "/Users/gabrielepasqualitto/.platformio/packages/framework-arduinoespressif32/libraries/SPI/src",
@@ -105,7 +104,6 @@
                 "path": [
                     "/Users/gabrielepasqualitto/Documents/lora-weather-station/Gateway/firmware-gateway/include",
                     "/Users/gabrielepasqualitto/Documents/lora-weather-station/Gateway/firmware-gateway/src",
-                    "/Users/gabrielepasqualitto/Documents/lora-weather-station/Gateway/firmware-gateway/lib/jsonlib",
                     "/Users/gabrielepasqualitto/Documents/lora-weather-station/Gateway/firmware-gateway/.pio/libdeps/esp32doit-devkit-v1/jsonlib",
                     "/Users/gabrielepasqualitto/Documents/lora-weather-station/Gateway/firmware-gateway/.pio/libdeps/esp32doit-devkit-v1/LoRa/src",
                     "/Users/gabrielepasqualitto/.platformio/packages/framework-arduinoespressif32/libraries/SPI/src",

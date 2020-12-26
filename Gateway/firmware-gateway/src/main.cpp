@@ -1,7 +1,6 @@
 #include <Arduino.h>
 #include <SPI.h>
 #include <LoRa.h>
-#include <jsonlib.h>
 #include <ArduinoJson.h>
 
 //used digital pins:
