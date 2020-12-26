@@ -3,6 +3,8 @@
 #include <LoRa.h>
 #include <ArduinoJson.h>
 #include <esp_task_wdt.h>
+#include <WiFi.h>
+#include <PubSubClient.h>
 
 //used digital pins:
 #define SCK 5                       //for lora module
@@ -14,10 +16,23 @@
 #define LED 2
 
 //constant defined
-#define WDT_TIMEOUT 5               //in seconds
+#define WDT_TIMEOUT 10               //in seconds
+const char* SSID = "yourNetworkName";
+const char* password =  "yourNetworkPass";
+const char* MQTTServer = "yourMQTTBrokerIPAddress";
+const char* MQTTUsername = "yourMQTTBrokerUsername";
+const char* MQTTPassword = "yourMQTTBrokerPassword";
+const char* MQTTTopic = "yourMQTTTopic";
 
 //global variables
 StaticJsonDocument<300> data;
+IPAddress ipaddress(192, 168, 1, 115);
+IPAddress gateway(192, 168, 1, 1);
+IPAddress subnet(255, 255, 255, 0);
+IPAddress dns1(8, 8, 8, 8);
+IPAddress dns2(8, 8, 4, 4);
+WiFiClient WIFIClient;
+PubSubClient MQTTClient(WIFIClient);
 int counter = 1;                    //debug
 float BMETemperature = -50.0;
 float BMEHumidity = 0.0;
@@ -42,8 +57,8 @@ void lora_connection() {
   //433E6 for Asia
   //866E6 for Europe
   //915E6 for North America
+  Serial.println("INFO: Wait LoRa Begin...");
   while (!LoRa.begin(433E6)) {
-    Serial.println("INFO: Wait LoRa Begin...");
     Serial.println(".");
     delay(500);
   }
@@ -55,6 +70,70 @@ void lora_connection() {
   LoRa.enableCrc();
   Serial.println("INFO: LoRa Initializing OK!!!");
   delay(500);
+}
+
+//function to connect to WiFi
+void wifi_connection() {
+  if (!WiFi.config(ipaddress, gateway, subnet, dns1, dns2)) {
+    Serial.println("ERROR: STA Failed to configure");
+  }
+
+  Serial.print("INFO: Connecting to ");
+  Serial.println(SSID);
+
+  WiFi.begin(SSID, password);
+
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+
+  Serial.println("");
+  Serial.println("INFO: WiFi connected!!!");
+  Serial.print("INFO: IP address: ");
+  Serial.println(WiFi.localIP());
+  Serial.print("INFO: ESP Mac Address: ");
+  Serial.println(WiFi.macAddress());
+  Serial.print("INFO: Subnet Mask: ");
+  Serial.println(WiFi.subnetMask());
+  Serial.print("INFO: Gateway IP: ");
+  Serial.println(WiFi.gatewayIP());
+  Serial.print("INFO: DNS: ");
+  Serial.println(WiFi.dnsIP());
+}
+
+//function to connect the client to MQTT Broker
+void mqtt_connection(){
+  MQTTClient.setServer(MQTTServer, 1883);
+
+  while (!MQTTClient.connected()){
+    Serial.print("INFO: Connecting to MQTT...");
+ 
+    if (MQTTClient.connect("Gateway", MQTTUsername, MQTTPassword)){
+      Serial.println("connected");
+    }
+    else{
+      Serial.print("failed with state ");
+      Serial.println(MQTTClient.state());
+      delay(500);
+    }
+  }
+}
+
+//function to disconnect the client from MQTT Broker
+void mqtt_disconnect(){
+  MQTTClient.disconnect();
+  Serial.println("INFO: Disconnected from MQTT Server");
+}
+
+void sendToMQTTBroker(){
+  //connect to MQTT Broker
+  mqtt_connection();
+
+  //TODO....
+
+  //disconnect from MQTT Broker
+  mqtt_disconnect();
 }
 
 void parseJson(int packetSize){
@@ -163,7 +242,7 @@ void setup() {
   lora_connection();
 
   //wifi connection
-  //wifi_connection();
+  wifi_connection();
 }
 
 void loop() {

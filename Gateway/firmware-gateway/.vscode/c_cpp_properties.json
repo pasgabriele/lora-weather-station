@@ -9,6 +9,8 @@
             "includePath": [
                 "/Users/gabrielepasqualitto/Documents/lora-weather-station/Gateway/firmware-gateway/include",
                 "/Users/gabrielepasqualitto/Documents/lora-weather-station/Gateway/firmware-gateway/src",
+                "/Users/gabrielepasqualitto/.platformio/packages/framework-arduinoespressif32/libraries/WiFi/src",
+                "/Users/gabrielepasqualitto/Documents/lora-weather-station/Gateway/firmware-gateway/.pio/libdeps/esp32doit-devkit-v1/PubSubClient/src",
                 "/Users/gabrielepasqualitto/Documents/lora-weather-station/Gateway/firmware-gateway/.pio/libdeps/esp32doit-devkit-v1/LoRa/src",
                 "/Users/gabrielepasqualitto/.platformio/packages/framework-arduinoespressif32/libraries/SPI/src",
                 "/Users/gabrielepasqualitto/Documents/lora-weather-station/Gateway/firmware-gateway/.pio/libdeps/esp32doit-devkit-v1/ArduinoJson/src",
@@ -92,7 +94,6 @@
                 "/Users/gabrielepasqualitto/.platformio/packages/framework-arduinoespressif32/libraries/Ticker/src",
                 "/Users/gabrielepasqualitto/.platformio/packages/framework-arduinoespressif32/libraries/Update/src",
                 "/Users/gabrielepasqualitto/.platformio/packages/framework-arduinoespressif32/libraries/WebServer/src",
-                "/Users/gabrielepasqualitto/.platformio/packages/framework-arduinoespressif32/libraries/WiFi/src",
                 "/Users/gabrielepasqualitto/.platformio/packages/framework-arduinoespressif32/libraries/WiFiClientSecure/src",
                 "/Users/gabrielepasqualitto/.platformio/packages/framework-arduinoespressif32/libraries/Wire/src",
                 "/Users/gabrielepasqualitto/.platformio/packages/tool-unity",
@@ -103,6 +104,8 @@
                 "path": [
                     "/Users/gabrielepasqualitto/Documents/lora-weather-station/Gateway/firmware-gateway/include",
                     "/Users/gabrielepasqualitto/Documents/lora-weather-station/Gateway/firmware-gateway/src",
+                    "/Users/gabrielepasqualitto/.platformio/packages/framework-arduinoespressif32/libraries/WiFi/src",
+                    "/Users/gabrielepasqualitto/Documents/lora-weather-station/Gateway/firmware-gateway/.pio/libdeps/esp32doit-devkit-v1/PubSubClient/src",
                     "/Users/gabrielepasqualitto/Documents/lora-weather-station/Gateway/firmware-gateway/.pio/libdeps/esp32doit-devkit-v1/LoRa/src",
                     "/Users/gabrielepasqualitto/.platformio/packages/framework-arduinoespressif32/libraries/SPI/src",
                     "/Users/gabrielepasqualitto/Documents/lora-weather-station/Gateway/firmware-gateway/.pio/libdeps/esp32doit-devkit-v1/ArduinoJson/src",
@@ -186,7 +189,6 @@
                     "/Users/gabrielepasqualitto/.platformio/packages/framework-arduinoespressif32/libraries/Ticker/src",
                     "/Users/gabrielepasqualitto/.platformio/packages/framework-arduinoespressif32/libraries/Update/src",
                     "/Users/gabrielepasqualitto/.platformio/packages/framework-arduinoespressif32/libraries/WebServer/src",
-                    "/Users/gabrielepasqualitto/.platformio/packages/framework-arduinoespressif32/libraries/WiFi/src",
                     "/Users/gabrielepasqualitto/.platformio/packages/framework-arduinoespressif32/libraries/WiFiClientSecure/src",
                     "/Users/gabrielepasqualitto/.platformio/packages/framework-arduinoespressif32/libraries/Wire/src",
                     "/Users/gabrielepasqualitto/.platformio/packages/tool-unity",
