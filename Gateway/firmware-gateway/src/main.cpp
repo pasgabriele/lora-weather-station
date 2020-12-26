@@ -120,8 +120,13 @@ void parseJson(int packetSize){
   Serial.println(windGust);
   Serial.print("INFO: Wind speed: ");
   Serial.println(windSpeed);
+  Serial.print("INFO: Wind dir: ");
+  Serial.println(windDir);
   Serial.print("INFO: UV Index: ");
   Serial.println(UVIndex);
+  Serial.print("INFO: Rain: ");
+  Serial.println(rain);
+
 
   //debug counter
   Serial.print("INFO: Received packet: ");
