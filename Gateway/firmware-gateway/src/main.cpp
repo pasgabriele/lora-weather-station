@@ -2,6 +2,7 @@
 #include <SPI.h>
 #include <LoRa.h>
 #include <ArduinoJson.h>
+#include <esp_task_wdt.h>
 
 //used digital pins:
 #define SCK 5                       //for lora module
@@ -11,6 +12,9 @@
 #define RST 14                      //for lora module
 #define DIO0 26                     //for lora module
 #define LED 2
+
+//constant defined
+#define WDT_TIMEOUT 5               //in seconds
 
 //global variables
 StaticJsonDocument<300> data;
@@ -26,6 +30,7 @@ float windGust = -1.0;
 float UVIndex = 0.0;
 int windDir = -1;
 float rain = -1.0;
+int rxCheckPercent = -1;
 
 //function to connect to lora
 void lora_connection() {
@@ -67,10 +72,11 @@ void parseJson(int packetSize){
   }
 
   //print the incoming packet with RSSI
+  rxCheckPercent = LoRa.packetRssi();
   Serial.print("INFO: Received packet '");
   Serial.print(received);
   Serial.print("' with RSSI ");
-  Serial.println(LoRa.packetRssi());
+  Serial.println(rxCheckPercent);
 
   //parse the received string using lib/jsonlib.h to extract sensors values
   /*id = jsonExtract(received, "id").toInt();
@@ -126,6 +132,8 @@ void parseJson(int packetSize){
   Serial.println(UVIndex);
   Serial.print("INFO: Rain: ");
   Serial.println(rain);
+  Serial.print("INFO: RSSI: ");
+  Serial.println(rxCheckPercent);
 
 
   //debug counter
@@ -133,6 +141,7 @@ void parseJson(int packetSize){
   Serial.println(counter);
   counter++;
   
+  //turn off ESP32 onboard LED 
   digitalWrite(LED, LOW);
 }
 
@@ -142,6 +151,11 @@ void setup() {
   while (!Serial);
   Serial.println();
   Serial.println("Gateway - LoRa weather station by Pasgabriele");
+
+  //enable panic so ESP32 restarts
+  esp_task_wdt_init(WDT_TIMEOUT, true);
+  esp_task_wdt_add(NULL);           //add current thread to WDT watch
+
 
   pinMode(LED, OUTPUT);
 
@@ -154,9 +168,12 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
+
+  //reset WDT every loop
+  esp_task_wdt_reset();
+
   int packetSize = LoRa.parsePacket();
   if (packetSize){
-
     parseJson(packetSize);
 
     //TODO: perform semantic verification on parsed data before sending via MQTT
@@ -171,6 +188,5 @@ void loop() {
 
     //send parsed data to WeeWX via MQTT protocol
     //sendToMQTTBroker();
-    //turn off ESP32 onboard LED 
   }
 }
