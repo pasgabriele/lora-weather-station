@@ -39,7 +39,6 @@ float BMETemperature = -50.0;
 float BMEHumidity = 0.0;
 float BMEPressure = 0.0;
 float UVIndex = -1.0;
-int batteryRaw = -1;
 float volt = 0.0;
 float windSpeed = -1.0;
 float gustSpeed = -1.0;
@@ -331,8 +330,8 @@ void batteryLevel(){
   //int analogValue = 0;
   //read analogValue
   pinMode(BATT, INPUT);
-  batteryRaw = averageAnalogRead(BATT);
-  Serial.print(F("INFO: Analogic Pin Reading: "));
+  int batteryRaw = averageAnalogRead(BATT);
+  Serial.print(F("INFO: Battery analogic pin value: "));
   Serial.print(batteryRaw);
   Serial.println(F("/4095"));
 
@@ -349,7 +348,6 @@ String composeJson(){
   String string;
   //populate JsonFormat
   data["id"] = bootCount;
-  //data["batteryRaw"] = batteryRaw;
   data["supplyVoltage"] = volt;
   data["outTemp"] = BMETemperature;
   data["outHumidity"] = BMEHumidity;
