@@ -5,6 +5,7 @@
 #include <esp_task_wdt.h>
 #include <WiFi.h>
 #include <PubSubClient.h>
+#include <NTPClient.h>
 
 //used digital pins:
 #define SCK 5                       //for lora module
@@ -34,6 +35,9 @@ IPAddress dns1(8, 8, 8, 8);
 IPAddress dns2(8, 8, 4, 4);
 WiFiClient WIFIClient;
 PubSubClient MQTTClient(WIFIClient);
+WiFiUDP ntpUDP;
+NTPClient timeClient(ntpUDP);
+int timestamp = 0;
 int counter = 1;                    //debug
 float BMETemperature = -50.0;
 float BMEHumidity = 0.0;
@@ -161,15 +165,16 @@ void parseJson(int packetSize){
   Serial.print("' with RSSI ");
   Serial.println(rxCheckPercent);
 
-  //paese the received string using ArduinoJson.h library to extract sensors values
+  //convert incoming string in json object using ArduinoJson.h library
   DeserializationError error = deserializeJson(data, received);
   if (error) {
     Serial.print(F("deserializeJson() failed: "));
     Serial.println(error.f_str());
     return;
   }
+
+  //extract sensors values from json object
   id = data["id"];
-  //batteryRaw = data["batteryRaw"];
   volt = data["supplyVoltage"];
   BMETemperature = data["outTemp"];
   BMEHumidity = data["outHumidity"];
@@ -180,10 +185,15 @@ void parseJson(int packetSize){
   UVIndex = data["UV"];
   rain = data["rain"];
 
+  //add timestamp to json string
+  timeClient.update();
+  timestamp = timeClient.getEpochTime();
+  data["dateTime"] = timestamp;
+
+  Serial.print("INFO: Timestamp: ");
+  Serial.println(timestamp);
   Serial.print("INFO: ID mes: ");
   Serial.println(id);
-  //Serial.print("INFO: Battery RAW: ");
-  //Serial.println(batteryRaw);
   Serial.print("INFO: Battery: ");
   Serial.println(volt);
   Serial.print("INFO: BME Temp: ");
@@ -226,7 +236,6 @@ void setup() {
   esp_task_wdt_init(WDT_TIMEOUT, true);
   esp_task_wdt_add(NULL);           //add current thread to WDT watch
 
-
   pinMode(LED, OUTPUT);
 
   //lora connection
@@ -234,6 +243,9 @@ void setup() {
 
   //wifi connection
   wifi_connection();
+
+  //configure NTP
+  timeClient.begin();
 }
 
 void loop() {
