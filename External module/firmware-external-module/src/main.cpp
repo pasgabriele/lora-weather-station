@@ -349,7 +349,7 @@ String composeJson(){
   String string;
   //populate JsonFormat
   data["id"] = bootCount;
-  data["batteryRaw"] = batteryRaw;
+  //data["batteryRaw"] = batteryRaw;
   data["supplyVoltage"] = volt;
   data["outTemp"] = BMETemperature;
   data["outHumidity"] = BMEHumidity;
