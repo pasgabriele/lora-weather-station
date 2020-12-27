@@ -17,18 +17,18 @@
 
 //constant defined
 #define WDT_TIMEOUT 10               //in seconds
-const char* SSID = "yourNetworkName";
-const char* password =  "yourNetworkPass";
-const char* MQTTServer = "yourMQTTBrokerIPAddress";
-const char* MQTTUsername = "yourMQTTBrokerUsername";
-const char* MQTTPassword = "yourMQTTBrokerPassword";
-const char* MQTTTopic = "yourMQTTTopic";
+const char* SSID = "TOINSERT";
+const char* password =  "TOINSERT";
+const char* MQTTServer = "TOINSERT";
+const char* MQTTUsername = "TOINSERT";
+const char* MQTTPassword = "TOINSERT";
+const char* MQTTTopic = "weather";
 
 //global variables
 StaticJsonDocument<300> data;
 String received = "";
-IPAddress ipaddress(192, 168, 1, 115);
-IPAddress gateway(192, 168, 1, 1);
+IPAddress ipaddress(192, 168, 0, 115);
+IPAddress gateway(192, 168, 0, 1);
 IPAddress subnet(255, 255, 255, 0);
 IPAddress dns1(8, 8, 8, 8);
 IPAddress dns2(8, 8, 4, 4);
@@ -134,7 +134,7 @@ void sendToMQTTBroker(){
   //publish json string to MQTT Broker
   char buffer[256];
   serializeJson(data, buffer);
-  MQTTClient.publish("outTopic", buffer);
+  MQTTClient.publish(MQTTTopic, buffer);
 
   //disconnect from MQTT Broker
   mqtt_disconnect();
@@ -169,7 +169,7 @@ void parseJson(int packetSize){
     return;
   }
   id = data["id"];
-  batteryRaw = data["batteryRaw"];
+  //batteryRaw = data["batteryRaw"];
   volt = data["supplyVoltage"];
   BMETemperature = data["outTemp"];
   BMEHumidity = data["outHumidity"];
@@ -182,8 +182,8 @@ void parseJson(int packetSize){
 
   Serial.print("INFO: ID mes: ");
   Serial.println(id);
-  Serial.print("INFO: Battery RAW: ");
-  Serial.println(batteryRaw);
+  //Serial.print("INFO: Battery RAW: ");
+  //Serial.println(batteryRaw);
   Serial.print("INFO: Battery: ");
   Serial.println(volt);
   Serial.print("INFO: BME Temp: ");
@@ -257,6 +257,6 @@ void loop() {
     //  etc...
 
     //send parsed data to WeeWX via MQTT protocol
-    //sendToMQTTBroker();
+    sendToMQTTBroker();
   }
 }
