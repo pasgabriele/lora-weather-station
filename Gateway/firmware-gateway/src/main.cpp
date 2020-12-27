@@ -26,6 +26,7 @@ const char* MQTTTopic = "yourMQTTTopic";
 
 //global variables
 StaticJsonDocument<300> data;
+String received = "";
 IPAddress ipaddress(192, 168, 1, 115);
 IPAddress gateway(192, 168, 1, 1);
 IPAddress subnet(255, 255, 255, 0);
@@ -130,7 +131,10 @@ void sendToMQTTBroker(){
   //connect to MQTT Broker
   mqtt_connection();
 
-  //TODO....
+  //publish json string to MQTT Broker
+  char buffer[256];
+  serializeJson(data, buffer);
+  MQTTClient.publish("outTopic", buffer);
 
   //disconnect from MQTT Broker
   mqtt_disconnect();
@@ -143,7 +147,7 @@ void parseJson(int packetSize){
   Serial.print("INFO: Incoming packet size: ");
   Serial.println(packetSize);
 
-  String received = "";
+  received = "";
 
   //read the incoming packet
   for (int i = 0; i < packetSize; i++) {
@@ -156,19 +160,6 @@ void parseJson(int packetSize){
   Serial.print(received);
   Serial.print("' with RSSI ");
   Serial.println(rxCheckPercent);
-
-  //parse the received string using lib/jsonlib.h to extract sensors values
-  /*id = jsonExtract(received, "id").toInt();
-  volt = jsonExtract(received, "supplyVoltage").toFloat();
-  batteryRaw = jsonExtract(received, "batteryRaw").toInt();
-  BMETemperature = jsonExtract(received, "outTemp").toFloat();
-  BMEHumidity = jsonExtract(received, "outHumidity").toFloat();
-  BMEPressure = jsonExtract(received, "pressure").toFloat();
-  windGust = jsonExtract(received, "windGust").toFloat();
-  windSpeed = jsonExtract(received, "windSpeed").toFloat();
-  UVIndex = jsonExtract(received, "UV").toFloat();
-  windDir = jsonExtract(received, "windDir").toInt();
-  rain = jsonExtract(received, "rain").toFloat();*/
 
   //paese the received string using ArduinoJson.h library to extract sensors values
   DeserializationError error = deserializeJson(data, received);
