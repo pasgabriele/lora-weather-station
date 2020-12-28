@@ -66,7 +66,7 @@ and the PCB created to merge all External module components:
 
 ## Software
 The External module source code is uploaded in [firmware-external-module](https://github.com/pasgabriele/lora-weather-station/tree/main/External%20module/firmware-external-module) folder.
-The code has been written using [Atom IDE](https://atom.io/) and the [PlatformIO plugin](https://platformio.org/), therefore you can clone this repository directly on the above plaftorm.
+The code has been written using [Visul Studio Code](https://code.visualstudio.com/) and the [PlatformIO plugin](https://platformio.org/), therefore you can clone this repository directly on the above plaftorm.
 
 ### Description
 
@@ -112,15 +112,3 @@ The battery voltage measurement is provided by batteryLevel function. It reads t
 
 ### Json string creation and LoRa sending
 When all weather data have been read, these are inserted in a json string using the composeJson function, then the string is sent to the Gateway using LoRaSend function via LoRa connection. After sending the string, the External module go in Deep Sleep for the configured time.
-
-### Requirements
-To compile correctly the source code is required to install the following board and libraries from PlatformIO interface in Atom:
-
- #### Board
- - esp32doit-devkit-v1
-
- #### Libraries
- - sandeepmistry/LoRa@^0.7.2
- - adafruit/Adafruit BME280 Library@^2.1.0
- - bblanchon/ArduinoJson@^6.16.1
- - adafruit/Adafruit Unified Sensor@^1.1.4
