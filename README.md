@@ -21,6 +21,6 @@ The weather station main features are:
 - Self-powered External module (via batteries and solar panel charger circuit)
 - Wireless External module
 - Access to weather data via MQTT
-- Information on temperature, humidity, pressure, wind speed and direction, UV index, rain accumulation and particulate matter
+- Information on temperature, humidity, pressure, wind speed and direction, UV index and rain accumulation
 - Access to real time and history weather data via Web GUI
 - Graphical weather data
