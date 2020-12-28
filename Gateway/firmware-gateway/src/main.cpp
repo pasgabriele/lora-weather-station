@@ -165,6 +165,9 @@ void parseJson(int packetSize){
   Serial.print("' with RSSI ");
   Serial.println(rxCheckPercent);
 
+  //map rssi value to percentage
+  rxCheckPercent = map(rxCheckPercent, -145, -30, 0, 100);
+
   //convert incoming string in json object using ArduinoJson.h library
   DeserializationError error = deserializeJson(data, received);
   if (error) {
@@ -184,6 +187,7 @@ void parseJson(int packetSize){
   windDir = data["windDir"];
   UVIndex = data["UV"];
   rain = data["rain"];
+  data["rxCheckPercent"] = rxCheckPercent;
 
   //add timestamp to json string
   timeClient.update();
@@ -212,7 +216,7 @@ void parseJson(int packetSize){
   Serial.println(UVIndex);
   Serial.print("INFO: Rain: ");
   Serial.println(rain);
-  Serial.print("INFO: RSSI: ");
+  Serial.print("INFO: Signal quality: ");
   Serial.println(rxCheckPercent);
 
 
@@ -250,12 +254,10 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
-
-  //reset WDT every loop
-  esp_task_wdt_reset();
-
   int packetSize = LoRa.parsePacket();
   if (packetSize){
+    //reset WDT every loop
+    esp_task_wdt_reset();
     parseJson(packetSize);
 
     //TODO: perform semantic verification on parsed data before sending via MQTT
