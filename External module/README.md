@@ -16,7 +16,6 @@ Below a list of External module main features:
   - Wind speed ![](https://img.shields.io/badge/status-ok-green)
   - Wind gust ![](https://img.shields.io/badge/status-ok-green)
   - Wind direction ![](https://img.shields.io/badge/status-ok-green)
-  - Time ![](https://img.shields.io/badge/status-todo-red)
   - UV index ![](https://img.shields.io/badge/status-ok-green)
   - Rain accumulation ![](https://img.shields.io/badge/status-ok-green)
 - Weather data reading every 5 minutes
