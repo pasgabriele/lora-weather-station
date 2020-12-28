@@ -29,3 +29,10 @@ The code has been written using [Visul Studio Code](https://code.visualstudio.co
 ### Description
 
 All incoming LoRa packets are processed by the Gateway. It's listening for LoRa packets and when a new one comes, the first check is for the transmission integrity using CRC LoRa check function. If the CRC is wrong the packet is discarded. If the CRC is ok, the incoming packet is accepted and parsed to extract all weather values from json string. Then, a timestamp (requested to NTP Server) is added to json string and this complete json string is published to MQTT Broker on topic `weather` for the WeeWX server. Moreover, to avoid Gateway freeze, a configurable watchdog timer (default is 8 minutes) is inserted in the source code to perform an auto recover in case of unexpected failures.
+
+The main functions of Gateway are:
+- lora_connection(): to connect the Gateway to LoRa network and enable the CRC check for incoming LoRa packages
+- wifi_connection(): to connect the Gateway to WiFi network
+- parseJson(int packetSize): to receive the incoming LoRa packets and to extract all weather values from json string. During the extraction, the Gateway gets from NTP server the current timestamp and adds it to json string.
+- sendToMQTTBroker(): to connect the Gateway to MQTT Broker and publish the json string on `weather` topic. After the string has been published, the Gateway disconnect the link to MQTT Broker.
+
