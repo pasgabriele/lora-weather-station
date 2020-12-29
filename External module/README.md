@@ -6,6 +6,7 @@
 - Verify battery voltage measurement
 - Verify ESP32 powered from TP4056 output to SH1.25 input
 - Verify sensors powered from ESP32 3V3 pin
+- Correggere rain. Il modulo esterno deve inviare rain in cm e non in mm
 
 ## Features
 Below a list of External module main features:
