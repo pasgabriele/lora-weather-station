@@ -315,12 +315,15 @@ void rainReading(){
   //rain = 0.2794 * #_pulses
   //
 	rain = RAIN_SCALE * (rainCounterDuringSleep+rainCounterDuringActive);
+  
+  //convert mm in cm
+  rain = rain/10;
 	Serial.println("INFO: Rain counter in active mode: " + String(rainCounterDuringActive));
 	Serial.println("INFO: Rain counter in sleep mode: " + String(rainCounterDuringSleep));
 	Serial.println("INFO: Total rain counter: " + String(rainCounterDuringSleep+rainCounterDuringActive));
 	Serial.print(F("INFO: Rain: "));
   Serial.print(rain);
-  Serial.println(F(" mm"));
+  Serial.println(F(" cm"));
 	rainCounterDuringActive = 0;
 	rainCounterDuringSleep = 0;
 }
