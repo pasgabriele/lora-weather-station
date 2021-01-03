@@ -17,7 +17,7 @@
 #define LED 2
 
 //constant defined
-#define WDT_TIMEOUT 10               //in seconds
+#define WDT_TIMEOUT 60              //in seconds
 const char* SSID = "TOINSERT";
 const char* password =  "TOINSERT";
 const char* MQTTServer = "TOINSERT";
