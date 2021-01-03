@@ -23,7 +23,7 @@
 
 //constant defined
 #define uS_TO_S_FACTOR 1000000      //conversion factor for micro seconds to seconds
-#define TIME_TO_SLEEP  1            //time ESP32 will go to sleep (in seconds) (300 = 5 minutes)
+#define TIME_TO_SLEEP  300          //time ESP32 will go to sleep (in seconds) (300 = 5 minutes)
 const float WINDSPEED_SCALE = 2.401;//anemometer coefficient (at 2.401 km/h the anemometer pulse once per second)
 const float WINDSPEED_PERIOD = 5.0; //sample time for wind speed measurement
 const float RAIN_SCALE = 0.2794;    //rain bucket coefficient (every 0.2794mm of rain the rain bucket pulse once)
