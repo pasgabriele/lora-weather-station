@@ -28,8 +28,8 @@ const char* MQTTTopic = "weather";
 //global variables
 StaticJsonDocument<300> data;
 String received = "";
-IPAddress ipaddress(192, 168, 0, 115);
-IPAddress gateway(192, 168, 0, 1);
+IPAddress ipaddress(192, 168, 1, 155);
+IPAddress gateway(192, 168, 1, 1);
 IPAddress subnet(255, 255, 255, 0);
 IPAddress dns1(8, 8, 8, 8);
 IPAddress dns2(8, 8, 4, 4);
@@ -107,43 +107,6 @@ void wifi_connection() {
   Serial.println(WiFi.dnsIP());
 }
 
-//function to connect the client to MQTT Broker
-void mqtt_connection(){
-  MQTTClient.setServer(MQTTServer, 1883);
-
-  while (!MQTTClient.connected()){
-    Serial.print("INFO: Connecting to MQTT...");
- 
-    if (MQTTClient.connect("Gateway", MQTTUsername, MQTTPassword)){
-      Serial.println("connected");
-    }
-    else{
-      Serial.print("failed with state ");
-      Serial.println(MQTTClient.state());
-      delay(500);
-    }
-  }
-}
-
-//function to disconnect the client from MQTT Broker
-void mqtt_disconnect(){
-  MQTTClient.disconnect();
-  Serial.println("INFO: Disconnected from MQTT Server");
-}
-
-void sendToMQTTBroker(){
-  //connect to MQTT Broker
-  mqtt_connection();
-
-  //publish json string to MQTT Broker
-  char buffer[256];
-  serializeJson(data, buffer);
-  MQTTClient.publish(MQTTTopic, buffer);
-
-  //disconnect from MQTT Broker
-  mqtt_disconnect();
-}
-
 void parseJson(int packetSize){
   //turn on ESP32 onboard LED when receives packet
   digitalWrite(LED, HIGH);
@@ -190,7 +153,9 @@ void parseJson(int packetSize){
   data["rxCheckPercent"] = rxCheckPercent;
 
   //add timestamp to json string
-  timeClient.update();
+  while(timeClient.update() == false){
+    Serial.println("WARN: Waiting time from NTP Server");
+  }
   timestamp = timeClient.getEpochTime();
   data["dateTime"] = timestamp;
 
@@ -219,7 +184,6 @@ void parseJson(int packetSize){
   Serial.print("INFO: Signal quality: ");
   Serial.println(rxCheckPercent);
 
-
   //debug counter
   Serial.print("INFO: Received packet: ");
   Serial.println(counter);
@@ -227,6 +191,43 @@ void parseJson(int packetSize){
   
   //turn off ESP32 onboard LED 
   digitalWrite(LED, LOW);
+}
+
+//function to connect the client to MQTT Broker
+void mqtt_connection(){
+  MQTTClient.setServer(MQTTServer, 12388);
+
+  while (!MQTTClient.connected()){
+    Serial.print("INFO: Connecting to MQTT...");
+ 
+    if (MQTTClient.connect("Gateway", MQTTUsername, MQTTPassword)){
+      Serial.println("connected");
+    }
+    else{
+      Serial.print("failed with state ");
+      Serial.println(MQTTClient.state());
+      delay(500);
+    }
+  }
+}
+
+//function to disconnect the client from MQTT Broker
+void mqtt_disconnect(){
+  MQTTClient.disconnect();
+  Serial.println("INFO: Disconnected from MQTT Server");
+}
+
+void sendToMQTTBroker(){
+  //connect to MQTT Broker
+  mqtt_connection();
+
+  //publish json string to MQTT Broker
+  char buffer[256];
+  serializeJson(data, buffer);
+  MQTTClient.publish(MQTTTopic, buffer);
+
+  //disconnect from MQTT Broker
+  mqtt_disconnect();
 }
 
 void setup() {
@@ -259,16 +260,6 @@ void loop() {
     //reset WDT every loop
     esp_task_wdt_reset();
     parseJson(packetSize);
-
-    //TODO: perform semantic verification on parsed data before sending via MQTT
-    //for example, no send MQTT message when External module send json message with:
-    //  BMETemperature == null
-    //  BMETemperature != [-20;+50]
-    //  BMEHumidity == null
-    //  BMEHumidity != [0;100]
-    //  BMEPressure == null
-    //  BMEPressure != [....]
-    //  etc...
 
     //send parsed data to WeeWX via MQTT protocol
     sendToMQTTBroker();
