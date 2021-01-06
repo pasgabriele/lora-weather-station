@@ -383,6 +383,9 @@ void setup() {
   //set mode rain GPIO
   pinMode(RAIN, INPUT_PULLUP);
 
+  //Set CPU clock to 80MHz
+  setCpuFrequencyMhz(80);
+
   //initialize serial monitor
   Serial.begin(9600);
   while (!Serial);
