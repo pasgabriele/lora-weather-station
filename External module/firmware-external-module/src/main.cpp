@@ -339,7 +339,7 @@ void batteryLevel(){
   Serial.println(F("/4095"));
 
   //mapping analogic value to voltage battery level
-  volt = (batteryRaw - 0) * (4.20 - 0.0) / (4095 - 0) + 0.0;
+  volt = batteryRaw * 1.737 / 1000;
   Serial.print(F("INFO: Battery Voltage: "));
   Serial.print(volt);
   Serial.println(F(" Volt"));
