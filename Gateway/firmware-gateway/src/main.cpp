@@ -26,13 +26,12 @@ const char* MQTTPassword = "TOINSERT";
 const char* MQTTTopic = "weather";
 
 //global variables
-StaticJsonDocument<300> data;
 String received = "";
 IPAddress ipaddress(192, 168, 1, 155);
 IPAddress gateway(192, 168, 1, 1);
 IPAddress subnet(255, 255, 255, 0);
-IPAddress dns1(8, 8, 8, 8);
-IPAddress dns2(8, 8, 4, 4);
+IPAddress dns1(192, 168, 1, 1);
+IPAddress dns2(8, 8, 8, 8);
 WiFiClient WIFIClient;
 PubSubClient MQTTClient(WIFIClient);
 WiFiUDP ntpUDP;
@@ -42,7 +41,7 @@ int counter = 1;                    //debug
 float BMETemperature = -50.0;
 float BMEHumidity = 0.0;
 float BMEPressure = 0.0;
-int id = 0;
+unsigned long id = 0;
 int batteryRaw = -1;
 float volt = 0.0;
 float windSpeed = -1.0;
@@ -131,6 +130,8 @@ void parseJson(int packetSize){
   //map rssi value to percentage
   rxCheckPercent = map(rxCheckPercent, -145, -30, 0, 100);
 
+  StaticJsonDocument<300> data;
+
   //convert incoming string in json object using ArduinoJson.h library
   DeserializationError error = deserializeJson(data, received);
   if (error) {
@@ -150,14 +151,6 @@ void parseJson(int packetSize){
   windDir = data["windDir"];
   UVIndex = data["UV"];
   rain = data["rain"];
-  data["rxCheckPercent"] = rxCheckPercent;
-
-  //add timestamp to json string
-  while(timeClient.update() == false){
-    Serial.println("WARN: Waiting time from NTP Server");
-  }
-  timestamp = timeClient.getEpochTime();
-  data["dateTime"] = timestamp;
 
   Serial.print("INFO: Timestamp: ");
   Serial.println(timestamp);
@@ -221,6 +214,28 @@ void sendToMQTTBroker(){
   //connect to MQTT Broker
   mqtt_connection();
 
+  //insert sensor values on json object
+  StaticJsonDocument<300> data;
+  data["id"] = id;
+  data["supplyVoltage"] = volt;
+  data["outTemp"] = BMETemperature;
+  data["outHumidity"] = BMEHumidity;
+  data["pressure"] = BMEPressure;
+  data["windSpeed"] = windSpeed;
+  data["windGust"] = windGust;
+  data["windDir"] = windDir;
+  data["UV"] = UVIndex;
+  data["rain"] = rain;
+  data["rxCheckPercent"] = rxCheckPercent;
+
+  //add timestamp to json string
+  while(timeClient.update() == false){
+    Serial.println("WARN: Waiting time from NTP Server");
+  }
+  timestamp = timeClient.getEpochTime();
+  
+  data["dateTime"] = timestamp;
+
   //publish json string to MQTT Broker
   char buffer[256];
   serializeJson(data, buffer);
@@ -242,6 +257,7 @@ void setup() {
   esp_task_wdt_add(NULL);           //add current thread to WDT watch
 
   pinMode(LED, OUTPUT);
+  digitalWrite(LED, LOW);
 
   //lora connection
   lora_connection();
