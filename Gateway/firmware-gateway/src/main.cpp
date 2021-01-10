@@ -106,9 +106,8 @@ void wifi_connection() {
   Serial.println(WiFi.dnsIP());
 }
 
-void parseJson(int packetSize){
-  //turn on ESP32 onboard LED when receives packet
-  digitalWrite(LED, HIGH);
+boolean parseJson(int packetSize){
+
   //print incoming packet size
   Serial.print("INFO: Incoming packet size: ");
   Serial.println(packetSize);
@@ -137,7 +136,8 @@ void parseJson(int packetSize){
   if (error) {
     Serial.print(F("deserializeJson() failed: "));
     Serial.println(error.f_str());
-    return;
+
+    return false;
   }
 
   //extract sensors values from json object
@@ -182,8 +182,7 @@ void parseJson(int packetSize){
   Serial.println(counter);
   counter++;
   
-  //turn off ESP32 onboard LED 
-  digitalWrite(LED, LOW);
+  return true;
 }
 
 //function to connect the client to MQTT Broker
@@ -210,7 +209,7 @@ void mqtt_disconnect(){
   Serial.println("INFO: Disconnected from MQTT Server");
 }
 
-void sendToMQTTBroker(){
+boolean sendToMQTTBroker(){
   //connect to MQTT Broker
   mqtt_connection();
 
@@ -239,10 +238,16 @@ void sendToMQTTBroker(){
   //publish json string to MQTT Broker
   char buffer[256];
   serializeJson(data, buffer);
-  MQTTClient.publish(MQTTTopic, buffer);
-
-  //disconnect from MQTT Broker
-  mqtt_disconnect();
+  if(MQTTClient.publish(MQTTTopic, buffer)){
+    //disconnect from MQTT Broker
+    mqtt_disconnect();
+    return true;
+  }
+  else{
+    //disconnect from MQTT Broker
+    mqtt_disconnect();
+    return false;
+  }
 }
 
 void setup() {
@@ -275,9 +280,16 @@ void loop() {
   if (packetSize){
     //reset WDT every loop
     esp_task_wdt_reset();
-    parseJson(packetSize);
 
-    //send parsed data to WeeWX via MQTT protocol
-    sendToMQTTBroker();
+    //turn on ESP32 onboard LED when receives packet
+    digitalWrite(LED, HIGH);
+
+    if(parseJson(packetSize)){
+      //send parsed data to WeeWX via MQTT protocol
+      sendToMQTTBroker();
+    }
+
+    //turn off ESP32 onboard LED when finish
+    digitalWrite(LED, LOW);
   }
 }
