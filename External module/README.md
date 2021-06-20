@@ -125,8 +125,9 @@ then
 
 Volt on GPIO32 = (4,2V * 27k)/(27k+27k) = 113400/54000 = 2,1V
 
-to determinate the c constant I read the analog value from GPIO32 when the battery voltage is 4,2. This analog value was 2440, then I calculated the c contanst in as following:
+to determinate the c constant, I read the analog value from GPIO32 when the battery voltage is 4,2. This analog value was 2440, then I calculated the c contanst as following:
 
+c = 4,2V/2440 = 0,00172131147541
 
 ### Json string creation and LoRa sending
-When all weather data have been read, these are inserted in a json string using the composeJson function, then the string is sent to the Gateway using LoRaSend function via LoRa connection. After sending the string, the External module go in Deep Sleep for the configured time.
+When all weather data have been read, these are inserted in a json string using the composeJson function, then the string is sent to the Gateway using LoRaSend function via LoRa connection. After sending the string, the External module restart the cicle.
