@@ -113,24 +113,21 @@ The battery voltage measurement is provided by batteryLevel() function. It reads
 
 The function used for voltage measurament is the following: 
 
-<img src="https://render.githubusercontent.com/render/math?math=battery voltage = c * analog value">
-*battery voltage = c * analog value*
+<img src="https://render.githubusercontent.com/render/math?math=battery_voltage = c * analog_value">
 
-voltage = c * analog value
+where *c* is the constant *0,00172131* calculated in the following way:
 
-where c is the constant 0,00172131 calculate in the following way:
+Using R1 and R2 resistors, when the battery is totally full, the maximun input voltage for GPIO33 is:
 
-Using R1 and R2 resistors the maximun input voltage for GPIO33 when the battery is totally full is:
-
-Volt on GPIO32 = (Max battery volt * R2)/(R1+R2)
+<img src="https://render.githubusercontent.com/render/math?math=max_volt_on_GPIO32 = (max_battery_voltage*R2)/(R1+R2)">
 
 then 
 
-Volt on GPIO32 = (4,2V * 27k)/(27k+27k) = 113400/54000 = 2,1V
+<img src="https://render.githubusercontent.com/render/math?math=max_volt_on_GPIO32 = (4,2*27000)/(27000+27000) = 113400/54000 = 2,1V">
 
-to determinate the c constant, I read the analog value from GPIO32 when the battery voltage is 4,2. This analog value was 2440, then I calculated the c contanst as following:
+to determinate the *c* constant, I read the analog value from GPIO32 when the battery voltage is 4,2. This analog value was 2440, then I calculated the *c* contanst as following:
 
-c = 4,2V/2440 = 0,00172131147541
+<img src="https://render.githubusercontent.com/render/math?math=c = 4,2/2440 = 0,00172131147541">
 
 ### Json string creation and LoRa sending
 When all weather data have been read, these are inserted in a json string using the composeJson function, then the string is sent to the Gateway using LoRaSend function via LoRa connection. After sending the string, the External module restart the cicle.
