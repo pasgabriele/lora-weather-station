@@ -46,12 +46,28 @@ The External module is composed by following hardware components:
 |1|[Sensors shield](https://www.aliexpress.com/item/32969306380.html)|Shield for temperature, humidity and preassure sensor||
 |1|Junction box|Outdoor PVC waterproof electrical junction boxe to store the assemblated PCB, UV index sensor and solar panel||
 
-### Wiring schema and PCB
+### Wiring schema
 In the following the wiring schema for External module:
 
 ![external module schema](https://github.com/pasgabriele/lora-weather-station/blob/main/External%20module/Schematic_external-module-wiring_2021-06-20.svg)
 
-and the PCB created to merge all External module components:
+In the following paragrapher are detailed the Power system, the battery voltage monitoring system and all sensors wiring.
+
+#### Power system ![](https://img.shields.io/badge/status-todo-red)
+
+#### Battery voltage monitoring system ![](https://img.shields.io/badge/status-todo-red)
+
+#### i2c communication ![](https://img.shields.io/badge/status-todo-red)
+
+#### Anemometer ![](https://img.shields.io/badge/status-todo-red)
+
+#### Wind vane ![](https://img.shields.io/badge/status-todo-red)
+
+#### Rain gauge ![](https://img.shields.io/badge/status-todo-red)
+
+### PCB
+
+Using the above schema and explanations, the following PCB has been created to merge all External module components:
 
 ![external module pcb](https://github.com/pasgabriele/lora-weather-station/blob/main/External%20module/pcb-external-module/PCB_PCB_2020-12-13_09-27-49_stampato_2021-06-20.svg)
 
