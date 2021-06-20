@@ -115,7 +115,7 @@ The function used for voltage measurament is the following:
 
 <img src="https://render.githubusercontent.com/render/math?math=batteryVoltage=c*analogValue">
 
-where *c* is the constant *0,00172131* calculated in the following way:
+where *c* is the constant *0,00173* calculated in the following way:
 
 Using R1 and R2 resistors, when the battery is totally full, the maximun input voltage for GPIO33 is:
 
@@ -125,9 +125,9 @@ then
 
 <img src="https://render.githubusercontent.com/render/math?math=maxVoltOnGPIO32=(4,2*27000)/(27000+27000)=113400/54000=2,1V">
 
-to determinate the *c* constant, I read the analog value from GPIO32 when the battery voltage is 4,2. This analog value was 2440, then I calculated the *c* contanst as following:
+to determinate the *c* constant, I read the analog value from GPIO32 when the battery voltage is 4,2. This analog value was 2427, then I calculated the *c* contanst as following:
 
-<img src="https://render.githubusercontent.com/render/math?math=c=4,2/2440=0,00172131147541">
+<img src="https://render.githubusercontent.com/render/math?math=c=4,2/2427=0,00173">
 
 This voltage measurement is stored in the volt variable and it will used to compose the json string.
 
