@@ -28,7 +28,7 @@ int batteryRaw = 0;
 
 const float WINDSPEED_SCALE = 2.401;    //anemometer coefficient (at 2.401 km/h the anemometer pulse once per second)
 const float WINDSPEED_PERIOD = 2.401;   //sample time for wind speed measurement
-const float BATTERY_CONV = 0.00172131;  //analog to volt constant
+const float BATTERY_CONV = 0.00172131147541;  //analog to volt constant
 
 //global variables
 unsigned long counter = 0;
@@ -43,7 +43,7 @@ float windDir = -1;
 volatile long lastWindIRQ = 0;
 volatile byte windClicks = 0;
 float windSpeed = -1.0;
-bool bmeInitializationStatus = false;
+bool BMEInitializationStatus = false;
 bool UVInitializationStatus = false;
 
 
@@ -77,7 +77,7 @@ void lora_connection(){
   }
 }
 
-boolean bmeInitialization(){
+boolean BMEInitialization(){
   //setup BME280
   if(debug){
     Serial.print("INFO: BME Initilizing.");
@@ -102,7 +102,7 @@ boolean bmeInitialization(){
 }
 
 //function to read BME280 data
-void bmeReading(){
+void BMEReading(){
   //BME280 read Temperature
   BMETemperature = bme.readTemperature();
   if(debug){
@@ -197,7 +197,7 @@ void batteryLevel(){
   //        27kohm
   //          |
   //        Batt-
-  volt = batteryRaw * BATTERY_CONV / 1000;
+  volt = batteryRaw * BATTERY_CONV;
   if(debug){
     Serial.print(F("INFO: Battery Voltage: "));
     Serial.print(volt);
@@ -333,7 +333,7 @@ void setup() {
 
   lora_connection();
 
-  bmeInitializationStatus = bmeInitialization();
+  BMEInitializationStatus = BMEInitialization();
   UVInitializationStatus = UVInitialization();
 
 }
@@ -342,8 +342,8 @@ void loop() {
   unsigned int start = millis();
 
   //read BME280 data
-  if (bmeInitializationStatus){
-    bmeReading();
+  if (BMEInitializationStatus){
+    BMEReading();
   }
   
   //read battery voltage
