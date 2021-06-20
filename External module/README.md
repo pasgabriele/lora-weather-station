@@ -69,9 +69,9 @@ The code has been written using [Visul Studio Code](https://code.visualstudio.co
 
 ### Description
 
-All weather data read from sensors are processed by the External module, inserted in json string (for example `{outTemp:27.23,outHumidity:62.05,pressure:1013.25}`) and send, via LoRa wireless communication (433Mhz), to the Gateway.
+All weather data read from sensors are processed by the External module, inserted in json string (for example `{"id":3908,"supplyVoltage":3.747275,"outTemp":26.61,"outHumidity":49.11914,"pressure":935.8403,"windSpeed":0,"windDir":157.5,"UV":0}`) and send, via LoRa wireless communication (433Mhz), to the Gateway.
 
-The External module is fully self powered via 2 li-ion 18650 batteries and a solar panel charger. To optimize the batteries life, the External module has been projected to work as following:
+The External module is fully self powered via 2 li-ion 18650 batteries and a solar panel charger. The External module has been projected to work as following:
 
 - reads sensors values
 - composes the json string
@@ -82,20 +82,20 @@ and repeat the cicle approximately every 2.8 seconds.
 No Deep Sleep mode has been enable. In this way the weather data is captured in real time. This is important specially for wind speed and direction and rain accumulation.
 
 ### Temperature, humidity and pressure measurement
-The temperature, humidity and pressure measurement is provided by BME280 sensor. The function used in the firmware is BMEReading: this function tries to begin the BME sensor and if done it reads the data and inserts them in the BMETemperature, BMEHumidity and BMEPressure variables.
+The temperature, humidity and pressure measurement is provided by BME280 sensor. In the setup function the BME280 sensor is initilizated using the function BMEInitialization(). If the initialization is ok then, in the loop, the BMEReading() reads the temperature, humidity and pressure data and inserts them in the BMETemperature, BMEHumidity and BMEPressure variables. These will used to compose the json string.
 
 ### UV index measurement
-The UV index measurement is provided by VEML6075 sensor. The function used in the firmware is UVReading: this function tries to begin the VEML6075 sensor and if done it reads the data and inserts them in the UVIndex variable.
+The UV index measurement is provided by VEML6075 sensor. In the setup function the VEML6075 sensor is initilizated using the function UVInitialization(). If the initialization is ok then, in the loop, the UVReading() reads the UV index data and inserts it in the UVIndex variables. This will used to compose the json string.
 
 ### Wind speed measurement
 The wind speed measurement is derived by: (http://cactus.io/hookups/weather/anemometer/davis/hookup-arduino-to-davis-anemometer-wind-speed).
 
 It works as following:
 
-As describe in Spurkfun Weather Meter Kit datasheet, a wind speed of 2.401km/h causes the switch to close once per second, then the wind speed measurement can be executed counting the numbers of switch closed in a sample time. Therefore, when the External module executes the windReading function, it actives the pulses measurement (activating the interrupt) for 2,401 seconds (sample window for wind measurement), then stops the pulses measurement (disabling the interrupt) and calculates the wind speed in this 2,401 seconds window.
+As describe in Spurkfun Weather Meter Kit datasheet, a wind speed of 2.401km/h causes the switch to close once per second, then the wind speed measurement can be executed counting the numbers of switch closed in a sample time. Therefore, when the External module executes the windSpeedReading() function, it actives the pulses measurement (activating the interrupt) for 2,401 seconds (sample window for wind measurement), then stops the pulses measurement (disabling the interrupt) and calculates the wind speed in this 2,401 seconds window.
 
 ### Wind direction measurement
-The wind direction measurement is provided by windDirectionReading function inserted in windReading function. It reads the analog value from the PIN connected to the Spurkfun Weather Meter Kit Wind Vane component (using the 10k ohm resistor) and converts this raw value in voltage measurement. As describe in the datasheet, a specified voltage value maps a specific wind direction. Therefore the windDirectionReading function maps the voltage to wind direction and return this in degrees value. The analog value is a AVG on 50 consecutive reads. windDirectionReading function is called every wakeup.
+The wind direction measurement is provided by windDirectionReading() function. It reads the analog value from the PIN connected to the Spurkfun Weather Meter Kit Wind Vane component (using the 10k ohm resistor) and converts this raw value wind direction degree. As describe in the datasheet, a specified voltage value maps a specific wind direction. Therefore the windDirectionReading() function maps the analog raw value to wind direction and return this in degrees value. The analog value is a AVG on 50 consecutive reads.
 
 ### Rain measurement ![](https://img.shields.io/badge/status-todo-red)
 The rain measurement is provided by rainReading function. As describe in Spurkfun Weather Meter Kit datasheet, every 0.2794mm of rain causes the switch to close once, then the rain measurement can be executed counting the numbers of switch closed. Due to the External Module go to sleep for a defined time, is necessary to count the rain switch close during the normal mode and during the sleep mode too. To do this, there are 2 different counters:
@@ -109,9 +109,11 @@ During the normal mode, at startup time, a interrupt function to monitor the rai
 Instead, during the sleep mode, the External module monitors the rain GPIO and if it detects a rain switch close, wake-up the External module, increases the rainCounterDuringSleep counter and executes the normal mode above described.
 
 ### Battery voltage measurement
-The battery voltage measurement is provided by batteryLevel function. It reads the analog value from the PIN connected to battery and converts this raw value in voltage measurement. The analog value is a AVG on 50 consecutive reads.
+The battery voltage measurement is provided by batteryLevel() function. It reads the analog value from the PIN connected to battery and converts this raw value in voltage measurement. The analog value is a AVG on 50 consecutive reads.
 
 The function used for voltage measurament is the following: 
+
+$$battery voltage=c*analog value$$
 
 voltage = c * analog value
 
