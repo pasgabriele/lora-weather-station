@@ -51,7 +51,7 @@ The External module is composed by following hardware components:
 ### Wiring schema and PCB
 In the following the wiring schema for External module:
 
-![external module schema](https://github.com/pasgabriele/lora-weather-station/blob/main/External%20module/schematic-external-module.svg)
+![external module schema](https://github.com/pasgabriele/lora-weather-station/blob/main/External%20module/Schematic_external-module-wiring_2021-06-20.svg)
 
 and the PCB created to merge all External module components:
 
