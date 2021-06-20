@@ -40,8 +40,8 @@ The External module is composed by following hardware components:
 |1|[Phoenix 2P connector](https://www.aliexpress.com/item/32819689207.html)|Phoenix 2P connector 5mm pitch for PCB||
 |1|[Switch 2 position](https://www.aliexpress.com/item/32799198160.html)|Toggle switch 2 position 2.54mm pitch||
 |1|[PCB 2 batteries case](https://www.aliexpress.com/item/4001009601436.html)|2 batteries case for PCB||
-|3|[10k resistor](https://www.aliexpress.com/item/4000695402017.html)|10k ohm resistor||
-|2|[27k resistor](https://www.aliexpress.com/item/4000695402017.html)|27k ohm resistor||
+|3|[10k resistor](https://www.aliexpress.com/item/1005001649069962.html)|10k ohm resistor||
+|2|[27k resistor](https://www.aliexpress.com/item/1005001649069962.html)|27k ohm resistor||
 |6|[XH2.54 4P connector](https://www.aliexpress.com/item/32959016223.html)|XH2.54mm 4P connector ||
 ||[Male and female 2.54mm breakable pin header](https://www.aliexpress.com/item/32724478308.html)|Single row male and female 2.54mm breakable pin header PCB JST connector strip||
 |1|[External module PCB](https://github.com/pasgabriele/lora-weather-station/tree/main/External%20module/pcb-external-module)|PCB for the external module||
