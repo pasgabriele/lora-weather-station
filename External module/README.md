@@ -53,7 +53,7 @@ In the following the wiring schema for External module:
 
 In the following paragraph are detailed and explained all single part of External module.
 
-#### Power system ![](https://img.shields.io/badge/status-tocomplete-yellow)
+#### Power system ![](https://img.shields.io/badge/status-todo-red)
 
 **Note 1:** The Lilygo SX1278 LoRa ESP32 is powered by the TP4056 output via SH1.25 battery interface.
 
