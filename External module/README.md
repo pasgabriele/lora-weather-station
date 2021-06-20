@@ -133,11 +133,11 @@ where *c* is the constant *0,00173* calculated in the following way:
 
 Using R1 and R2 resistors, when the battery is totally full, the maximun input voltage for GPIO33 is:
 
-<img src="https://render.githubusercontent.com/render/math?math=maxVoltOnGPIO32=(maxBatteryVoltage*R2)/(R1+R2)">
+<img src="https://render.githubusercontent.com/render/math?math=maxVoltOnGPIO32=(maxBatteryVoltage*R2)/(R1%2BR2)">
 
 then 
 
-<img src="https://render.githubusercontent.com/render/math?math=maxVoltOnGPIO32=(4,2*27000)/(27000+27000)=113400/54000=2,1V">
+<img src="https://render.githubusercontent.com/render/math?math=maxVoltOnGPIO32=(4,2*27000)/(27000%2B27000)=113400/54000=2,1V">
 
 to determinate the *c* constant, I read the analog value from GPIO32 when the battery voltage is 4,2. This analog value was 2427, then I calculated the *c* contanst as following:
 
