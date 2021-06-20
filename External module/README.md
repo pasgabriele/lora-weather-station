@@ -97,7 +97,7 @@ As describe in Spurkfun Weather Meter Kit datasheet, a wind speed of 2.401km/h c
 ### Wind direction measurement
 The wind direction measurement is provided by windDirectionReading function inserted in windReading function. It reads the analog value from the PIN connected to the Spurkfun Weather Meter Kit Wind Vane component (using the 10k ohm resistor) and converts this raw value in voltage measurement. As describe in the datasheet, a specified voltage value maps a specific wind direction. Therefore the windDirectionReading function maps the voltage to wind direction and return this in degrees value. The analog value is a AVG on 50 consecutive reads. windDirectionReading function is called every wakeup.
 
-### Rain measurement
+### Rain measurement ![](https://img.shields.io/badge/status-todo-red)
 The rain measurement is provided by rainReading function. As describe in Spurkfun Weather Meter Kit datasheet, every 0.2794mm of rain causes the switch to close once, then the rain measurement can be executed counting the numbers of switch closed. Due to the External Module go to sleep for a defined time, is necessary to count the rain switch close during the normal mode and during the sleep mode too. To do this, there are 2 different counters:
  - rainCounterDuringSleep
  - rainCounterDuringActive 
@@ -109,7 +109,25 @@ During the normal mode, at startup time, a interrupt function to monitor the rai
 Instead, during the sleep mode, the External module monitors the rain GPIO and if it detects a rain switch close, wake-up the External module, increases the rainCounterDuringSleep counter and executes the normal mode above described.
 
 ### Battery voltage measurement
-The battery voltage measurement is provided by batteryLevel function. It reads the analog value from the PIN connected to battery and converts this raw value in voltage measurement. The analog value is a AVG on 50 consecutive reads. batteryLevel function is called every wakeup.
+The battery voltage measurement is provided by batteryLevel function. It reads the analog value from the PIN connected to battery and converts this raw value in voltage measurement. The analog value is a AVG on 50 consecutive reads.
+
+The function used for voltage measurament is the following: 
+
+voltage = c * analog value
+
+where c is the constant 0,00172131 calculate in the following way:
+
+Using R1 and R2 resistors the maximun input voltage for GPIO33 when the battery is totally full is:
+
+Volt on GPIO32 = (Max battery volt * R2)/(R1+R2)
+
+then 
+
+Volt on GPIO32 = (4,2V * 27k)/(27k+27k) = 113400/54000 = 2,1V
+
+to determinate the c constant I read the analog value from GPIO32 when the battery voltage is 4,2. This analog value was 2440, then I calculated the c contanst in as following:
+
+2440/4,2 = 
 
 ### Json string creation and LoRa sending
 When all weather data have been read, these are inserted in a json string using the composeJson function, then the string is sent to the Gateway using LoRaSend function via LoRa connection. After sending the string, the External module go in Deep Sleep for the configured time.
