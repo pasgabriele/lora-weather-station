@@ -143,7 +143,7 @@ to determinate the *c* constant, I read the analog value from GPIO32 when the ba
 
 <img src="https://render.githubusercontent.com/render/math?math=c=4,2/2427=0,00173">
 
-This voltage measurement is stored in the volt variable and it will used to compose the json string.
+The voltage measurement is stored in the volt variable and it will used to compose the json string.
 
 ### Json string creation and LoRa sending
 When all weather data have been read, these are inserted in a json string using the composeJson() function, then the string is sent to the Gateway using LoRaSend(String packet) function via LoRa connection. After sending the string, the External module restart the cicle.
