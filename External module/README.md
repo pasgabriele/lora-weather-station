@@ -14,14 +14,12 @@ Below a list of External module main features:
   - Humidity ![](https://img.shields.io/badge/status-ok-green)
   - Pressure ![](https://img.shields.io/badge/status-ok-green)
   - Wind speed ![](https://img.shields.io/badge/status-ok-green)
-  - Wind gust ![](https://img.shields.io/badge/status-ok-green)
   - Wind direction ![](https://img.shields.io/badge/status-ok-green)
   - UV index ![](https://img.shields.io/badge/status-ok-green)
-  - Rain accumulation ![](https://img.shields.io/badge/status-ok-green)
-- Weather data reading every 5 minutes
+  - Rain accumulation ![](https://img.shields.io/badge/status-todo-red)
+- Weather data reading every 2,8 seconds
 - Weather data encapsulation in json string
 - Long distance and low energy LoRa communication with the Gateway
-- Deep sleep mode
 - Batteries powered
 - Batteries voltage monitoring
 - Solar charging
