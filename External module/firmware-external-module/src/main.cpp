@@ -28,7 +28,7 @@ int batteryRaw = 0;
 
 const float WINDSPEED_SCALE = 2.401;    //anemometer coefficient (at 2.401 km/h the anemometer pulse once per second)
 const float WINDSPEED_PERIOD = 2.401;   //sample time for wind speed measurement
-const float BATTERY_CONV = 0.00172131147541;  //analog to volt constant
+const float BATTERY_CONV = 0.00173;  //analog to volt constant
 
 //global variables
 unsigned long counter = 0;
