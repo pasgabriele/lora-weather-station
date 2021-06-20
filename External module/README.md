@@ -113,6 +113,7 @@ The battery voltage measurement is provided by batteryLevel() function. It reads
 
 The function used for voltage measurament is the following: 
 
+<img src="https://render.githubusercontent.com/render/math?math=battery voltage = c * analog value">
 *battery voltage = c * analog value*
 
 voltage = c * analog value
