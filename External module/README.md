@@ -41,7 +41,7 @@ The External module is composed by following hardware components:
 |1|[Switch 2 position](https://www.aliexpress.com/item/32799198160.html)|Toggle switch 2 position 2.54mm pitch||
 |1|[PCB 2 batteries case](https://www.aliexpress.com/item/4001009601436.html)|2 batteries case for PCB||
 |3|[10k resistor](https://www.aliexpress.com/item/1005001649069962.html)|10k ohm resistor||
-|2|[27k resistor](https://www.aliexpress.com/item/1005001649069962.html)|27k ohm resistor||
+|2|[27k resistor](https://www.aliexpress.com/item/1005001649069962.html)|27k ohm resistor||47k ohm resistor
 |7|[XH2.54 4P connector](https://www.aliexpress.com/item/32959016223.html)|XH2.54mm 4P connector ||
 ||[Male and female 2.54mm breakable pin header](https://www.aliexpress.com/item/32724478308.html)|Single row male and female 2.54mm breakable pin header PCB JST connector strip||
 |1|[External module PCB](https://github.com/pasgabriele/lora-weather-station/tree/main/External%20module/pcb-external-module)|PCB for the external module||
@@ -61,6 +61,8 @@ and the PCB created to merge all External module components:
 
 **Note 2:** ![](https://img.shields.io/badge/status-toverify-yellow) All weather sensors are powered by the Lilygo SX1278 LoRa ESP32 3V3 and GND pins.
 
+**Note 2:** ![](https://img.shields.io/badge/status-toverify-yellow) Under 3,65V battery voltage, the analog pin values (for wind direction and battery measurement) are no long valid.
+
 ## Software
 The External module source code is uploaded in [firmware-external-module](https://github.com/pasgabriele/lora-weather-station/tree/main/External%20module/firmware-external-module) folder.
 The code has been written using [Visul Studio Code](https://code.visualstudio.com/) and the [PlatformIO plugin](https://platformio.org/), therefore you can clone this repository directly on the above plaftorm.
@@ -75,20 +77,22 @@ The External module is fully self powered via 2 li-ion 18650 batteries and a sol
 - composes the json string
 - sends the json string to Gateway
 
-then goes in Deep Sleep mode for a configurable time (default is 5 minutes). Of course, the batteries saving necessity affects the weather data update frequency. With 5 minutes of Deep Sleep mode you do not have a real time weather situation. This is insignificant for some weather data (for example temperature, humidity and pressure) because this measures don't have great variations in 5 minutes, but it could be significant for other weather data (for example wind speed and direction). For this reason you can set the Deep Sleep time based on your necessities.
+and repeat the cicle approximately every 2.8 seconds.
+
+No Deep Sleep mode has been enable. In this way the weather data is captured in real time. This is important specially for wind speed and direction and rain accumulation.
 
 ### Temperature, humidity and pressure measurement
-The temperature, humidity and pressure measurement is provided by BME280 sensor. The function used in the firmware is BMEReading: this function tries to begin the BME sensor and if done it reads the data and inserts them in the BMETemperature, BMEHumidity and BMEPressure variables. BMEReading function is called every wakeup.
+The temperature, humidity and pressure measurement is provided by BME280 sensor. The function used in the firmware is BMEReading: this function tries to begin the BME sensor and if done it reads the data and inserts them in the BMETemperature, BMEHumidity and BMEPressure variables.
 
 ### UV index measurement
-The UV index measurement is provided by VEML6075 sensor. The function used in the firmware is UVReading: this function tries to begin the VEML6075 sensor and if done it reads the data and inserts them in the UVIndex variable. UVReading function is called every wakeup.
+The UV index measurement is provided by VEML6075 sensor. The function used in the firmware is UVReading: this function tries to begin the VEML6075 sensor and if done it reads the data and inserts them in the UVIndex variable.
 
 ### Wind speed measurement
-The wind speed measurement is derived by: (http://cactus.io/hookups/weather/anemometer/davis/hookup-arduino-to-davis-anemometer-wind-speed), (https://github.com/rpurser47/weatherstation) and (https://github.com/switchdoclabs/SDL_Weather_80422).
+The wind speed measurement is derived by: (http://cactus.io/hookups/weather/anemometer/davis/hookup-arduino-to-davis-anemometer-wind-speed).
 
 It works as following:
 
-As describe in Spurkfun Weather Meter Kit datasheet, a wind speed of 2.401km/h causes the switch to close once per second, then the wind speed measurement can be executed counting the numbers of switch closed in a sample time. Therefore, when the External module executes the windReading function, it actives the pulses measurement (activating the interrupt) for 5 seconds (sample window for wind measurement), then stops the pulses measurement (disabling the interrupt) and calculates the wind speed and gust in this 5 seconds window. windReading function is called every wakeup.
+As describe in Spurkfun Weather Meter Kit datasheet, a wind speed of 2.401km/h causes the switch to close once per second, then the wind speed measurement can be executed counting the numbers of switch closed in a sample time. Therefore, when the External module executes the windReading function, it actives the pulses measurement (activating the interrupt) for 2,401 seconds (sample window for wind measurement), then stops the pulses measurement (disabling the interrupt) and calculates the wind speed in this 2,401 seconds window.
 
 ### Wind direction measurement
 The wind direction measurement is provided by windDirectionReading function inserted in windReading function. It reads the analog value from the PIN connected to the Spurkfun Weather Meter Kit Wind Vane component (using the 10k ohm resistor) and converts this raw value in voltage measurement. As describe in the datasheet, a specified voltage value maps a specific wind direction. Therefore the windDirectionReading function maps the voltage to wind direction and return this in degrees value. The analog value is a AVG on 50 consecutive reads. windDirectionReading function is called every wakeup.
