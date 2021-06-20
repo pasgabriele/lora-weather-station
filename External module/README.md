@@ -51,7 +51,7 @@ In the following the wiring schema for External module:
 
 ![external module schema](https://github.com/pasgabriele/lora-weather-station/blob/main/External%20module/Schematic_external-module-wiring_2021-06-20.svg)
 
-In the following paragrapher are detailed the Power system, the battery voltage monitoring system and all sensors wiring.
+In the following paragraph are detailed and explained all single part of External module.
 
 #### Power system ![](https://img.shields.io/badge/status-todo-red)
 
