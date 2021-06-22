@@ -54,7 +54,7 @@ In the following the wiring schema for External module:
 In the following paragraph are detailed and explained all single part of External module.
 
 #### Power system ![](https://img.shields.io/badge/status-todo-red)
-The External Module is powered by 2 18650 3.7V 3400mAh Li-Ion batteries in parallel (6400mAh) recharged by a 6V 750ma solar panel via the TP4056 module. The TP4056 module accepts 4-8V input voltage, therefore the solar panel can be directly connected to it via IN+ and IN- pins. The TP4056 recharges the 2 batteries with a maximum of 1000mA via the B+ and B+ pins. At the same time, the batteries, via the OUT+ and OUT- pins of TP4056, powered the Lilygo ESP32 microcontroller using the dedicated onboard SH1.25-2 battery interface. Using this dedicated interface no more external components are necessary to voltage regulation.
+The External Module is powered by 2 18650 3.7V 3400mAh Li-Ion batteries in parallel (6400mAh) recharged by a 6V 750ma solar panel via the TP4056 module. The TP4056 module accepts between 4 and 8 input voltage, therefore the solar panel can be directly connected to it via IN+ and IN- pins. The TP4056 recharges the 2 batteries with a maximum of 1000mA via the B+ and B+ pins. At the same time, the batteries, via the OUT+ and OUT- pins of TP4056, power the Lilygo ESP32 microcontroller using the dedicated onboard SH1.25-2 battery interface. Using this dedicated interface no others external components are necessary to voltage regulation.
 
 **Note 1:** The Lilygo SX1278 LoRa ESP32 is powered by the TP4056 output via SH1.25 battery interface.
 
