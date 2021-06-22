@@ -82,39 +82,15 @@ Using an analog pin (GPIO33) of microcontroller, it possibles to check the volta
 
 ![battery monitor](https://raw.githubusercontent.com/pasgabriele/lora-weather-station/main/External%20module/Schematic_battery%20monitor_2021-06-22.svg)
 
-Using this voltage divider we have: 
+Using this voltage divider we have VoltOnGPIO33 = (maxBatteryVoltage * R2) / (R1 + R2) = (4,2V * 27k) / (54k) = 2,1V
 
-<img src="https://render.githubusercontent.com/render/math?math=VoltOnGPIO33=(maxBatteryVoltage*R2)/(R1%2BR2)=(4,2V*27k)/(54k)=2,1V">
+With this, we can measure the voltage applied to GPIO33 and then calculate the battery level. As already mentioned the voltages on GPIO33 shifts between 0 and 3,3 volts then between 0 and 4095 values (the ADC pin has 12bit resolution), so we can establish a constant to calculate the voltage applied to the pin based on its value. This constant, theoretically, will be c = 3300 / 4095 = 0,8058608059. As we are applying a voltage divider and the voltage applied to the pin is half the voltage of the battery, our constant should be c = 0,8058608059 * 2 = 1,6117216118. This means, for each unit in ADC pin we have 1,6117216118 mVolts applied to it.
 
-With this, we can measure the voltage applied to GPIO33 and then calculate the battery level. As already mentioned the voltages on GPIO33 shifts between 0 and 3,3 volts then between 0 and 4095 values (the ADC pin has 12bit resolution), so we can establish a constant to calculate the voltage applied to the pin based on its value. This constant, theoretically, will be:
-
-<img src="https://render.githubusercontent.com/render/math?math=c=3300/4095=0,8058608059">
-
-As we are applying a voltage divider and the voltage applied to the pin is half the voltage of the battery, our constant should be:
-
-<img src="https://render.githubusercontent.com/render/math?math=c=0,8058608059*2=1,6117216118">
-
-This means, for each unit in ADC pin we have 1,6117216118 mVolts applied to it.
-
-For example, if the read value on ADC pin is 2320, then the voltage applied to the pin should be:
-
-<img src="https://render.githubusercontent.com/render/math?math=V_batt=2320*1,6117216118=3739,194139376=3,74V">
+For example, if the read value on ADC pin is 2320, then the voltage applied to the pin should be V_batt = 2320 * 1,6117216118 = 3739,194139376 = 3,74V
 
 
 ADC pins are not that precise, so the value of our constant should be adjusted to a level we consider it is valid for our components. In my case, after doing some testings I have concluded that the best value for the conversion factor is 1.7.
 
-
-
-
-
-
-
-
-An important aspect of the External module is the tracking of battery voltage level. To do this, the following circuit has been provided:
-
-![battery monitor](https://raw.githubusercontent.com/pasgabriele/lora-weather-station/main/External%20module/Schematic_battery%20monitor_2021-06-22.svg)
-
-The voltage output from the battery shift from 4,2V (when it is full) and 2,4 (when it is completely discharged). 
 
 see: https://www.pangodream.es/esp32-getting-battery-charging-level and https://www.settorezero.com/wordpress/arduino-nano-33-iot-wifi-ble-e-imu/
 
