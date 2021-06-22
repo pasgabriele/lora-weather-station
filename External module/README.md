@@ -62,6 +62,8 @@ All weather sensors are powered directly by microcontroller 3V3 and GND pins wit
 Measuring the energy consumption of the External module using an amperometer, it has been registered that it requires about 20mA during the weather reading and peaks of 130mA during the LoRa packets trasmissions.
 Using this values, we can calculate the External module lifetime witout charging system enabled:
 
+
+|--|--|
 |Weather data reading|2500ms|
 |LoRa trasmission|230ms|
 |Weather data reading + LoRa trasmission (cicle)|about 2,8s|
