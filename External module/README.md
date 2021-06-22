@@ -78,6 +78,10 @@ Based on these considerations it can be said that the External module, in the ab
 
 #### Battery voltage monitoring system ![](https://img.shields.io/badge/status-todo-red)
 
+To keep track of the remaining voltage battery level of the External module, the following circuit has been provided:
+
+![battery monitor]()
+
 see: https://www.pangodream.es/esp32-getting-battery-charging-level and https://www.settorezero.com/wordpress/arduino-nano-33-iot-wifi-ble-e-imu/
 
 #### i2c communication ![](https://img.shields.io/badge/status-todo-red)
