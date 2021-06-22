@@ -80,7 +80,7 @@ Based on these considerations it can be said that the External module, in the ab
 
 To keep track of the remaining voltage battery level of the External module, the following circuit has been provided:
 
-![battery monitor]()
+![battery monitor](https://raw.githubusercontent.com/pasgabriele/lora-weather-station/main/External%20module/Schematic_battery%20monitor_2021-06-22.svg)
 
 see: https://www.pangodream.es/esp32-getting-battery-charging-level and https://www.settorezero.com/wordpress/arduino-nano-33-iot-wifi-ble-e-imu/
 
