@@ -78,9 +78,27 @@ Based on these considerations it can be said that the External module, in the ab
 
 #### Battery voltage monitoring system ![](https://img.shields.io/badge/status-todo-red)
 
-To keep track of the remaining voltage battery level of the External module, the following circuit has been provided:
+Using an analog pin (GPIO33) of microcontroller, it possibles to check the voltage of the battery, but all ADC pin exepct voltages between 0 and 3,3 volts instead the battery output voltage is 4,2 volts when it is totally charged. To solve this problem a voltage divider has been connected to the battery to divide the voltage by 2 and to have an maximun voltage of 2,1 volts when battery is totally charged. To do this, 2 27k ohm resistors have been inserted as reported in the following circuit:
 
 ![battery monitor](https://raw.githubusercontent.com/pasgabriele/lora-weather-station/main/External%20module/Schematic_battery%20monitor_2021-06-22.svg)
+
+Infact, 
+
+<img src="https://render.githubusercontent.com/render/math?math=VoltOnGPIO33=(maxBatteryVoltage*R2)/(R1%2BR2)=(4,2*27k)/(54k)=2,1V">
+
+
+With this, we can measure the voltage applied in GPIO34 (or any other ADC pins of our ESP32) and then, based on a conversion table, calculate the charge level of the battery.
+
+
+
+
+
+
+An important aspect of the External module is the tracking of battery voltage level. To do this, the following circuit has been provided:
+
+![battery monitor](https://raw.githubusercontent.com/pasgabriele/lora-weather-station/main/External%20module/Schematic_battery%20monitor_2021-06-22.svg)
+
+The voltage output from the battery shift from 4,2V (when it is full) and 2,4 (when it is completely discharged). 
 
 see: https://www.pangodream.es/esp32-getting-battery-charging-level and https://www.settorezero.com/wordpress/arduino-nano-33-iot-wifi-ble-e-imu/
 
