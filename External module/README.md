@@ -63,6 +63,8 @@ In the following paragraph are detailed and explained all single part of Externa
 
 #### Battery voltage monitoring system ![](https://img.shields.io/badge/status-todo-red)
 
+see: https://www.pangodream.es/esp32-getting-battery-charging-level and https://www.settorezero.com/wordpress/arduino-nano-33-iot-wifi-ble-e-imu/
+
 #### i2c communication ![](https://img.shields.io/badge/status-todo-red)
 
 #### Anemometer ![](https://img.shields.io/badge/status-todo-red)
