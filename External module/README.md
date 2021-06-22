@@ -53,12 +53,26 @@ In the following the wiring schema for External module:
 
 In the following paragraph are detailed and explained all single part of External module.
 
-#### Power system ![](https://img.shields.io/badge/status-todo-red)
+#### Power system
 The External Module is powered by 2 18650 3.7V 3400mAh Li-Ion batteries in parallel (6400mAh) recharged by a 6V 750ma solar panel via the TP4056 module. The TP4056 module accepts between 4 and 8 input voltage, therefore the solar panel can be directly connected to it via IN+ and IN- pins. The TP4056 recharges the 2 batteries with a maximum of 1000mA via the B+ and B+ pins. At the same time, the batteries, via the OUT+ and OUT- pins of TP4056, power the Lilygo ESP32 microcontroller using the dedicated onboard SH1.25-2 battery interface. Using this dedicated interface no others external components are necessary to voltage regulation. A 2 position switch is inserted between the batteries and the microcontroller so that all sensors and the microcontroller can be turned off. Note that the batteries recharge circuit can never be turned off because it's before the switch.
 
 All weather sensors are powered directly by microcontroller 3V3 and GND pins without using external voltage regulator due to all sensors required 3,3V to operate.
 
-**Note 3:** Below 3,65V battery voltage, the analog pin values (used for wind direction and battery measurement) are no long reliable.
+#### External module lifetime without recharge system enabled
+Measuring the energy consumption of the External module using an amperometer, it has been registered that it requires about 20mA during the weather reading and peaks of 130mA during the LoRa packets trasmissions.
+Using this values, we can calculate the External module lifetime witout charging system enabled:
+
+|Weather data reading|2500ms|
+|LoRa trasmission|230ms|
+|Weather data reading + LoRa trasmission (cicle)|about 2,8s|
+|Number of cicles per hour|3600/2,8s = 1286 cicles|
+|Current consumption per hour for weather data reading|1286*20mA*2,5/3600 = 17,87mA|
+|Current consumption per hour for LoRa trasmission|1286*130mA*0,23/3600 = 18,90mA|
+|Battery lifetime in hours|6800/(17,87+18,90) = 6800/36,77 = 184,92 hours|
+|Battery lifetime in days|184,92/24 = 7,7 days|
+
+These calculations are theoretical only. There are other factors that influence the results (real battery capacity, weather conditions, etc.). Moreover, it's very important declare that when the batteries drop below 3.65V, the External module works badly and therefore the weather data readings are no longer reliable.
+Based on these considerations it can be said that the External module, in the absence of a recharging system, is able to live for 3/4 days.
 
 #### Battery voltage monitoring system ![](https://img.shields.io/badge/status-todo-red)
 
