@@ -84,15 +84,13 @@ Using an analog pin (GPIO33) of microcontroller, it possibles to check the volta
 
 Using this voltage divider we have VoltOnGPIO33 = (maxBatteryVoltage * R2) / (R1 + R2) = (4,2V * 27k) / (54k) = 2,1V
 
-With this, we can measure the voltage applied to GPIO33 and then calculate the battery level. As already mentioned the voltages on GPIO33 shifts between 0 and 3,3 volts then between 0 and 4095 values (the ADC pin has 12bit resolution), so we can establish a constant to calculate the voltage applied to the pin based on its value. This constant, theoretically, will be c = 3300 / 4095 = 0,8058608059. As we are applying a voltage divider and the voltage applied to the pin is half the voltage of the battery, our constant should be c = 0,8058608059 * 2 = 1,6117216118. This means, for each unit in ADC pin we have 1,6117216118 mVolts applied to it.
+With this, we can measure the voltage applied to GPIO33 and then calculate the battery level. As already mentioned the voltages on GPIO33 shifts between 0 and 3,3 volts then between 0 and 4095 values (the ADC pin has 12bit resolution), so we can establish a constant to calculate the voltage applied to the pin based on its value. This constant, theoretically, will be c = 3,3 / 4095 = 0,000805860805861. As we are applying a voltage divider and the voltage applied to the pin is half the voltage of the battery, our constant should be c = 0,000805860805861 * 2 = 0,001611721611722. This means, for each unit in ADC pin we have 0,001611721611722 Volts applied to it.
 
-For example, if the read value on ADC pin is 2320, then the voltage applied to the pin should be V_batt = 2320 * 1,6117216118 = 3739,194139376 = 3,74V
+For example, if the read value on ADC pin is 2320, then the voltage applied to the pin should be VBatt = 2320 * 0,001611721611722 = 3,74V
 
+ADC pins are not that precise, so the value of our constant should be adjusted to a level we consider it is valid for our components. In my case, after doing some testings I have concluded that the best value for the conversion factor is **0.00173**.
 
-ADC pins are not that precise, so the value of our constant should be adjusted to a level we consider it is valid for our components. In my case, after doing some testings I have concluded that the best value for the conversion factor is 1.7.
-
-
-see: https://www.pangodream.es/esp32-getting-battery-charging-level and https://www.settorezero.com/wordpress/arduino-nano-33-iot-wifi-ble-e-imu/
+sources: https://www.pangodream.es/esp32-getting-battery-charging-level and https://www.settorezero.com/wordpress/arduino-nano-33-iot-wifi-ble-e-imu/
 
 #### i2c communication ![](https://img.shields.io/badge/status-todo-red)
 
