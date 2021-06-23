@@ -4,6 +4,7 @@
 ## TODO ![](https://img.shields.io/badge/status-todo-red)
 
 - Rainfall function
+- Try to change LoRa signalBandwidth and txPower to reduce trasmission power consumption
 
 ## Features
 Below a list of External module main features:
