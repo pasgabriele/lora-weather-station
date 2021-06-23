@@ -85,13 +85,7 @@ Using an analog pin (GPIO33) of microcontroller, it possibles to check the volta
 
 Using this voltage divider we have VoltOnGPIO33 = (maxBatteryVoltage * R2) / (R1 + R2) = (4,2V * 27k) / (54k) = 2,1V
 
-With this, we can measure the voltage applied to GPIO33 and then calculate the battery level. As already mentioned the voltages on GPIO33 shifts between 0 and 3,3 volts then between 0 and 4095 values (the ADC pin has 12bit resolution), so we can establish a constant to calculate the voltage applied to the pin based on its value. This constant, theoretically, will be c = 3,3 / 4095 = 0,000805860805861. As we are applying a voltage divider and the voltage applied to the pin is half the voltage of the battery, our constant should be c = 0,000805860805861 * 2 = 0,001611721611722. This means, for each unit in ADC pin we have 0,001611721611722 Volts applied to it.
-
-For example, if the read value on ADC pin is 2320, then the voltage applied to the pin should be VBatt = 2320 * 0,001611721611722 = 3,74V
-
-ADC pins are not that precise, so the value of our constant should be adjusted to a level we consider it is valid for our components. In my case, after doing some testings I have concluded that the best value for the conversion factor is **0.00173**.
-
-sources: https://www.pangodream.es/esp32-getting-battery-charging-level and https://www.settorezero.com/wordpress/arduino-nano-33-iot-wifi-ble-e-imu/
+With this, we can measure the voltage applied to GPIO33 and then calculate the battery level (see Battery voltage measurement section for software details).
 
 ## i2c communication
 The i2c channel is used to permit communication between the microcontroller and the UV (VEML6075) and temperature, humidity and pressure sensors (BME280). This bus can be used for future purpose too, due to on PCB there are other 5 i2c sockets.
@@ -101,7 +95,7 @@ The cup-type anemometer measures wind speed by closing a contact as a magnet mov
 
 ![anemometer wiring](https://raw.githubusercontent.com/pasgabriele/lora-weather-station/main/External%20module/Schematic_anemometer_2021-06-23.svg)
 
-The Anemometer is connected to the microcontroller GPIO23 and GND. After that, all we need to do then is to monitor for button presses which is pretty straightforward. We can use the pin interrupts method to monitor the button press (tips). When the reed switch closes the circuit (pressing the button), it triggers a software event (see Wind speed measurement section).
+The Anemometer is connected to the microcontroller GPIO23 and GND. After that, all we need to do then is to monitor for button presses which is pretty straightforward. We can use the pin interrupts method to monitor the button press (tips). When the reed switch closes the circuit (pressing the button), it triggers a software event (see Wind speed measurement section for software details).
 
 ## Wind vane ![](https://img.shields.io/badge/status-todo-red)
 
@@ -157,6 +151,15 @@ The wind direction measurement is provided by windDirectionReading() function. I
 ~~Instead, during the sleep mode, the External module monitors the rain GPIO and if it detects a rain switch close, wake-up the External module, increases the rainCounterDuringSleep counter and executes the normal mode above described.~~
 
 ## Battery voltage measurement ![](https://img.shields.io/badge/status-todo-red)
+As already mentioned the voltages on GPIO33 shifts between 0 and 3,3 volts then between 0 and 4095 values (the ADC pin has 12bit resolution), so we can establish a constant to calculate the voltage applied to the pin based on its value. This constant, theoretically, will be c = 3,3 / 4095 = 0,000805860805861. As we are applying a voltage divider and the voltage applied to the pin is half the voltage of the battery, our constant should be c = 0,000805860805861 * 2 = 0,001611721611722. This means, for each unit in ADC pin we have 0,001611721611722 Volts applied to it.
+
+For example, if the read value on ADC pin is 2320, then the voltage applied to the pin should be VBatt = 2320 * 0,001611721611722 = 3,74V
+
+ADC pins are not that precise, so the value of our constant should be adjusted to a level we consider it is valid for our components. In my case, after doing some testings I have concluded that the best value for the conversion factor is **0.00173**.
+
+sources: https://www.pangodream.es/esp32-getting-battery-charging-level and https://www.settorezero.com/wordpress/arduino-nano-33-iot-wifi-ble-e-imu/
+
+
 The battery voltage measurement is provided by batteryLevel() function. It reads the analog value from the PIN connected to battery and converts this raw value in voltage measurement. The analog value is a AVG on 50 consecutive reads.
 
 The function used for voltage measurament is the following: 
