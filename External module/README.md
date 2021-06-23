@@ -59,7 +59,7 @@ The External Module is powered by 2 18650 3.7V 3400mAh Li-Ion batteries in paral
 All weather sensors are powered directly by microcontroller 3V3 and GND pins without using external voltage regulator due to all sensors required 3,3V to operate.
 
 #### External module lifetime without recharge system enabled
-Measuring the energy consumption of the External module using an amperometer, it has been registered that it requires about 20mA during the weather reading and peaks of 130mA during the LoRa packets trasmissions.
+Measuring the energy consumption of the External module using an amperometer, it has been registered that it requires about 20mA during the weather reading (setting the microcontroller CPU frequency to 26Mhz) and peaks of 130mA during the LoRa packets trasmissions.
 Using this values, we can calculate the External module lifetime witout charging system enabled:
 
 |Description|Measurement|
