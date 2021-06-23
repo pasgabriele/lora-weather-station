@@ -67,11 +67,11 @@ Using this values, we can calculate the External module lifetime witout charging
 |Weather data reading|2500ms|
 |LoRa trasmission|230ms|
 |Weather data reading + LoRa trasmission (cicle)|about 2,8s|
-|Number of cicles per hour|3600/2,8s = 1286 cicles|
-|Current consumption per hour for weather data reading|1286*20mA*2,5/3600 = 17,87mA|
-|Current consumption per hour for LoRa trasmission|1286*130mA*0,23/3600 = 18,90mA|
-|Battery lifetime in hours|6800/(17,87+18,90) = 6800/36,77 = 184,92 hours|
-|Battery lifetime in days|184,92/24 = 7,7 days|
+|Number of cicles per hour|3600 / 2,8s = 1286 cicles|
+|Current consumption per hour for weather data reading|1286 * 20mA * 2,5 / 3600 = 17,87mA|
+|Current consumption per hour for LoRa trasmission|1286 * 130mA * 0,23 / 3600 = 18,90mA|
+|Battery lifetime in hours|6800 / (17,87 + 18,90) = 6800 / 36,77 = 184,92 hours|
+|Battery lifetime in days|184,92 / 24 = 7,7 days|
 
 These calculations are theoretical only. There are other factors that influence the results (real battery capacity, weather conditions, etc.). Moreover, it's very important declare that when the batteries drop below 3.65V, the External module works badly and therefore the weather data readings are no longer reliable.
 Based on these considerations it can be said that the External module, in the absence of a recharging system, is able to live for 3/4 days.
