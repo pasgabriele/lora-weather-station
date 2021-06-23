@@ -151,7 +151,7 @@ The wind direction measurement is provided by windDirectionReading() function. I
 
 ~~Instead, during the sleep mode, the External module monitors the rain GPIO and if it detects a rain switch close, wake-up the External module, increases the rainCounterDuringSleep counter and executes the normal mode above described.~~
 
-### Battery voltage measurement
+### Battery voltage measurement ![](https://img.shields.io/badge/status-todo-red)
 The battery voltage measurement is provided by batteryLevel() function. It reads the analog value from the PIN connected to battery and converts this raw value in voltage measurement. The analog value is a AVG on 50 consecutive reads.
 
 The function used for voltage measurament is the following: 
