@@ -76,7 +76,7 @@ Using this values, we can calculate the External module lifetime witout charging
 These calculations are theoretical only. There are other factors that influence the results (real battery capacity, weather conditions, etc.). Moreover, it's very important declare that when the batteries drop below 3.65V, the External module works badly and therefore the weather data readings are no longer reliable.
 Based on these considerations it can be said that the External module, in the absence of a recharging system, is able to live for 3/4 days.
 
-#### Battery voltage monitoring system ![](https://img.shields.io/badge/status-todo-red)
+#### Battery voltage monitoring system
 
 Using an analog pin (GPIO33) of microcontroller, it possibles to check the voltage of the battery, but all ADC pin exepct voltages between 0 and 3,3 volts instead the battery output voltage is 4,2 volts when it is totally charged. To solve this problem a voltage divider has been connected to the battery to divide the voltage by 2 and to have an maximun voltage of 2,1 volts when battery is totally charged. To do this, 2 27k ohm resistors have been inserted as reported in the following circuit:
 
