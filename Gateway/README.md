@@ -4,7 +4,6 @@
 
 - Verify Gateway watchdog (insert the WDT in parse function) ![](https://img.shields.io/badge/status-todo-red)
 - Weather data received semantic analysis ![](https://img.shields.io/badge/status-todo-red)
-- onboard LED blink until Wi-Fi successful connection ![](https://img.shields.io/badge/status-todo-red)
 
 ## Features
 Below a list of Gateway main features:
