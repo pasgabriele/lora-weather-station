@@ -5,7 +5,6 @@
 
 - Rainfall function
 - Try to change LoRa signalBandwidth and txPower to reduce trasmission power consumption (https://iopscience.iop.org/article/10.1088/1742-6596/1407/1/012092/pdf)
-- Correction for battery measurament. Use the new PCB where the battery voltage measurement circuit uses B+ and B- and not OUT+ and OUT- as in the current PCB
 
 ## Features
 Below a list of External module main features:
@@ -51,7 +50,7 @@ The External module is composed by following hardware components:
 ## Wiring schema
 In the following the wiring schema for External module:
 
-![external module schema](https://github.com/pasgabriele/lora-weather-station/blob/main/External%20module/Schematic_external-module-wiring_2021-06-20.svg)
+![external module schema](https://raw.githubusercontent.com/pasgabriele/lora-weather-station/main/External%20module/Schematic_external-module-wiring_2021-07-07.svg)
 
 In the following paragraph are detailed and explained all single part of External module.
 
