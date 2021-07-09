@@ -15,6 +15,7 @@
 #define DIO0 26                     //for lora module
 #define LED 2                       //for led onboard
 #define WSPEED 23                   //for wind sensor
+#define RAIN 13                     //for rain sensor
 
 //used analogic pins:
 #define BATT 33                     //for battery monitoring
@@ -29,6 +30,7 @@ int batteryRaw = 0;
 const float WINDSPEED_SCALE = 2.401;    //anemometer coefficient (at 2.401 km/h the anemometer pulse once per second)
 const float WINDSPEED_PERIOD = 2.401;   //sample time for wind speed measurement
 const float BATTERY_CONV = 0.001715;  //analog to volt constant
+const float RAIN_SCALE = 0.2794;    //rain bucket coefficient (every 0.2794mm of rain the rain bucket pulse once)
 
 //global variables
 unsigned long counter = 0;
@@ -45,7 +47,9 @@ volatile byte windClicks = 0;
 float windSpeed = -1.0;
 bool BMEInitializationStatus = false;
 bool UVInitializationStatus = false;
-
+volatile long lastRainIRQ = 0;
+volatile byte rainClicks = 0;
+float rain = -1.0;
 
 //function to connect LoRa
 void lora_connection(){
@@ -282,6 +286,41 @@ void windSpeedReading(){
   }
 }
 
+//interrupt routines (these are called by the hardware interrupts, not by the main code)
+void rainIRQ(){
+	//count rain gauge bucket tips as they occur
+  //activated by the magnet and reed switch in the rain gauge, attached to GPIO13
+  unsigned int timeRainEvent = millis(); //grab current time
+
+  //ignore switch-bounce glitches less than 0.5 sec after initial edge
+  if(timeRainEvent - lastRainIRQ < 500) {
+    return;
+  }
+	rainClicks++;
+  lastRainIRQ = timeRainEvent; //set up for next event
+}
+
+void rainReading(){
+	//as described in Sparkfun Weather Meter Kit (SEN-15901)(https://cdn.sparkfun.com/assets/d/1/e/0/6/DS-15901-Weather_Meter.pdf),
+  //each 0.2794mm of rain cause one momentary contact closure that can be recorded with a digital counter or microcontroller
+	//interrupt input.
+  //then we can use the following formula:
+  //
+  //rain = 0.2794 * #_pulses
+  //
+	rain = RAIN_SCALE * (rainClicks);
+  
+  //convert mm in cm
+  rain = rain/10;
+  if (debug){
+    Serial.println("INFO: Rain clicks: " + String(rainClicks));
+    Serial.print(F("INFO: Rain: "));
+    Serial.print(rain);
+    Serial.println(F(" cm"));
+  }
+  rainClicks = 0;
+}
+
 //function to compose json string
 String composeJson(){
   StaticJsonDocument<300> data;
@@ -296,6 +335,7 @@ String composeJson(){
   data["windSpeed"] = windSpeed;
   data["windDir"] = windDir;
   data["UV"] = UVIndex;
+  data["rain"] = rain;
 
   //copy JsonFormat to string
   serializeJson(data, string);
@@ -324,6 +364,9 @@ void setup() {
   //enable panic so ESP32 restarts
   esp_task_wdt_init(WDT_TIMEOUT, true);
   esp_task_wdt_add(NULL);           //add current thread to WDT watch
+
+  //enable interrupt for "online" rain measurement
+  attachInterrupt(RAIN, rainIRQ, RISING);
 
   //initialize serial monitor
   Serial.begin(9600);
@@ -359,6 +402,9 @@ void loop() {
   if(UVInitializationStatus){
     UVReading();
   }
+
+  //read rain
+  rainReading();
 
   //send packet to LoRa Receiver using composeJson function as input
   LoRaSend(composeJson());
