@@ -155,30 +155,12 @@ As already mentioned the voltages on GPIO33 shifts between 0 and 3,3 volts then 
 
 For example, if the read value on ADC pin is 2320, then the voltage applied to the pin should be VBatt = 2320 * 0,001611721611722 = 3,74V
 
-ADC pins are not that precise, so the value of our constant should be adjusted to a level we consider it is valid for our components. In my case, after doing some testings I have concluded that the best value for the conversion factor is **0.00173**.
+ADC pins are not that precise, so the value of our constant should be adjusted to a level we consider it is valid for our components. In my case, after doing some testings I have concluded that the best value for the conversion factor is **0.001715**.
 
 sources: https://www.pangodream.es/esp32-getting-battery-charging-level and https://www.settorezero.com/wordpress/arduino-nano-33-iot-wifi-ble-e-imu/
 
 
-The battery voltage measurement is provided by batteryLevel() function. It reads the analog value from the PIN connected to battery and converts this raw value in voltage measurement. The analog value is a AVG on 50 consecutive reads.
-
-The function used for voltage measurament is the following: 
-
-<img src="https://render.githubusercontent.com/render/math?math=batteryVoltage=c*analogValue">
-
-where *c* is the constant *0,00173* calculated in the following way:
-
-Using R1 and R2 resistors, when the battery is totally full, the maximun input voltage for GPIO33 is:
-
-<img src="https://render.githubusercontent.com/render/math?math=maxVoltOnGPIO32=(maxBatteryVoltage*R2)/(R1%2BR2)">
-
-then 
-
-<img src="https://render.githubusercontent.com/render/math?math=maxVoltOnGPIO32=(4,2*27000)/(27000%2B27000)=113400/54000=2,1V">
-
-to determinate the *c* constant, I read the analog value from GPIO32 when the battery voltage is 4,2. This analog value was 2427, then I calculated the *c* contanst as following:
-
-<img src="https://render.githubusercontent.com/render/math?math=c=4,2/2427=0,00173">
+The battery voltage measurement is provided by batteryLevel() function. It reads the analog value from the PIN connected to battery and converts this raw value in voltage measurement using the above conversion factor. The analog value is a AVG on 50 consecutive reads.
 
 The voltage measurement is stored in the volt variable and it will used to compose the json string.
 
