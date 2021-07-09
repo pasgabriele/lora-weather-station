@@ -35,13 +35,12 @@ The External module is composed by following hardware components:
 |1|[BME280](https://it.aliexpress.com/item/32849462236.html)|Temperature, humidity and preassure sensor||
 |1|[Spurkfun Weather Meter Kit](https://www.sparkfun.com/products/15901)|Wind speed, wind direction and rain accumulation sensor||
 |1|[VEML6075](https://it.aliexpress.com/item/32843641073.html)|UV index sensor||
-|2|[RJ11 6P6C female PCB socket](https://www.aliexpress.com/item/1005001419331726.html)|RJ11 6P6C female socket for PCB||
+|7|[RJ11 6P4C female PCB socket](https://www.ebay.it/itm/294215189887)|RJ11 6P4C female socket for PCB||
 |1|[Phoenix 2P connector](https://www.aliexpress.com/item/32819689207.html)|Phoenix 2P connector 5mm pitch for PCB||
 |1|[Switch 2 position](https://www.aliexpress.com/item/32799198160.html)|Toggle switch 2 position 2.54mm pitch||
 |1|[PCB 2 batteries case](https://www.aliexpress.com/item/4001009601436.html)|2 batteries case for PCB||
 |3|[10k resistor](https://www.aliexpress.com/item/1005001649069962.html)|10k ohm resistor||
 |2|[27k resistor](https://www.aliexpress.com/item/1005001649069962.html)|27k ohm resistor||47k ohm resistor
-|7|[XH2.54 4P connector](https://www.aliexpress.com/item/32959016223.html)|XH2.54mm 4P connector ||
 ||[Male and female 2.54mm breakable pin header](https://www.aliexpress.com/item/32724478308.html)|Single row male and female 2.54mm breakable pin header PCB JST connector strip||
 |1|[External module PCB](https://github.com/pasgabriele/lora-weather-station/tree/main/External%20module/pcb-external-module)|PCB for the external module||
 |1|[Sensors shield](https://www.aliexpress.com/item/32969306380.html)|Shield for temperature, humidity and preassure sensor||
@@ -88,9 +87,9 @@ Using this voltage divider we have VoltOnGPIO33 = (maxBatteryVoltage * R2) / (R1
 With this, we can measure the voltage applied to GPIO33 and then calculate the battery level (see Battery voltage measurement section for software details).
 
 ## i2c communication
-The i2c channel is used to permit communication between the microcontroller and the UV (VEML6075) and temperature, humidity and pressure sensors (BME280). This bus can be used for future purpose too, due to on PCB there are other 5 i2c sockets.
+The i2c channel is used to permit communication between the microcontroller and the UV (VEML6075) and temperature, humidity and pressure sensors (BME280). This bus can be used for future purpose too, due to on PCB there are other 3 i2c sockets.
 
-## Anemometer ![](https://img.shields.io/badge/status-todo-red)
+## Anemometer
 The cup-type anemometer measures wind speed by closing a contact as a magnet moves past a switch. A wind speed of 2,401 km/h causes the switch to close once per second. The anemometer switch is connected to the inner two conductors of the RJ11 cable shared by the anemometer and wind vane (pin 2 and 3) and finally it is connected to the microcontroller via the shared wind vane RJ11. Below the detailed schema:
 
 ![anemometer wiring](https://raw.githubusercontent.com/pasgabriele/lora-weather-station/main/External%20module/Schematic_anemometer_2021-06-23.svg)
@@ -150,35 +149,17 @@ The wind direction measurement is provided by windDirectionReading() function. I
 
 ~~Instead, during the sleep mode, the External module monitors the rain GPIO and if it detects a rain switch close, wake-up the External module, increases the rainCounterDuringSleep counter and executes the normal mode above described.~~
 
-## Battery voltage measurement ![](https://img.shields.io/badge/status-todo-red)
+## Battery voltage measurement
 As already mentioned the voltages on GPIO33 shifts between 0 and 3,3 volts then between 0 and 4095 values (the ADC pin has 12bit resolution), so we can establish a constant to calculate the voltage applied to the pin based on its value. This constant, theoretically, will be c = 3,3 / 4095 = 0,000805860805861. As we are applying a voltage divider and the voltage applied to the pin is half the voltage of the battery, our constant should be c = 0,000805860805861 * 2 = 0,001611721611722. This means, for each unit in ADC pin we have 0,001611721611722 Volts applied to it.
 
 For example, if the read value on ADC pin is 2320, then the voltage applied to the pin should be VBatt = 2320 * 0,001611721611722 = 3,74V
 
-ADC pins are not that precise, so the value of our constant should be adjusted to a level we consider it is valid for our components. In my case, after doing some testings I have concluded that the best value for the conversion factor is **0.00173**.
+ADC pins are not that precise, so the value of our constant should be adjusted to a level we consider it is valid for our components. In my case, after doing some testings I have concluded that the best value for the conversion factor is **0.001715**.
 
 sources: https://www.pangodream.es/esp32-getting-battery-charging-level and https://www.settorezero.com/wordpress/arduino-nano-33-iot-wifi-ble-e-imu/
 
 
-The battery voltage measurement is provided by batteryLevel() function. It reads the analog value from the PIN connected to battery and converts this raw value in voltage measurement. The analog value is a AVG on 50 consecutive reads.
-
-The function used for voltage measurament is the following: 
-
-<img src="https://render.githubusercontent.com/render/math?math=batteryVoltage=c*analogValue">
-
-where *c* is the constant *0,00173* calculated in the following way:
-
-Using R1 and R2 resistors, when the battery is totally full, the maximun input voltage for GPIO33 is:
-
-<img src="https://render.githubusercontent.com/render/math?math=maxVoltOnGPIO32=(maxBatteryVoltage*R2)/(R1%2BR2)">
-
-then 
-
-<img src="https://render.githubusercontent.com/render/math?math=maxVoltOnGPIO32=(4,2*27000)/(27000%2B27000)=113400/54000=2,1V">
-
-to determinate the *c* constant, I read the analog value from GPIO32 when the battery voltage is 4,2. This analog value was 2427, then I calculated the *c* contanst as following:
-
-<img src="https://render.githubusercontent.com/render/math?math=c=4,2/2427=0,00173">
+The battery voltage measurement is provided by batteryLevel() function. It reads the analog value from the PIN connected to battery and converts this raw value in voltage measurement using the above conversion factor. The analog value is a AVG on 50 consecutive reads.
 
 The voltage measurement is stored in the volt variable and it will used to compose the json string.
 
