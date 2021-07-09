@@ -283,6 +283,8 @@ void windSpeedReading(){
     Serial.print(F("INFO: Wind Speed: "));
     Serial.print(windSpeed);
     Serial.println(F(" km/h"));
+    Serial.print(F("INFO: Status PIN wind: "));
+    Serial.println(digitalRead(23));
   }
 }
 
@@ -317,6 +319,8 @@ void rainReading(){
     Serial.print(F("INFO: Rain: "));
     Serial.print(rain);
     Serial.println(F(" cm"));
+    Serial.print(F("INFO: Status PIN rain: "));
+    Serial.println(digitalRead(13));
   }
   rainClicks = 0;
 }
