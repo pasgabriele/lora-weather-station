@@ -364,6 +364,7 @@ void LoRaSend(String packet){
 
 void setup() {
   pinMode(LED, OUTPUT);
+  pinMode(RAIN, INPUT); //input from rain gauge sensor
 
   //Set CPU clock to 80MHz or 26MHz
   setCpuFrequencyMhz(26);
