@@ -3,9 +3,8 @@
 #include <LoRa.h>
 #include <ArduinoJson.h>
 #include <esp_task_wdt.h>
-#include <WiFi.h>
 #include <PubSubClient.h>
-#include <NTPClient.h>
+#include "configuration.h"
 
 //used digital pins:
 #define SCK 5                       //for lora module
@@ -16,26 +15,10 @@
 #define DIO0 26                     //for lora module
 #define LED 2
 
-//constant defined
-#define WDT_TIMEOUT 60              //in seconds
-const char* SSID = "TOINSERT";
-const char* password =  "TOINSERT";
-const char* MQTTServer = "TOINSERT";
-const char* MQTTUsername = "TOINSERT";
-const char* MQTTPassword = "TOINSERT";
-const char* MQTTTopic = "weather";
-
 //global variables
 String received = "";
-IPAddress ipaddress(192, 168, 1, 155);
-IPAddress gateway(192, 168, 1, 1);
-IPAddress subnet(255, 255, 255, 0);
-IPAddress dns1(192, 168, 1, 1);
-IPAddress dns2(8, 8, 8, 8);
 WiFiClient WIFIClient;
 PubSubClient MQTTClient(WIFIClient);
-WiFiUDP ntpUDP;
-NTPClient timeClient(ntpUDP);
 int timestamp = 0;
 int counter = 1;                    //debug
 float BMETemperature = -50.0;
@@ -47,7 +30,7 @@ float volt = 0.0;
 float windSpeed = -1.0;
 float windGust = -1.0;
 float UVIndex = 0.0;
-int windDir = -1;
+float windDir = -1.0;
 float rain = -1.0;
 int rxCheckPercent = -1;
 
@@ -78,6 +61,7 @@ void lora_connection() {
 
 //function to connect to WiFi
 void wifi_connection() {
+  digitalWrite(LED, HIGH);
   if (!WiFi.config(ipaddress, gateway, subnet, dns1, dns2)) {
     Serial.println("ERROR: STA Failed to configure");
   }
@@ -104,6 +88,7 @@ void wifi_connection() {
   Serial.println(WiFi.gatewayIP());
   Serial.print("INFO: DNS: ");
   Serial.println(WiFi.dnsIP());
+  digitalWrite(LED, LOW);
 }
 
 boolean parseJson(int packetSize){
@@ -143,17 +128,15 @@ boolean parseJson(int packetSize){
   //extract sensors values from json object
   id = data["id"];
   volt = data["supplyVoltage"];
+  batteryRaw = data["batteryRaw"];
   BMETemperature = data["outTemp"];
   BMEHumidity = data["outHumidity"];
   BMEPressure = data["pressure"];
   windSpeed = data["windSpeed"];
-  windGust = data["windGust"];
   windDir = data["windDir"];
   UVIndex = data["UV"];
   rain = data["rain"];
 
-  Serial.print("INFO: Timestamp: ");
-  Serial.println(timestamp);
   Serial.print("INFO: ID mes: ");
   Serial.println(id);
   Serial.print("INFO: Battery: ");
@@ -164,8 +147,8 @@ boolean parseJson(int packetSize){
   Serial.println(BMEHumidity);
   Serial.print("INFO: BME Press: ");
   Serial.println(BMEPressure);
-  Serial.print("INFO: Wind gust: ");
-  Serial.println(windGust);
+  Serial.print("INFO: Battery raw: ");
+  Serial.println(batteryRaw);
   Serial.print("INFO: Wind speed: ");
   Serial.println(windSpeed);
   Serial.print("INFO: Wind dir: ");
@@ -217,11 +200,11 @@ boolean sendToMQTTBroker(){
   StaticJsonDocument<300> data;
   data["id"] = id;
   data["supplyVoltage"] = volt;
+  data["batteryRaw"] = batteryRaw;
   data["outTemp"] = BMETemperature;
   data["outHumidity"] = BMEHumidity;
   data["pressure"] = BMEPressure;
   data["windSpeed"] = windSpeed;
-  data["windGust"] = windGust;
   data["windDir"] = windDir;
   data["UV"] = UVIndex;
   data["rain"] = rain;
