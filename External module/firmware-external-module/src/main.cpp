@@ -233,7 +233,7 @@ void windDirectionReading(){
   else windDir = 270;
 
   if(debug){
-    Serial.print("INFO: Analog value: ");
+    Serial.print("INFO: Wind Dir analogic pin value: ");
     Serial.println(adc);
     Serial.print("INFO: Wind Dir degree: ");
     Serial.println(windDir);
@@ -280,10 +280,11 @@ void windSpeedReading(){
   }
 
   if(debug){
+    Serial.println("INFO: Wind Speed clicks: " + String(windClicks));
     Serial.print(F("INFO: Wind Speed: "));
     Serial.print(windSpeed);
     Serial.println(F(" km/h"));
-    Serial.print(F("INFO: Status PIN wind: "));
+    Serial.print(F("INFO: Status PIN Wind Speed: "));
     Serial.println(digitalRead(23));
   }
 }
@@ -319,7 +320,7 @@ void rainReading(){
     Serial.print(F("INFO: Rain: "));
     Serial.print(rain);
     Serial.println(F(" cm"));
-    Serial.print(F("INFO: Status PIN rain: "));
+    Serial.print(F("INFO: Status PIN Rain: "));
     Serial.println(digitalRead(13));
   }
   rainClicks = 0;
@@ -343,8 +344,10 @@ String composeJson(){
 
   //copy JsonFormat to string
   serializeJson(data, string);
-  Serial.println("INFO: The following string will be send...");
-  Serial.println(string);
+  if (debug){
+    Serial.println("INFO: The following string will be send...");
+    Serial.println(string);
+  }
   return string;
 }
 
@@ -413,11 +416,13 @@ void loop() {
   //send packet to LoRa Receiver using composeJson function as input
   LoRaSend(composeJson());
 
-  unsigned int end = millis();
-  unsigned int time = (end - start);
-  Serial.print("Cicle time: ");
-  Serial.print(time);
-  Serial.println(" msec");
+  if(debug){
+    unsigned int end = millis();
+    unsigned int time = (end - start);
+    Serial.print("Loop time: ");
+    Serial.print(time);
+    Serial.println(" msec");
+  }
 
   //reset WDT every loop
   esp_task_wdt_reset();
