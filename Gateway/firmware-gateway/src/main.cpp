@@ -170,7 +170,7 @@ boolean parseJson(int packetSize){
 
 //function to connect the client to MQTT Broker
 void mqtt_connection(){
-  MQTTClient.setServer(MQTTServer, 12388);
+  MQTTClient.setServer(MQTTServer, MQTTPort);
 
   while (!MQTTClient.connected()){
     Serial.print("INFO: Connecting to MQTT...");

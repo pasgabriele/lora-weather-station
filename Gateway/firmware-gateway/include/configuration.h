@@ -12,6 +12,7 @@ const char* MQTTServer = "TO_INSERT";
 const char* MQTTUsername = "TO_INSERT";
 const char* MQTTPassword = "TO_INSERT";
 const char* MQTTTopic = "weather";
+const int MQTTPort = 12388;
 
 //global variables
 IPAddress ipaddress(192, 168, 1, 115);
