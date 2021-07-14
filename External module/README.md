@@ -3,7 +3,6 @@
 
 ## TODO ![](https://img.shields.io/badge/status-todo-red)
 
-- Rainfall function
 - Try to change LoRa signalBandwidth and txPower to reduce trasmission power consumption (https://iopscience.iop.org/article/10.1088/1742-6596/1407/1/012092/pdf)
 
 ## Features
