@@ -15,7 +15,7 @@ Below a list of External module main features:
   - Wind speed ![](https://img.shields.io/badge/status-ok-green)
   - Wind direction ![](https://img.shields.io/badge/status-ok-green)
   - UV index ![](https://img.shields.io/badge/status-ok-green)
-  - Rain accumulation ![](https://img.shields.io/badge/status-todo-red)
+  - Rain accumulation ![](https://img.shields.io/badge/status-todo-green)
 - Weather data reading every 2,8 seconds
 - Weather data encapsulation in json string
 - Long distance and low energy LoRa communication with the Gateway
