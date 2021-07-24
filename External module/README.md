@@ -133,7 +133,7 @@ The wind vane is connected to the external two conductors of the RJ11 cable shar
 
 ![wind vane wiring](https://raw.githubusercontent.com/pasgabriele/lora-weather-station/main/External%20module/Schematic_wind-vane.svg)
 
-The Anemometer is connected to the microcontroller GPIO23 and GND. After that, all we need to do then is to monitor for button presses which is pretty straightforward. We can use the pin interrupts method to monitor the button press (tips). When the reed switch closes the circuit (pressing the button), it triggers a software event (see Wind speed measurement section for software details).
+The wind vane is connected to the microcontroller GPIO32 and GND. After that, all we need to do then is to read the GPIO analog value and convert this value in wind direction using the table defined in Wind direction measurement section.
 
 ## Rain gauge ![](https://img.shields.io/badge/status-todo-red)
 
