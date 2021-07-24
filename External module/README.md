@@ -90,7 +90,7 @@ A first INA219 has been inserted between the solar panel and the Adafruit Solar 
 ![INA219 solar](https://raw.githubusercontent.com/pasgabriele/lora-weather-station/main/External%20module/Schematic_INA219_solar.svg)
 
 ## Battery monitoring system ![](https://img.shields.io/badge/status-toverity-yellow)
-A second INA219 has been inserted between the battery pack and the Adafruit Solar Charger. This module will be able to monitor the voltage and the current of the battery pack. The INA219 reads this values and via i2c channel trasmits them to the microcontroller. If the read current value is negative then the battery is in charge fase, otherwise it's in discharge fase. ![](https://img.shields.io/badge/status-toverity-yellow)
+A second INA219 has been inserted between the battery pack and the Adafruit Solar Charger. This module will be able to monitor the voltage and the current of the battery pack. The INA219 reads this values and via i2c channel trasmits them to the microcontroller. If the read current value is negative then the battery is in charge fase, otherwise it's in discharge fase.
 
 ![INA219 battery](https://raw.githubusercontent.com/pasgabriele/lora-weather-station/main/External%20module/Schematic_INA219_battery.svg)
 
