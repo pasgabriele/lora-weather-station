@@ -4,6 +4,9 @@
 ## TODO ![](https://img.shields.io/badge/status-todo-red)
 
 - Try to change LoRa signalBandwidth and txPower to reduce trasmission power consumption (https://iopscience.iop.org/article/10.1088/1742-6596/1407/1/012092/pdf)
+- Replace TP4056 with Adafruit Solar Charger (https://www.adafruit.com/product/4755)
+- Add an INA219 for solar panel voltage and current measurement
+- Add an INA219 for battery voltage and current measurement
 
 ## Features
 Below a list of External module main features:
