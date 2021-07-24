@@ -84,13 +84,13 @@ Using this values, we can calculate the External module lifetime witout charging
 These calculations are theoretical only. There are other factors that influence the results (real battery capacity, weather conditions, etc.). **Moreover, it's very important declare that when the batteries drop below 3.65V, the External module works badly and therefore the weather data readings are no longer reliable.**
 Based on these considerations it can be said that the External module, in the absence of a recharging system, is able to live for 3/4 days.
 
-## Solar panel monitoring system ![](https://img.shields.io/badge/status-todo-red)
+## Solar panel monitoring system
 A first INA219 has been inserted between the solar panel and the Adafruit Solar Charger. This module will be able to monitor the voltage and the current producted by the solar panel. The INA219 reads this values and via i2c channel trasmits them to the microcontroller.
 
 ![INA219 solar](https://raw.githubusercontent.com/pasgabriele/lora-weather-station/main/External%20module/Schematic_INA219_solar.svg)
 
 ## Battery monitoring system ![](https://img.shields.io/badge/status-toverity-yellow)
-A second INA219 has been inserted between the battery pack and the Adafruit Solar Charger. This module will be able to monitor the voltage and the current of the battery pack. The INA219 reads this values and via i2c channel trasmits them to the microcontroller. If the read current value is negative then the battery is in charge fase, otherwise it's in discharge fase.
+A second INA219 has been inserted between the battery pack and the Adafruit Solar Charger. This module will be able to monitor the voltage and the current of the battery pack. The INA219 reads this values and via i2c channel trasmits them to the microcontroller. If the read current value is negative then the battery is in charge fase, otherwise it's in discharge fase. ![](https://img.shields.io/badge/status-toverity-yellow)
 
 ![INA219 battery](https://raw.githubusercontent.com/pasgabriele/lora-weather-station/main/External%20module/Schematic_INA219_battery.svg)
 
