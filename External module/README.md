@@ -58,7 +58,7 @@ In the following the wiring schema for External module:
 In the following paragraph are detailed and explained all single part of External module.
 
 ## Power system
-The External Module power system core is the Adadruit Solar Charger (bq24074). It recharges the 2 18650 3.7V 3400mAh Li-Ion batteries in parallel (6400mAh) using the 6V 750ma solar panel and at the same time, it powers the Lilygo ESP32 microcontroller via the HT7333 LDO. The maximum batteries charge current is 1000ma. A 2 position switch is inserted between the batteries and the microcontroller so that all sensors and the microcontroller can be turned off. Note that the batteries charge circuit can never be turned off because it's before the switch.
+The External Module power system core is the Adadruit Solar Charger (bq24074). It recharges the 2 18650 3.7V 3400mAh Li-Ion batteries (6400mAh in parallel) using the 6V 750ma solar panel and at the same time, it powers the Lilygo ESP32 microcontroller via the HT7333 LDO. The maximum batteries charge current is 1000ma. A 2 position switch is inserted between the batteries and the microcontroller so that all sensors and the microcontroller can be turned off. Note that the batteries charge circuit can never be turned off because it's before the switch.
 
 All weather sensors are powered directly by microcontroller 3V3 and GND pins without using external voltage regulator due to all sensors required 3,3V to operate.
 
