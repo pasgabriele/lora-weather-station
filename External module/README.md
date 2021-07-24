@@ -104,7 +104,7 @@ The cup-type anemometer measures wind speed by closing a contact as a magnet mov
 
 The Anemometer is connected to the microcontroller GPIO23 and GND. After that, all we need to do then is to monitor for button presses which is pretty straightforward. We can use the pin interrupts method to monitor the button press (tips). When the reed switch closes the circuit (pressing the button), it triggers a software event (see Wind speed measurement section for software details).
 
-## Wind vane ![](https://img.shields.io/badge/status-todo-red)
+## Wind vane
 The wind vane has eight switches, each connected to a different resistor. The vane’s magnet may close two switches at once, allowing up to 16 different positions to be indicated. An external resistor shall be used to form a voltage divider, producing a voltage output that can be measured with an analog to digital converter.
 Resistance values for all 16 possible positions are given in the table.
 
