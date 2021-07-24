@@ -66,7 +66,7 @@ Moreover, a 2 position switch is inserted between Solar Charger and LDO so that 
 
 All weather sensors are powered directly by microcontroller 3V3 and GND pins without using external voltage regulator due to all sensors required 3,3V to operate.
 
-## External module lifetime without recharge system enabled ![](https://img.shields.io/badge/status-toreview-yellow)
+## External module lifetime without recharge system enabled ![](https://img.shields.io/badge/status-toverify-yellow)
 Measuring the energy consumption of the External module using an amperometer, it has been registered that it requires about 20mA during the weather reading (setting the microcontroller CPU frequency to 26Mhz) and peaks of 130mA during the LoRa packets trasmissions.
 Using this values, we can calculate the External module lifetime witout charging system enabled:
 
@@ -84,14 +84,13 @@ Using this values, we can calculate the External module lifetime witout charging
 These calculations are theoretical only. There are other factors that influence the results (real battery capacity, weather conditions, etc.). **Moreover, it's very important declare that when the batteries drop below 3.65V, the External module works badly and therefore the weather data readings are no longer reliable.**
 Based on these considerations it can be said that the External module, in the absence of a recharging system, is able to live for 3/4 days.
 
-## Battery voltage monitoring system ![](https://img.shields.io/badge/status-todo-red)
+## Solar panel monitoring system ![](https://img.shields.io/badge/status-todo-red)
+A first INA219 has been inserted between the solar panel and the Adafruit Solar Charger. This module will be able to monitor the voltage and the current producted by the solar panel. The INA219 reads this values and via i2c channel trasmits them to the microcontroller.
 
-~~Using an analog pin (GPIO33) of microcontroller, it possibles to check the voltage of the battery, but all ADC pin exepct voltages between 0 and 3,3 volts instead the battery output voltage is 4,2 volts when it is totally charged. To solve this problem a voltage divider has been connected to the battery to divide the voltage by 2 and to have an maximun voltage of 2,1 volts when battery is totally charged. To do this, 2 27k ohm resistors have been inserted as reported in the following circuit:~~
 
 
-~~Using this voltage divider we have VoltOnGPIO33 = (maxBatteryVoltage * R2) / (R1 + R2) = (4,2V * 27k) / (54k) = 2,1V~~
-
-~~With this, we can measure the voltage applied to GPIO33 and then calculate the battery level (see Battery voltage measurement section for software details).~~
+## Battery monitoring system ![](https://img.shields.io/badge/status-toverity-yellow)
+A second INA219 has been inserted between the battery pack and the Adafruit Solar Charger. This module will be able to monitor the voltage and the current of the battery pack. The INA219 reads this values and via i2c channel trasmits them to the microcontroller. If the read current value is negative then the battery is in charge fase, otherwise it's in discharge fase.
 
 ## i2c communication
 The i2c channel is used to permit communication between the microcontroller and the UV (VEML6075) and temperature, humidity and pressure sensors (BME280). This bus is used to INA219 communication and can be used for future purpose too, due to on PCB there are other 3 i2c sockets.
