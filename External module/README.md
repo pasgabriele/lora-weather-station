@@ -101,7 +101,7 @@ The i2c channel is used to permit communication between the microcontroller and 
 ## Anemometer
 The cup-type anemometer measures wind speed by closing a contact as a magnet moves past a switch. A wind speed of 2,401 km/h causes the switch to close once per second. The anemometer switch is connected to the inner two conductors of the RJ11 cable shared by the anemometer and wind vane (pin 2 and 3) and finally it is connected to the microcontroller via the shared wind vane RJ11. Below the detailed schema:
 
-![anemometer wiring](https://raw.githubusercontent.com/pasgabriele/lora-weather-station/main/External%20module/Schematic_anemometer_2021-06-23.svg)
+![anemometer wiring](https://raw.githubusercontent.com/pasgabriele/lora-weather-station/main/External%20module/Schematic_anemometer.svg)
 
 The Anemometer is connected to the microcontroller GPIO23 and GND. After that, all we need to do then is to monitor for button presses which is pretty straightforward. We can use the pin interrupts method to monitor the button press (tips). When the reed switch closes the circuit (pressing the button), it triggers a software event (see Wind speed measurement section for software details).
 
