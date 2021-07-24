@@ -22,8 +22,9 @@ Below a list of External module main features:
 - Weather data encapsulation in json string
 - Long distance and low energy LoRa communication with the Gateway
 - Batteries powered
-- Batteries voltage monitoring
-- Solar charging
+- Batteries voltage and current monitoring
+- Solar charged
+- Solar panel voltage and current monitoring
 
 ## Components
 The External module is composed by following hardware components:
@@ -31,9 +32,10 @@ The External module is composed by following hardware components:
 |Quantity|Name|Description|Alternative|
 |--|--|--|--|
 |1|[Lilygo SX1278 LoRa ESP32 443Mhz](http://www.lilygo.cn/prod_view.aspx?TypeId=50003&Id=1133&FId=t3:50003:3)|Microcontroller SX1278 ESP32 with LoRa trasmitter at 433Mhz|Equivalent ESP32 with LoRa trasmitter at 433Mhz (for example  [Heltec WiFi LoRa 32](https://heltec.org/project/wifi-lora-32/))|
-|1|[TP4056](https://it.aliexpress.com/item/32986135934.html)|Battery charger 5V 1A||
+|1|[Adafruit Universal USB / DC / Solar Lithium Ion/Polymer charger - bq24074](https://www.adafruit.com/product/4755)|Solar Lithium Ion/Polymer charger||
 |1|[Solar panel](https://it.aliexpress.com/item/32877897718.html)|6V 750mA solar panel||
 |2|[Panasonic 18650](https://it.aliexpress.com/item/4000484192899.html)|Batteries Panasonic 18650 NCR18650B 3.7V 3400mAh Li-Ion with PCB||
+|2|[INA219](https://it.aliexpress.com/item/1005001854701258.html)|Current and voltage monitor||
 |1|[BME280](https://it.aliexpress.com/item/32849462236.html)|Temperature, humidity and preassure sensor||
 |1|[Spurkfun Weather Meter Kit](https://www.sparkfun.com/products/15901)|Wind speed, wind direction and rain accumulation sensor||
 |1|[VEML6075](https://it.aliexpress.com/item/32843641073.html)|UV index sensor||
@@ -42,7 +44,6 @@ The External module is composed by following hardware components:
 |1|[Switch 2 position](https://www.aliexpress.com/item/32799198160.html)|Toggle switch 2 position 2.54mm pitch||
 |1|[PCB 2 batteries case](https://www.aliexpress.com/item/4001009601436.html)|2 batteries case for PCB||
 |3|[10k resistor](https://www.aliexpress.com/item/1005001649069962.html)|10k ohm resistor||
-|2|[27k resistor](https://www.aliexpress.com/item/1005001649069962.html)|27k ohm resistor||47k ohm resistor
 ||[Male and female 2.54mm breakable pin header](https://www.aliexpress.com/item/32724478308.html)|Single row male and female 2.54mm breakable pin header PCB JST connector strip||
 |1|[External module PCB](https://github.com/pasgabriele/lora-weather-station/tree/main/External%20module/pcb-external-module)|PCB for the external module||
 |1|[Sensors shield](https://www.aliexpress.com/item/32969306380.html)|Shield for temperature, humidity and preassure sensor||
