@@ -94,7 +94,6 @@ A second INA219 has been inserted between the battery pack and the Adafruit Sola
 
 ![INA219 battery](https://raw.githubusercontent.com/pasgabriele/lora-weather-station/main/External%20module/Schematic_INA219_battery.svg)
 
-
 ## i2c communication
 The i2c channel is used to permit communication between the microcontroller and the UV (VEML6075) and temperature, humidity and pressure sensors (BME280). This bus is used to INA219 communication and can be used for future purpose too, due to on PCB there are other 3 i2c sockets.
 
