@@ -87,10 +87,13 @@ Based on these considerations it can be said that the External module, in the ab
 ## Solar panel monitoring system ![](https://img.shields.io/badge/status-todo-red)
 A first INA219 has been inserted between the solar panel and the Adafruit Solar Charger. This module will be able to monitor the voltage and the current producted by the solar panel. The INA219 reads this values and via i2c channel trasmits them to the microcontroller.
 
-
+![INA219 solar](https://raw.githubusercontent.com/pasgabriele/lora-weather-station/main/External%20module/Schematic_INA219_solar.svg)
 
 ## Battery monitoring system ![](https://img.shields.io/badge/status-toverity-yellow)
 A second INA219 has been inserted between the battery pack and the Adafruit Solar Charger. This module will be able to monitor the voltage and the current of the battery pack. The INA219 reads this values and via i2c channel trasmits them to the microcontroller. If the read current value is negative then the battery is in charge fase, otherwise it's in discharge fase.
+
+![INA219 battery](https://raw.githubusercontent.com/pasgabriele/lora-weather-station/main/External%20module/Schematic_INA219_battery.svg)
+
 
 ## i2c communication
 The i2c channel is used to permit communication between the microcontroller and the UV (VEML6075) and temperature, humidity and pressure sensors (BME280). This bus is used to INA219 communication and can be used for future purpose too, due to on PCB there are other 3 i2c sockets.
