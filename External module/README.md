@@ -127,7 +127,7 @@ Resistance values for all 16 possible positions are given in the table.
 |315|64,9k|
 |337,5|21,88k|
 
-Resistance values for positions between those shown in the diagram are the result of two adjacent resistors connected in parallel when the vane’s magnet activates two switches simultaneously. For all details refers to Spurkfun Weather Meter Kit datasheet (https://cdn.sparkfun.com/assets/d/1/e/0/6/DS-15901-Weather_Meter.pdf).
+Resistance values for positions between those shown in the diagram are the result of two adjacent resistors connected in parallel when the vane’s magnet activates two switches simultaneously. For all details refers to [Spurkfun Weather Meter Kit datasheet](https://cdn.sparkfun.com/assets/d/1/e/0/6/DS-15901-Weather_Meter.pdf).
 
 The wind vane is connected to the external two conductors of the RJ11 cable shared by the anemometer and wind vane (pin 1 and 4) and finally it is connected to the microcontroller via the shared wind vane RJ11. Below the detailed schema including the 10k external resistor:
 
