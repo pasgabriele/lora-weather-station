@@ -98,13 +98,42 @@ A second INA219 has been inserted between the battery pack and the Adafruit Sola
 The i2c channel is used to permit communication between the microcontroller and the UV (VEML6075) and temperature, humidity and pressure sensors (BME280). This bus is used to INA219 communication and can be used for future purpose too, due to on PCB there are other 3 i2c sockets.
 
 ## Anemometer
-The cup-type anemometer measures wind speed by closing a contact as a magnet moves past a switch. A wind speed of 2,401 km/h causes the switch to close once per second. The anemometer switch is connected to the inner two conductors of the RJ11 cable shared by the anemometer and wind vane (pin 2 and 3) and finally it is connected to the microcontroller via the shared wind vane RJ11. Below the detailed schema:
+The cup-type anemometer measures wind speed by closing a contact as a magnet moves past a switch. A wind speed of 2,401 km/h causes the switch to close once per second. The anemometer switch is connected to the inner two conductors of the RJ11 cable shared by the anemometer and wind vane (pin 2 and 3) and finally it is connected to the microcontroller via the shared wind vane RJ11. Below the detailed schema including the 10k external resistor:
 
 ![anemometer wiring](https://raw.githubusercontent.com/pasgabriele/lora-weather-station/main/External%20module/Schematic_anemometer.svg)
 
 The Anemometer is connected to the microcontroller GPIO23 and GND. After that, all we need to do then is to monitor for button presses which is pretty straightforward. We can use the pin interrupts method to monitor the button press (tips). When the reed switch closes the circuit (pressing the button), it triggers a software event (see Wind speed measurement section for software details).
 
 ## Wind vane ![](https://img.shields.io/badge/status-todo-red)
+The wind vane has eight switches, each connected to a different resistor. The vane’s magnet may close two switches at once, allowing up to 16 different positions to be indicated. An external resistor shall be used to form a voltage divider, producing a voltage output that can be measured with an analog to digital converter.
+Resistance values for all 16 possible positions are given in the table.
+
+|Direction(degree)|Resistor(ohm)|
+|--|--|
+|0|33k|
+|22,5|6,57k|
+|45|8,2k|
+|67,5|891|
+|90|1k|
+|112,5|688|
+|135|2,2k|
+|157,5|1,41k|
+|180|3,9k|
+|202,5|3,14k|
+|225|16k|
+|247,5|14,12k|
+|270|120k|
+|292,5|42,12k|
+|315|64,9k|
+|337,5|21,88k|
+
+Resistance values for positions between those shown in the diagram are the result of two adjacent resistors connected in parallel when the vane’s magnet activates two switches simultaneously. For all details refers to Spurkfun Weather Meter Kit datasheet (https://cdn.sparkfun.com/assets/d/1/e/0/6/DS-15901-Weather_Meter.pdf).
+
+The wind vane is connected to the external two conductors of the RJ11 cable shared by the anemometer and wind vane (pin 1 and 4) and finally it is connected to the microcontroller via the shared wind vane RJ11. Below the detailed schema including the 10k external resistor:
+
+![wind vane wiring](https://raw.githubusercontent.com/pasgabriele/lora-weather-station/main/External%20module/Schematic_wind-vane.svg)
+
+The Anemometer is connected to the microcontroller GPIO23 and GND. After that, all we need to do then is to monitor for button presses which is pretty straightforward. We can use the pin interrupts method to monitor the button press (tips). When the reed switch closes the circuit (pressing the button), it triggers a software event (see Wind speed measurement section for software details).
 
 ## Rain gauge ![](https://img.shields.io/badge/status-todo-red)
 
