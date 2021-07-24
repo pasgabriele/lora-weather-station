@@ -36,6 +36,7 @@ The External module is composed by following hardware components:
 |1|[Solar panel](https://it.aliexpress.com/item/32877897718.html)|6V 750mA solar panel||
 |2|[Panasonic 18650](https://it.aliexpress.com/item/4000484192899.html)|Batteries Panasonic 18650 NCR18650B 3.7V 3400mAh Li-Ion with PCB||
 |2|[INA219](https://it.aliexpress.com/item/1005001854701258.html)|Current and voltage monitor||
+|1|[HT7333](https://it.aliexpress.com/item/32694851944.html)|3,3V Low Dropout (LDO) regulator||
 |1|[BME280](https://it.aliexpress.com/item/32849462236.html)|Temperature, humidity and preassure sensor||
 |1|[Spurkfun Weather Meter Kit](https://www.sparkfun.com/products/15901)|Wind speed, wind direction and rain accumulation sensor||
 |1|[VEML6075](https://it.aliexpress.com/item/32843641073.html)|UV index sensor||
@@ -57,7 +58,7 @@ In the following the wiring schema for External module:
 In the following paragraph are detailed and explained all single part of External module.
 
 ## Power system
-The External Module is powered by 2 18650 3.7V 3400mAh Li-Ion batteries in parallel (6400mAh) recharged by a 6V 750ma solar panel via the TP4056 module. The TP4056 module accepts between 4 and 8 input voltage, therefore the solar panel can be directly connected to it via IN+ and IN- pins. The TP4056 recharges the 2 batteries with a maximum of 1000mA via the B+ and B+ pins. At the same time, the batteries, via the OUT+ and OUT- pins of TP4056, power the Lilygo ESP32 microcontroller using the dedicated onboard SH1.25-2 battery interface. Using this dedicated interface no others external components are necessary to voltage regulation. A 2 position switch is inserted between the batteries and the microcontroller so that all sensors and the microcontroller can be turned off. Note that the batteries recharge circuit can never be turned off because it's before the switch.
+The External Module is powered by 2 18650 3.7V 3400mAh Li-Ion batteries in parallel (6400mAh) recharged by a 6V 750ma solar panel via the Adafruit Solar Charger module (bq24074). It recharges the 2 batteries with a maximum of 1000mA via the LIPO and GND pins and, at the same time, it powers, using the LOAD and GND pins, the Lilygo ESP32 microcontroller via the HT7333 LDO. A 2 position switch is inserted between the batteries and the microcontroller so that all sensors and the microcontroller can be turned off. Note that the batteries recharge circuit can never be turned off because it's before the switch.
 
 All weather sensors are powered directly by microcontroller 3V3 and GND pins without using external voltage regulator due to all sensors required 3,3V to operate.
 
