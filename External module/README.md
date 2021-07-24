@@ -66,7 +66,7 @@ Moreover, a 2 position switch is inserted between Solar Charger and LDO so that 
 
 All weather sensors are powered directly by microcontroller 3V3 and GND pins without using external voltage regulator due to all sensors required 3,3V to operate.
 
-## External module lifetime without recharge system enabled
+## External module lifetime without recharge system enabled ![](https://img.shields.io/badge/status-toreview-yellow)
 Measuring the energy consumption of the External module using an amperometer, it has been registered that it requires about 20mA during the weather reading (setting the microcontroller CPU frequency to 26Mhz) and peaks of 130mA during the LoRa packets trasmissions.
 Using this values, we can calculate the External module lifetime witout charging system enabled:
 
@@ -84,18 +84,17 @@ Using this values, we can calculate the External module lifetime witout charging
 These calculations are theoretical only. There are other factors that influence the results (real battery capacity, weather conditions, etc.). **Moreover, it's very important declare that when the batteries drop below 3.65V, the External module works badly and therefore the weather data readings are no longer reliable.**
 Based on these considerations it can be said that the External module, in the absence of a recharging system, is able to live for 3/4 days.
 
-## Battery voltage monitoring system
+## Battery voltage monitoring system ![](https://img.shields.io/badge/status-todo-red)
 
-Using an analog pin (GPIO33) of microcontroller, it possibles to check the voltage of the battery, but all ADC pin exepct voltages between 0 and 3,3 volts instead the battery output voltage is 4,2 volts when it is totally charged. To solve this problem a voltage divider has been connected to the battery to divide the voltage by 2 and to have an maximun voltage of 2,1 volts when battery is totally charged. To do this, 2 27k ohm resistors have been inserted as reported in the following circuit:
+~~Using an analog pin (GPIO33) of microcontroller, it possibles to check the voltage of the battery, but all ADC pin exepct voltages between 0 and 3,3 volts instead the battery output voltage is 4,2 volts when it is totally charged. To solve this problem a voltage divider has been connected to the battery to divide the voltage by 2 and to have an maximun voltage of 2,1 volts when battery is totally charged. To do this, 2 27k ohm resistors have been inserted as reported in the following circuit:~~
 
-![battery monitor](https://raw.githubusercontent.com/pasgabriele/lora-weather-station/main/External%20module/Schematic_battery%20monitor_2021-06-22.svg)
 
-Using this voltage divider we have VoltOnGPIO33 = (maxBatteryVoltage * R2) / (R1 + R2) = (4,2V * 27k) / (54k) = 2,1V
+~~Using this voltage divider we have VoltOnGPIO33 = (maxBatteryVoltage * R2) / (R1 + R2) = (4,2V * 27k) / (54k) = 2,1V~~
 
-With this, we can measure the voltage applied to GPIO33 and then calculate the battery level (see Battery voltage measurement section for software details).
+~~With this, we can measure the voltage applied to GPIO33 and then calculate the battery level (see Battery voltage measurement section for software details).~~
 
 ## i2c communication
-The i2c channel is used to permit communication between the microcontroller and the UV (VEML6075) and temperature, humidity and pressure sensors (BME280). This bus can be used for future purpose too, due to on PCB there are other 3 i2c sockets.
+The i2c channel is used to permit communication between the microcontroller and the UV (VEML6075) and temperature, humidity and pressure sensors (BME280). This bus is used to INA219 communication and can be used for future purpose too, due to on PCB there are other 3 i2c sockets.
 
 ## Anemometer
 The cup-type anemometer measures wind speed by closing a contact as a magnet moves past a switch. A wind speed of 2,401 km/h causes the switch to close once per second. The anemometer switch is connected to the inner two conductors of the RJ11 cable shared by the anemometer and wind vane (pin 2 and 3) and finally it is connected to the microcontroller via the shared wind vane RJ11. Below the detailed schema:
@@ -157,19 +156,19 @@ The wind direction measurement is provided by windDirectionReading() function. I
 
 ~~Instead, during the sleep mode, the External module monitors the rain GPIO and if it detects a rain switch close, wake-up the External module, increases the rainCounterDuringSleep counter and executes the normal mode above described.~~
 
-## Battery voltage measurement
-As already mentioned the voltages on GPIO33 shifts between 0 and 3,3 volts then between 0 and 4095 values (the ADC pin has 12bit resolution), so we can establish a constant to calculate the voltage applied to the pin based on its value. This constant, theoretically, will be c = 3,3 / 4095 = 0,000805860805861. As we are applying a voltage divider and the voltage applied to the pin is half the voltage of the battery, our constant should be c = 0,000805860805861 * 2 = 0,001611721611722. This means, for each unit in ADC pin we have 0,001611721611722 Volts applied to it.
+## Battery voltage measurement ![](https://img.shields.io/badge/status-todo-red)
+~~As already mentioned the voltages on GPIO33 shifts between 0 and 3,3 volts then between 0 and 4095 values (the ADC pin has 12bit resolution), so we can establish a constant to calculate the voltage applied to the pin based on its value. This constant, theoretically, will be c = 3,3 / 4095 = 0,000805860805861. As we are applying a voltage divider and the voltage applied to the pin is half the voltage of the battery, our constant should be c = 0,000805860805861 * 2 = 0,001611721611722. This means, for each unit in ADC pin we have 0,001611721611722 Volts applied to it.~~
 
-For example, if the read value on ADC pin is 2320, then the voltage applied to the pin should be VBatt = 2320 * 0,001611721611722 = 3,74V
+~~For example, if the read value on ADC pin is 2320, then the voltage applied to the pin should be VBatt = 2320 * 0,001611721611722 = 3,74V~~
 
-ADC pins are not that precise, so the value of our constant should be adjusted to a level we consider it is valid for our components. In my case, after doing some testings I have concluded that the best value for the conversion factor is **0.001715**.
+~~ADC pins are not that precise, so the value of our constant should be adjusted to a level we consider it is valid for our components. In my case, after doing some testings I have concluded that the best value for the conversion factor is **0.001715**.~~
 
-sources: https://www.pangodream.es/esp32-getting-battery-charging-level and https://www.settorezero.com/wordpress/arduino-nano-33-iot-wifi-ble-e-imu/
+~~sources: https://www.pangodream.es/esp32-getting-battery-charging-level and https://www.settorezero.com/wordpress/arduino-nano-33-iot-wifi-ble-e-imu/~~
 
 
-The battery voltage measurement is provided by batteryLevel() function. It reads the analog value from the PIN connected to battery and converts this raw value in voltage measurement using the above conversion factor. The analog value is a AVG on 50 consecutive reads.
+~~The battery voltage measurement is provided by batteryLevel() function. It reads the analog value from the PIN connected to battery and converts this raw value in voltage measurement using the above conversion factor. The analog value is a AVG on 50 consecutive reads.~~
 
-The voltage measurement is stored in the volt variable and it will used to compose the json string.
+~~The voltage measurement is stored in the volt variable and it will used to compose the json string.~~
 
 ## Json string creation and LoRa sending
 When all weather data have been read, these are inserted in a json string using the composeJson() function, then the string is sent to the Gateway using LoRaSend(String packet) function via LoRa connection. After sending the string, the External module restart the cicle.
