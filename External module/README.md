@@ -168,7 +168,7 @@ The UV index measurement is provided by VEML6075 sensor. In the setup function t
 ## Wind speed measurement
 The wind speed measurement is derived by: (http://cactus.io/hookups/weather/anemometer/davis/hookup-arduino-to-davis-anemometer-wind-speed).
 
-It works as following:
+It works as following: 
 
 As describe in Spurkfun Weather Meter Kit datasheet, a wind speed of 2.401km/h causes the switch to close once per second, then the wind speed measurement can be executed counting the numbers of switch closed in a sample time. Therefore, when the External module executes the windSpeedReading() function, it actives the pulses measurement (activating the interrupt) for 2,401 seconds (sample window for wind measurement), then stops the pulses measurement (disabling the interrupt), calculates the wind speed in this 2,401 seconds window and stores this value in the windSpeed variable. This will used to compose the json string.
 
