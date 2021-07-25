@@ -134,7 +134,7 @@ The wind vane is connected to the external two conductors of the RJ11 cable shar
 
 The wind vane is connected to the microcontroller analog GPIO32 and GND. After that, all we need to do then is to read the GPIO analog value and convert this value in wind direction using the table defined in Wind direction measurement section (read that section for software details).
 
-## Rain gauge ![](https://img.shields.io/badge/status-todo-red)
+## Rain gauge
 The Spurkfun Weather Meter Kit rain gauge, as defined in own [datasheet](https://cdn.sparkfun.com/assets/d/1/e/0/6/DS-15901-Weather_Meter.pdf), is a self-emptying tipping bucket type. Each 0.2794mm of rain cause one momentary contact closure that can be recorded with a digital counter or microcontroller interrupt input. The gauge’s switch is connected to the two center conductors of the attached RJ 11-terminated cable (pin 2 and 3). To wire the rain gauge sensor to the microcontroller it's necessary to use a 10k ohm external resistor to avoid digital value fluctuations.
 
 Below the detailed wiring schema including the 10k external resistor:
