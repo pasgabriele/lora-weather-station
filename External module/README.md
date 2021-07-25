@@ -4,9 +4,6 @@
 ## TODO ![](https://img.shields.io/badge/status-todo-red)
 
 - Try to change LoRa signalBandwidth and txPower to reduce trasmission power consumption (https://iopscience.iop.org/article/10.1088/1742-6596/1407/1/012092/pdf)
-- Replace TP4056 with Adafruit Solar Charger (https://www.adafruit.com/product/4755)
-- Add an INA219 for solar panel voltage and current measurement
-- Add an INA219 for battery voltage and current measurement
 
 ## Features
 Below a list of External module main features:
@@ -104,11 +101,15 @@ Below the detailed wiring schema including the 10k external resistor:
 
 ![anemometer wiring](https://raw.githubusercontent.com/pasgabriele/lora-weather-station/main/External%20module/Schematic_anemometer.svg)
 
-The Anemometer is connected to the microcontroller GPIO23 and GND. After that, all we need to do then is to monitor for button presses which is pretty straightforward. We can use the pin interrupts method to monitor the button press (tips). When the reed switch closes the circuit (pressing the button), it triggers a software event (see Wind speed measurement section for software details).
+The Anemometer is connected to the microcontroller digital GPIO23 and GND. After that, all we need to do then is to monitor for button presses which is pretty straightforward. We can use the pin interrupts method to monitor the button press (tips). When the reed switch closes the circuit (pressing the button), it triggers a software event (see Wind speed measurement section for software details).
 
 ## Wind vane
-The wind vane has eight switches, each connected to a different resistor. The vane’s magnet may close two switches at once, allowing up to 16 different positions to be indicated. An external resistor shall be used to form a voltage divider, producing a voltage output that can be measured with an analog to digital converter.
-Resistance values for all 16 possible positions are given in the table.
+The Spurkfun Weather Meter Kit wind vane, as defined in own [datasheet](https://cdn.sparkfun.com/assets/d/1/e/0/6/DS-15901-Weather_Meter.pdf), has eight switches, each connected to a different resistor. The vane’s magnet may close two switches at once, allowing up to 16 different positions to be indicated. An external resistor shall be used to form a voltage divider, producing a voltage output that can be measured using an analog pin of microcontroller.
+Resistance values for all 16 possible positions are given in the table. To wire the rain guage sensor to the microcontroller it's necessary to use a 10k ohm external resistor to avoid digital value fluctuations.
+
+Below the detailed wiring schema including the 10k external resistor:
+
+
 
 |Direction(degree)|Resistor(ohm)|
 |--|--|
@@ -129,15 +130,16 @@ Resistance values for all 16 possible positions are given in the table.
 |315|64,9k|
 |337,5|21,88k|
 
-Resistance values for positions between those shown in the diagram are the result of two adjacent resistors connected in parallel when the vane’s magnet activates two switches simultaneously. For all details refers to [Spurkfun Weather Meter Kit datasheet](https://cdn.sparkfun.com/assets/d/1/e/0/6/DS-15901-Weather_Meter.pdf).
+Resistance values for positions between those shown in the diagram are the result of two adjacent resistors connected in parallel when the vane’s magnet activates two switches simultaneously.
 
 The wind vane is connected to the external two conductors of the RJ11 cable shared by the anemometer and wind vane (pin 1 and 4) and finally it is connected to the microcontroller via the shared anemometer RJ11. Below the detailed schema including the 10k external resistor:
 
 ![wind vane wiring](https://raw.githubusercontent.com/pasgabriele/lora-weather-station/main/External%20module/Schematic_wind-vane.svg)
 
-The wind vane is connected to the microcontroller GPIO32 and GND. After that, all we need to do then is to read the GPIO analog value and convert this value in wind direction using the table defined in Wind direction measurement section.
+The wind vane is connected to the microcontroller analog GPIO32 and GND. After that, all we need to do then is to read the GPIO analog value and convert this value in wind direction using the table defined in Wind direction measurement section (read that section for software details).
 
 ## Rain gauge ![](https://img.shields.io/badge/status-todo-red)
+The Spurkfun Weather Meter Kit rain gauge, as defined in own [datasheet](https://cdn.sparkfun.com/assets/d/1/e/0/6/DS-15901-Weather_Meter.pdf), is a self-emptying tipping bucket type. Each 0.2794mm of rain cause one momentary contact closure that can be recorded with a digital counter or microcontroller interrupt input. The gauge’s switch is connected to the two center conductors of the attached RJ 11-terminated cable (pin 2 and 3). 
 
 ## PCB
 
