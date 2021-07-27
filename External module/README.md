@@ -147,7 +147,7 @@ The rain gauge is connected to the microcontroller digital GPIO13 and GND. After
 
 Using the above schema and explanations, the following PCB has been created to merge all External module components:
 
-![external module pcb](https://raw.githubusercontent.com/pasgabriele/lora-weather-station/main/External%20module/pcb-external-module/PCB_PCB_2021-07-20.svg)
+![external module pcb](https://raw.githubusercontent.com/pasgabriele/lora-weather-station/main/External%20module/pcb-external-module/PCB_PCB_external-module-wiring-v.2.2-2021-07-27.svg)
 
 ## Software description
 The External module source code is uploaded in [firmware-external-module](https://github.com/pasgabriele/lora-weather-station/tree/main/External%20module/firmware-external-module) folder.
