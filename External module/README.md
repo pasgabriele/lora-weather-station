@@ -78,7 +78,7 @@ Using this values, we can calculate the External module lifetime witout charging
 |Battery lifetime in hours|6800 / (26,79 + 18,90) = 6800 / 45,69 = 148,82 hours|
 |Battery lifetime in days|148,82 / 24 = 6,2 days|
 
-These calculations are theoretical only. There are other factors that influence the results (real battery capacity, weather conditions, etc.). **Moreover, it's very important declare that when the batteries drop below 3.65V, the External module works badly and therefore the weather data readings are no longer reliable.**
+These calculations are theoretical only. There are other factors that influence the results (real battery capacity, weather conditions, etc.). **Moreover, it's very important declare that when the batteries drop below 3,65V, the External module works badly and therefore the weather data readings are no longer reliable.**
 Based on these considerations it can be said that the External module, in the absence of a recharging system, is able to live for 3/4 days.
 
 ## Solar panel monitoring system
