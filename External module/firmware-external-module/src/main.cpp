@@ -24,7 +24,7 @@
 #define WDT_TIMEOUT 60              //in seconds
 
 //debug variable
-bool debug = true;
+bool debug = false;
 
 const float WINDSPEED_SCALE = 2.401;    //anemometer coefficient (at 2.401 km/h the anemometer pulse once per second)
 const float WINDSPEED_PERIOD = 2.401;   //sample time for wind speed measurement
