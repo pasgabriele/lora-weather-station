@@ -181,16 +181,12 @@ As describe in Spurkfun Weather Meter Kit datasheet, a wind speed of 2.401km/h c
 ## Wind direction measurement
 The wind direction measurement is provided by windDirectionReading() function. It reads the analog value from the PIN connected to the Spurkfun Weather Meter Kit Wind Vane component (using the 10k ohm resistor) and converts this raw value in wind direction degree. As describe in the datasheet, a specified voltage value maps a specific wind direction. Therefore the windDirectionReading() function maps the analog raw value to wind direction and return this in degrees value. The analog value is a AVG on 50 consecutive reads. This degree value is stored in the windDir variable and it will used to compose the json string. 
 
-## Rain measurement ![](https://img.shields.io/badge/status-todo-red)
-~~The rain measurement is provided by rainReading function. As describe in Spurkfun Weather Meter Kit datasheet, every 0.2794mm of rain causes the switch to close once, then the rain measurement can be executed counting the numbers of switch closed. Due to the External Module go to sleep for a defined time, is necessary to count the rain switch close during the normal mode and during the sleep mode too. To do this, there are 2 different counters:~~
-~~- rainCounterDuringSleep~~
-~~- rainCounterDuringActive~~
+## Rain measurement
+The rain measurement is provided by rainReading() function. As describe in Spurkfun Weather Meter Kit datasheet, every 0,2794mm of rain causes the switch to close once, then the rain measurement can be executed counting the numbers of switch closed.
 
-~~It works as following:~~
+It works as following:
 
-~~During the normal mode, at startup time, a interrupt function to monitor the rain switch close is enabled. If a rain switch close is detected, the interrupt function increments the rainCounterDuringActive counter, then, when the rainReading function is called, it uses the counter to calculate the rain amount.~~
-
-~~Instead, during the sleep mode, the External module monitors the rain GPIO and if it detects a rain switch close, wake-up the External module, increases the rainCounterDuringSleep counter and executes the normal mode above described.~~
+At startup time, a interrupt function to monitor the rain switch close is enabled. If a rain switch close is detected, the interrupt function increments the rainClicks counter, then, when the rainReading function is called, it uses the counter to calculate the rain amount (# of count  * 0,2794mm). Then this value is stored in rain variable (in cm unit) and it will used to compose the json string.
 
 ## Solar panel and battery voltage and current measurements ![](https://img.shields.io/badge/status-todo-red)
 ~~As already mentioned the voltages on GPIO33 shifts between 0 and 3,3 volts then between 0 and 4095 values (the ADC pin has 12bit resolution), so we can establish a constant to calculate the voltage applied to the pin based on its value. This constant, theoretically, will be c = 3,3 / 4095 = 0,000805860805861. As we are applying a voltage divider and the voltage applied to the pin is half the voltage of the battery, our constant should be c = 0,000805860805861 * 2 = 0,001611721611722. This means, for each unit in ADC pin we have 0,001611721611722 Volts applied to it.~~
