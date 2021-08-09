@@ -64,7 +64,7 @@ Moreover, a 2 position switch is inserted between Solar Charger and LDO so that 
 All weather sensors are powered directly by microcontroller 3V3 and GND pins without using external voltage regulator due to all sensors required 3,3V to operate.
 
 ## External module lifetime without recharge system enabled ![](https://img.shields.io/badge/status-toverify-yellow)
-Measuring the energy consumption of the External module using an amperometer, it has been registered that it requires about 20mA during the weather reading (setting the microcontroller CPU frequency to 26Mhz) and peaks of 130mA during the LoRa packets trasmissions.
+Measuring the energy consumption of the External module using an amperometer, it has been registered that it requires about 30mA during the weather reading (setting the microcontroller CPU frequency to 26Mhz) and peaks of 130mA during the LoRa packets trasmissions.
 Using this values, we can calculate the External module lifetime witout charging system enabled:
 
 |Description|Measurement|
@@ -73,10 +73,10 @@ Using this values, we can calculate the External module lifetime witout charging
 |LoRa trasmission|230ms|
 |Weather data reading + LoRa trasmission (cicle)|about 2,8s|
 |Number of cicles per hour|3600 / 2,8s = 1286 cicles|
-|Current consumption per hour for weather data reading|1286 * 20mA * 2,5 / 3600 = 17,87mA|
+|Current consumption per hour for weather data reading|1286 * 30mA * 2,5 / 3600 = 26,79mA|
 |Current consumption per hour for LoRa trasmission|1286 * 130mA * 0,23 / 3600 = 18,90mA|
-|Battery lifetime in hours|6800 / (17,87 + 18,90) = 6800 / 36,77 = 184,92 hours|
-|Battery lifetime in days|184,92 / 24 = 7,7 days|
+|Battery lifetime in hours|6800 / (26,79 + 18,90) = 6800 / 45,69 = 148,82 hours|
+|Battery lifetime in days|148,82 / 24 = 6,2 days|
 
 These calculations are theoretical only. There are other factors that influence the results (real battery capacity, weather conditions, etc.). **Moreover, it's very important declare that when the batteries drop below 3.65V, the External module works badly and therefore the weather data readings are no longer reliable.**
 Based on these considerations it can be said that the External module, in the absence of a recharging system, is able to live for 3/4 days.
