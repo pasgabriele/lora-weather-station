@@ -31,7 +31,7 @@ The External module is composed by following hardware components:
 |1|[Lilygo SX1278 LoRa ESP32 443Mhz](http://www.lilygo.cn/prod_view.aspx?TypeId=50003&Id=1133&FId=t3:50003:3)|Microcontroller SX1278 ESP32 with LoRa trasmitter at 433Mhz|Equivalent ESP32 with LoRa trasmitter at 433Mhz (for example  [Heltec WiFi LoRa 32](https://heltec.org/project/wifi-lora-32/))|
 |1|[Adafruit Universal USB / DC / Solar Lithium Ion/Polymer charger - bq24074](https://www.adafruit.com/product/4755)|Solar Lithium Ion/Polymer charger||
 |1|[Solar panel](https://it.aliexpress.com/item/32877897718.html)|6V 750mA solar panel||
-|2|[Panasonic 18650](https://it.aliexpress.com/item/4000484192899.html)|Batteries Panasonic 18650 NCR18650B 3.7V 3400mAh Li-Ion with PCB||
+|2|[Panasonic 18650](https://it.aliexpress.com/item/4000484192899.html)|Batteries Panasonic 18650 NCR18650B 3,7V 3400mAh Li-Ion with PCB||
 |2|[INA219](https://it.aliexpress.com/item/1005001854701258.html)|Current and voltage monitor||
 |1|[HT7333](https://it.aliexpress.com/item/32694851944.html)|3,3V Low Dropout (LDO) regulator||
 |1|[BME280](https://it.aliexpress.com/item/32849462236.html)|Temperature, humidity and preassure sensor||
