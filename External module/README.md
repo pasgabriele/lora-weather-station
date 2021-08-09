@@ -8,13 +8,13 @@
 ## Features
 Below a list of External module main features:
 - It is able to detect the following measures:
-  - Temperature ![](https://img.shields.io/badge/status-ok-green)
-  - Humidity ![](https://img.shields.io/badge/status-ok-green)
-  - Pressure ![](https://img.shields.io/badge/status-ok-green)
-  - Wind speed ![](https://img.shields.io/badge/status-ok-green)
-  - Wind direction ![](https://img.shields.io/badge/status-ok-green)
-  - UV index ![](https://img.shields.io/badge/status-ok-green)
-  - Rain accumulation ![](https://img.shields.io/badge/status-todo-green)
+  - Temperature 
+  - Humidity 
+  - Pressure 
+  - Wind speed 
+  - Wind direction 
+  - UV index 
+  - Rain accumulation 
 - Weather data reading every 2,8 seconds
 - Weather data encapsulation in json string
 - Long distance and low energy LoRa communication with the Gateway
