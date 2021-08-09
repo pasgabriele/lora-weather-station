@@ -5,6 +5,7 @@
 #include <Adafruit_VEML6075.h>
 #include <ArduinoJson.h>
 #include <esp_task_wdt.h>
+#include <Adafruit_INA219.h>
 
 //used digital pins:
 #define SCK 5                       //for lora module
@@ -18,38 +19,52 @@
 #define RAIN 13                     //for rain sensor
 
 //used analogic pins:
-#define BATT 33                     //for battery monitoring
 #define WDIR 32                     //for wind sensor
 
 #define WDT_TIMEOUT 60              //in seconds
 
 //debug variable
-bool debug = false;
-int batteryRaw = 0;
+bool debug = true;
 
 const float WINDSPEED_SCALE = 2.401;    //anemometer coefficient (at 2.401 km/h the anemometer pulse once per second)
 const float WINDSPEED_PERIOD = 2.401;   //sample time for wind speed measurement
-const float BATTERY_CONV = 0.001715;  //analog to volt constant
 const float RAIN_SCALE = 0.2794;    //rain bucket coefficient (every 0.2794mm of rain the rain bucket pulse once)
 
 //global variables
 unsigned long counter = 0;
+
 Adafruit_BME280 bme;
+bool BMEInitializationStatus = false;
 float BMETemperature = -50.0;
 float BMEHumidity = -10.0;
 float BMEPressure = -10.0;
+
 Adafruit_VEML6075 uv = Adafruit_VEML6075();
+bool UVInitializationStatus = false;
 float UVIndex = -10.0;
-float volt = 0.0;
+
 float windDir = -1;
 volatile long lastWindIRQ = 0;
 volatile byte windClicks = 0;
 float windSpeed = -1.0;
-bool BMEInitializationStatus = false;
-bool UVInitializationStatus = false;
+
 volatile long lastRainIRQ = 0;
 volatile byte rainClicks = 0;
 float rain = -1.0;
+
+Adafruit_INA219 ina219Batt(0x41);
+bool INABattInitializationStatus = false;
+float shuntVoltageBatt = 0.0;
+float busVoltageBatt = 0.0;
+float current_mABatt = 0.0;
+float loadVoltageBatt = 0.0;
+
+Adafruit_INA219 ina219Sol(0x40);
+bool INASolInitializationStatus = false;
+float shuntVoltageSol = 0.0;
+float busVoltageSol = 0.0;
+float current_mASol = 0.0;
+float loadVoltageSol = 0.0;
 
 //function to connect LoRa
 void lora_connection(){
@@ -179,33 +194,91 @@ int averageAnalogRead(int pinToRead){
 	return(runningValue);
 }
 
-//function to read battery level
-void batteryLevel(){
-  pinMode(BATT, INPUT);
-  batteryRaw = averageAnalogRead(BATT);
+boolean INA219BATTInitialization(){
+  //setup INA219 BATT
   if(debug){
-    Serial.print(F("INFO: Battery analogic pin value: "));
-    Serial.print(batteryRaw);
-    Serial.println(F("/4095"));
+    Serial.print("INFO: INA219 BATT Initilizing.");
   }
 
-  //mapping analogic value to voltage battery level
-  //this convertion is derived by: https://www.pangodream.es/esp32-getting-battery-charging-level
-  //this convertion is true for battery wiring in the following schema:
-  //        Batt+
-  //          |
-  //        27kohm
-  //          |
-  //          +-------GPIO33
-  //          |
-  //        27kohm
-  //          |
-  //        Batt-
-  volt = batteryRaw * BATTERY_CONV;
+  for(int i=0; i<5;i++){
+    if(ina219Batt.begin()){
+      if(debug){
+        Serial.println();
+        Serial.println("INFO: INA219 BATT Initilizing OK!");
+      }
+      ina219Batt.setCalibration_16V_400mA();
+      return true;
+    }
+    if(debug){
+      Serial.print(".");
+    }
+  }
   if(debug){
-    Serial.print(F("INFO: Battery Voltage: "));
-    Serial.print(volt);
-    Serial.println(F(" Volt"));
+    Serial.println("ERROR: Couldn't find INA219 BATT");
+  }
+  return false;
+}
+
+boolean INA219SOLInitialization(){
+  //setup INA219 SOL
+  if(debug){
+    Serial.print("INFO: INA219 SOL Initilizing.");
+  }
+
+  for(int i=0; i<5;i++){
+    if(ina219Sol.begin()){
+      if(debug){
+        Serial.println();
+        Serial.println("INFO: INA219 SOL Initilizing OK!");
+      }
+      ina219Sol.setCalibration_16V_400mA();
+      return true;
+    }
+    if(debug){
+      Serial.print(".");
+    }
+  }
+  if(debug){
+    Serial.println("ERROR: Couldn't find INA219 SOL");
+  }
+  return false;
+}
+
+//function to read battery current and voltage
+void INABattReading(){
+  shuntVoltageBatt = ina219Batt.getShuntVoltage_mV();
+  busVoltageBatt = ina219Batt.getBusVoltage_V();
+  current_mABatt = ina219Batt.getCurrent_mA();
+  loadVoltageBatt = busVoltageBatt + (shuntVoltageBatt / 1000);
+  if(debug){
+    Serial.print(F("INFO: Battery shunt voltage: "));
+    Serial.print(shuntVoltageBatt);
+    Serial.println(F(" mV"));
+    Serial.print(F("INFO: Battery bus voltage: "));
+    Serial.print(busVoltageBatt);
+    Serial.println(F(" V"));
+    Serial.print(F("INFO: Battery current: "));
+    Serial.print(current_mABatt);
+    Serial.println(F(" mA"));
+  }
+}
+
+//function to read solar current and voltage
+void INASolReading(){
+  shuntVoltageSol = ina219Sol.getShuntVoltage_mV();
+  busVoltageSol = ina219Sol.getBusVoltage_V();
+  current_mASol = ina219Sol.getCurrent_mA();
+  loadVoltageSol = busVoltageSol + (shuntVoltageSol / 1000);
+  if(debug){
+    Serial.print(F("INFO: Solar shunt voltage: "));
+    Serial.print(shuntVoltageSol);
+    Serial.println(F(" mV"));
+    Serial.print(F("INFO: Solar bus voltage: "));
+    Serial.print(busVoltageSol);
+    Serial.println(F(" V"));
+    Serial.print(F("INFO: Solar current: "));
+    Serial.print(current_mASol);
+    Serial.println(F(" mA"));
   }
 }
 
@@ -332,8 +405,10 @@ String composeJson(){
   String string;
   //populate JsonFormat
   data["id"] = counter++;
-  data["supplyVoltage"] = volt;
-  data["batteryRaw"] = batteryRaw;
+  data["supplyVoltage"] = loadVoltageSol;
+  data["consBatteryVoltage"] = loadVoltageBatt;
+  data["currentSol"] = current_mASol;
+  data["currentBatt"] = current_mABatt;
   data["outTemp"] = BMETemperature;
   data["outHumidity"] = BMEHumidity;
   data["pressure"] = BMEPressure;
@@ -387,6 +462,8 @@ void setup() {
   BMEInitializationStatus = BMEInitialization();
   UVInitializationStatus = UVInitialization();
 
+  INABattInitializationStatus = INA219BATTInitialization();
+  INASolInitializationStatus = INA219SOLInitialization();
 }
 
 void loop() {
@@ -397,8 +474,15 @@ void loop() {
     BMEReading();
   }
   
-  //read battery voltage
-  batteryLevel();
+  //read battery voltage and current
+  if (INABattInitializationStatus){
+    INABattReading();
+  }
+
+  //read solar voltage and current
+  if (INABattInitializationStatus){
+    INASolReading();
+  }
 
   //read wind direction
   windDirectionReading();

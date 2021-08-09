@@ -25,14 +25,16 @@ float BMETemperature = -50.0;
 float BMEHumidity = 0.0;
 float BMEPressure = 0.0;
 unsigned long id = 0;
-int batteryRaw = -1;
-float volt = 0.0;
 float windSpeed = -1.0;
 float windGust = -1.0;
 float UVIndex = 0.0;
 float windDir = -1.0;
 float rain = -1.0;
 int rxCheckPercent = -1;
+float solVolt = 0.0;
+float solAmp = 0.0;
+float battVolt = 0.0;
+float battAmp = 0.0;
 
 //function to connect to lora
 void lora_connection() {
@@ -127,8 +129,10 @@ boolean parseJson(int packetSize){
 
   //extract sensors values from json object
   id = data["id"];
-  volt = data["supplyVoltage"];
-  batteryRaw = data["batteryRaw"];
+  solVolt = data["supplyVoltage"];
+  battVolt = data["consBatteryVoltage"];
+  solAmp = data["currentSol"];
+  battAmp = data["currentBatt"];
   BMETemperature = data["outTemp"];
   BMEHumidity = data["outHumidity"];
   BMEPressure = data["pressure"];
@@ -139,16 +143,12 @@ boolean parseJson(int packetSize){
 
   Serial.print("INFO: ID mes: ");
   Serial.println(id);
-  Serial.print("INFO: Battery: ");
-  Serial.println(volt);
   Serial.print("INFO: BME Temp: ");
   Serial.println(BMETemperature);
   Serial.print("INFO: BME Hum: ");
   Serial.println(BMEHumidity);
   Serial.print("INFO: BME Press: ");
   Serial.println(BMEPressure);
-  Serial.print("INFO: Battery raw: ");
-  Serial.println(batteryRaw);
   Serial.print("INFO: Wind speed: ");
   Serial.println(windSpeed);
   Serial.print("INFO: Wind dir: ");
@@ -159,6 +159,14 @@ boolean parseJson(int packetSize){
   Serial.println(rain);
   Serial.print("INFO: Signal quality: ");
   Serial.println(rxCheckPercent);
+  Serial.print("INFO: Solar voltage: ");
+  Serial.println(solVolt);
+  Serial.print("INFO: Solar current: ");
+  Serial.println(solAmp);
+  Serial.print("INFO: Battery voltage: ");
+  Serial.println(battVolt);
+  Serial.print("INFO: : Battery current: ");
+  Serial.println(battAmp);
 
   //debug counter
   Serial.print("INFO: Received packet: ");
@@ -198,9 +206,6 @@ boolean sendToMQTTBroker(){
 
   //insert sensor values on json object
   StaticJsonDocument<300> data;
-  data["id"] = id;
-  data["supplyVoltage"] = volt;
-  data["batteryRaw"] = batteryRaw;
   data["outTemp"] = BMETemperature;
   data["outHumidity"] = BMEHumidity;
   data["pressure"] = BMEPressure;
@@ -209,6 +214,8 @@ boolean sendToMQTTBroker(){
   data["UV"] = UVIndex;
   data["rain"] = rain;
   data["rxCheckPercent"] = rxCheckPercent;
+  data["supplyVoltage"] = solVolt;
+  data["batteryRaw"] = battVolt;
 
   //add timestamp to json string
   while(timeClient.update() == false){
