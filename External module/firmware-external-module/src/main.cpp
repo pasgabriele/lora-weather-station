@@ -58,6 +58,8 @@ float shuntVoltageBatt = 0.0;
 float busVoltageBatt = 0.0;
 float current_mABatt = 0.0;
 float loadVoltageBatt = 0.0;
+bool txBatteryStatus = false;
+bool charging = false;
 
 Adafruit_INA219 ina219Sol(0x40);
 bool INASolInitializationStatus = false;
@@ -263,6 +265,18 @@ void INABattReading(){
     Serial.print(current_mABatt);
     Serial.println(F(" mA"));
   }
+  if(loadVoltageBatt > 3.65){
+    txBatteryStatus = true;
+  }
+  else {
+    txBatteryStatus = false;
+  }
+  if(current_mABatt < 0){
+    charging = true;
+  }
+  else{
+    charging = false;
+  }
 }
 
 //function to read solar current and voltage
@@ -418,6 +432,8 @@ String composeJson(){
   data["windDir"] = windDir;
   data["UV"] = UVIndex;
   data["rain"] = rain;
+  data["txBatteryStatus"] = txBatteryStatus;
+  data["batteryStatus1"] = charging;
 
   //copy JsonFormat to string
   serializeJson(data, string);
