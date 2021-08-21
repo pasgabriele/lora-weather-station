@@ -206,7 +206,8 @@ boolean INA219BATTInitialization(){
         Serial.println();
         Serial.println("INFO: INA219 BATT Initilizing OK!");
       }
-      ina219Batt.setCalibration_16V_400mA();
+      //ina219Batt.setCalibration_16V_400mA();
+      ina219Batt.setCalibration_32V_1A();
       return true;
     }
     if(debug){
@@ -231,7 +232,8 @@ boolean INA219SOLInitialization(){
         Serial.println();
         Serial.println("INFO: INA219 SOL Initilizing OK!");
       }
-      ina219Sol.setCalibration_16V_400mA();
+      //ina219Sol.setCalibration_16V_400mA();
+      ina219Sol.setCalibration_32V_1A();
       return true;
     }
     if(debug){
