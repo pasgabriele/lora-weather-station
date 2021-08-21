@@ -35,6 +35,8 @@ float solVolt = 0.0;
 float solAmp = 0.0;
 float battVolt = 0.0;
 float battAmp = 0.0;
+bool txBatteryStatus = false;
+bool batteryStatus1 = false;
 
 //function to connect to lora
 void lora_connection() {
@@ -140,6 +142,8 @@ boolean parseJson(int packetSize){
   windDir = data["windDir"];
   UVIndex = data["UV"];
   rain = data["rain"];
+  txBatteryStatus = data["txBatteryStatus"];
+  batteryStatus1 = data["batteryStatus1"];
 
   Serial.print("INFO: ID mes: ");
   Serial.println(id);
@@ -167,6 +171,10 @@ boolean parseJson(int packetSize){
   Serial.println(battVolt);
   Serial.print("INFO: : Battery current: ");
   Serial.println(battAmp);
+  Serial.print("INFO: : Battery voltage > 3.65: ");
+  Serial.println(txBatteryStatus);
+  Serial.print("INFO: : Battery in charging: ");
+  Serial.println(batteryStatus1);
 
   //debug counter
   Serial.print("INFO: Received packet: ");
@@ -206,6 +214,8 @@ boolean sendToMQTTBroker(){
 
   //insert sensor values on json object
   StaticJsonDocument<300> data;
+  data["supplyVoltage"] = solVolt;
+  data["consBatteryVoltage"] = battVolt;
   data["outTemp"] = BMETemperature;
   data["outHumidity"] = BMEHumidity;
   data["pressure"] = BMEPressure;
@@ -213,9 +223,9 @@ boolean sendToMQTTBroker(){
   data["windDir"] = windDir;
   data["UV"] = UVIndex;
   data["rain"] = rain;
+  data["txBatteryStatus"] = txBatteryStatus;
+  data["batteryStatus1"] = batteryStatus1;
   data["rxCheckPercent"] = rxCheckPercent;
-  data["supplyVoltage"] = solVolt;
-  data["batteryRaw"] = battVolt;
 
   //add timestamp to json string
   while(timeClient.update() == false){
