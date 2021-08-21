@@ -8,13 +8,13 @@
 ## Features
 Below a list of External module main features:
 - It is able to detect the following measures:
-  - Temperature ![](https://img.shields.io/badge/status-ok-green)
-  - Humidity ![](https://img.shields.io/badge/status-ok-green)
-  - Pressure ![](https://img.shields.io/badge/status-ok-green)
-  - Wind speed ![](https://img.shields.io/badge/status-ok-green)
-  - Wind direction ![](https://img.shields.io/badge/status-ok-green)
-  - UV index ![](https://img.shields.io/badge/status-ok-green)
-  - Rain accumulation ![](https://img.shields.io/badge/status-todo-green)
+  - Temperature 
+  - Humidity 
+  - Pressure 
+  - Wind speed 
+  - Wind direction 
+  - UV index 
+  - Rain accumulation 
 - Weather data reading every 2,8 seconds
 - Weather data encapsulation in json string
 - Long distance and low energy LoRa communication with the Gateway
@@ -31,7 +31,7 @@ The External module is composed by following hardware components:
 |1|[Lilygo SX1278 LoRa ESP32 443Mhz](http://www.lilygo.cn/prod_view.aspx?TypeId=50003&Id=1133&FId=t3:50003:3)|Microcontroller SX1278 ESP32 with LoRa trasmitter at 433Mhz|Equivalent ESP32 with LoRa trasmitter at 433Mhz (for example  [Heltec WiFi LoRa 32](https://heltec.org/project/wifi-lora-32/))|
 |1|[Adafruit Universal USB / DC / Solar Lithium Ion/Polymer charger - bq24074](https://www.adafruit.com/product/4755)|Solar Lithium Ion/Polymer charger||
 |1|[Solar panel](https://it.aliexpress.com/item/32877897718.html)|6V 750mA solar panel||
-|2|[Panasonic 18650](https://it.aliexpress.com/item/4000484192899.html)|Batteries Panasonic 18650 NCR18650B 3.7V 3400mAh Li-Ion with PCB||
+|2|[Panasonic 18650](https://it.aliexpress.com/item/4000484192899.html)|Batteries Panasonic 18650 NCR18650B 3,7V 3400mAh Li-Ion with PCB||
 |2|[INA219](https://it.aliexpress.com/item/1005001854701258.html)|Current and voltage monitor||
 |1|[HT7333](https://it.aliexpress.com/item/32694851944.html)|3,3V Low Dropout (LDO) regulator||
 |1|[BME280](https://it.aliexpress.com/item/32849462236.html)|Temperature, humidity and preassure sensor||
@@ -39,10 +39,10 @@ The External module is composed by following hardware components:
 |1|[VEML6075](https://it.aliexpress.com/item/32843641073.html)|UV index sensor||
 |7|[RJ11 6P4C female PCB socket](https://www.ebay.it/itm/294215189887)|RJ11 6P4C female socket for PCB||
 |1|[Phoenix 2P connector](https://www.aliexpress.com/item/32819689207.html)|Phoenix 2P connector 5mm pitch for PCB||
-|1|[Switch 2 position](https://www.aliexpress.com/item/32799198160.html)|Toggle switch 2 position 2.54mm pitch||
+|1|[Switch 2 position](https://www.aliexpress.com/item/32799198160.html)|Toggle switch 2 position 2,54mm pitch||
 |1|[PCB 2 batteries case](https://www.aliexpress.com/item/4001009601436.html)|2 batteries case for PCB||
 |3|[10k resistor](https://www.aliexpress.com/item/1005001649069962.html)|10k ohm resistor||
-||[Male and female 2.54mm breakable pin header](https://www.aliexpress.com/item/32724478308.html)|Single row male and female 2.54mm breakable pin header PCB JST connector strip||
+||[Male and female 2,54mm breakable pin header](https://www.aliexpress.com/item/32724478308.html)|Single row male and female 2,54mm breakable pin header PCB JST connector strip||
 |1|[External module PCB](https://github.com/pasgabriele/lora-weather-station/tree/main/External%20module/pcb-external-module)|PCB for the external module||
 |1|[Sensors shield](https://www.aliexpress.com/item/32969306380.html)|Shield for temperature, humidity and preassure sensor||
 |1|Junction box|Outdoor PVC waterproof electrical junction boxe to store the assemblated PCB, UV index sensor and solar panel||
@@ -55,7 +55,7 @@ In the following the wiring schema for External module:
 In the following paragraph are detailed and explained all single part of External module.
 
 ## Power system
-The External Module power system core is the Adadruit Solar Charger (bq24074). It's a smart solar charger module ables to charge the 2 18650 3.7V 3400mAh Li-Ion batteries (6400mAh in parallel) using the energy producted by 6V 750ma solar panel and, at the same time, ables to powers direclty the Lilygo ESP32 microcontroller (via a HT7333 LDO). In details, the solar panel is connected to VBUS and GND pins of bq24074. This is possible because the Solar Charger accepts 4,5-10V input voltage. The bq24074 which powers this design is great for solar charging, and will automatically draw the most current possible from the panel in any light condition. Even thought it isn't a 'true' MPPT (max power point tracker), it has near-identical performance without the additional cost of a buck-converter. The batteris pack is connected to LIPO and GND pins and this will be charged by the bq24074 in smart way. Smart load sharing automatically uses the input power when available, to keep battery from constantly charging/discharging, up to 1.5A draw. The load is connected to OUT and GND pins and the load output is regulated to never be over 4,4V. All features of this module can be read here (https://learn.adafruit.com/adafruit-bq24074-universal-usb-dc-solar-charger-breakout).
+The External Module power system core is the Adadruit Solar Charger (bq24074). It's a smart solar charger module ables to charge the 2 18650 3.7V 3400mAh Li-Ion batteries (6400mAh in parallel) using the energy producted by 6V 750ma solar panel and, at the same time, ables to powers direclty the Lilygo ESP32 microcontroller (via a HT7333 LDO). In details, the solar panel is connected to VBUS and GND pins of bq24074. This is possible because the Solar Charger accepts 4,5-10V input voltage. The bq24074 which powers this design is great for solar charging, and will automatically draw the most current possible from the panel in any light condition. Even thought it isn't a 'true' MPPT (max power point tracker), it has near-identical performance without the additional cost of a buck-converter. The batteris pack is connected to LIPO and GND pins and this will be charged by the bq24074 in smart way. Smart load sharing automatically uses the input power when available, to keep battery from constantly charging/discharging, up to 1,5A draw. The load is connected to OUT and GND pins and the load output is regulated to never be over 4,4V. All features of this module can be read here (https://learn.adafruit.com/adafruit-bq24074-universal-usb-dc-solar-charger-breakout).
 
 Due to the load output is regulated to 4,4V and the microcontroller input power is 3,3V, a LDO regulator is connected between the Solar Charger output and the microcontroller input.
 
@@ -78,7 +78,7 @@ Using this values, we can calculate the External module lifetime witout charging
 |Battery lifetime in hours|6800 / (26,79 + 18,90) = 6800 / 45,69 = 148,82 hours|
 |Battery lifetime in days|148,82 / 24 = 6,2 days|
 
-These calculations are theoretical only. There are other factors that influence the results (real battery capacity, weather conditions, etc.). **Moreover, it's very important declare that when the batteries drop below 3.65V, the External module works badly and therefore the weather data readings are no longer reliable.**
+These calculations are theoretical only. There are other factors that influence the results (real battery capacity, weather conditions, etc.). **Moreover, it's very important declare that when the batteries drop below 3,65V, the External module works badly and therefore the weather data readings are no longer reliable.**
 Based on these considerations it can be said that the External module, in the absence of a recharging system, is able to live for 3/4 days.
 
 ## Solar panel monitoring system
@@ -135,7 +135,7 @@ The wind vane is connected to the external two conductors of the RJ11 cable shar
 The wind vane is connected to the microcontroller analog GPIO32 and GND. After that, all we need to do then is to read the GPIO analog value and convert this value in wind direction using the table defined in Wind direction measurement section (read that section for software details).
 
 ## Rain gauge
-The Spurkfun Weather Meter Kit rain gauge, as defined in own [datasheet](https://cdn.sparkfun.com/assets/d/1/e/0/6/DS-15901-Weather_Meter.pdf), is a self-emptying tipping bucket type. Each 0.2794mm of rain cause one momentary contact closure that can be recorded with a digital counter or microcontroller interrupt input. The gauge’s switch is connected to the two center conductors of the attached RJ 11-terminated cable (pin 2 and 3). To wire the rain gauge sensor to the microcontroller it's necessary to use a 10k ohm external resistor to avoid digital value fluctuations.
+The Spurkfun Weather Meter Kit rain gauge, as defined in own [datasheet](https://cdn.sparkfun.com/assets/d/1/e/0/6/DS-15901-Weather_Meter.pdf), is a self-emptying tipping bucket type. Each 0,2794mm of rain cause one momentary contact closure that can be recorded with a digital counter or microcontroller interrupt input. The gauge’s switch is connected to the two center conductors of the attached RJ 11-terminated cable (pin 2 and 3). To wire the rain gauge sensor to the microcontroller it's necessary to use a 10k ohm external resistor to avoid digital value fluctuations.
 
 Below the detailed wiring schema including the 10k external resistor:
 
@@ -161,7 +161,7 @@ The External module is fully self powered via 2 li-ion 18650 batteries and a sol
 - composes the json string
 - sends the json string to Gateway
 
-and repeat the cicle approximately every 2.8 seconds.
+and repeat the cicle approximately every 2,8 seconds.
 
 No Deep Sleep mode has been enable. In this way the weather data is captured in real time. This is important specially for wind speed and direction and rain accumulation.
 
@@ -176,23 +176,19 @@ The wind speed measurement is derived by: (http://cactus.io/hookups/weather/anem
 
 It works as following: 
 
-As describe in Spurkfun Weather Meter Kit datasheet, a wind speed of 2.401km/h causes the switch to close once per second, then the wind speed measurement can be executed counting the numbers of switch closed in a sample time. Therefore, when the External module executes the windSpeedReading() function, it actives the pulses measurement (activating the interrupt) for 2,401 seconds (sample window for wind measurement), then stops the pulses measurement (disabling the interrupt), calculates the wind speed in this 2,401 seconds window and stores this value in the windSpeed variable. This will used to compose the json string.
+As describe in Spurkfun Weather Meter Kit datasheet, a wind speed of 2,401km/h causes the switch to close once per second, then the wind speed measurement can be executed counting the numbers of switch closed in a sample time. Therefore, when the External module executes the windSpeedReading() function, it actives the pulses measurement (activating the interrupt) for 2,401 seconds (sample window for wind measurement), then stops the pulses measurement (disabling the interrupt), calculates the wind speed in this 2,401 seconds window and stores this value in the windSpeed variable. This will used to compose the json string.
 
 ## Wind direction measurement
 The wind direction measurement is provided by windDirectionReading() function. It reads the analog value from the PIN connected to the Spurkfun Weather Meter Kit Wind Vane component (using the 10k ohm resistor) and converts this raw value in wind direction degree. As describe in the datasheet, a specified voltage value maps a specific wind direction. Therefore the windDirectionReading() function maps the analog raw value to wind direction and return this in degrees value. The analog value is a AVG on 50 consecutive reads. This degree value is stored in the windDir variable and it will used to compose the json string. 
 
-## Rain measurement ![](https://img.shields.io/badge/status-todo-red)
-~~The rain measurement is provided by rainReading function. As describe in Spurkfun Weather Meter Kit datasheet, every 0.2794mm of rain causes the switch to close once, then the rain measurement can be executed counting the numbers of switch closed. Due to the External Module go to sleep for a defined time, is necessary to count the rain switch close during the normal mode and during the sleep mode too. To do this, there are 2 different counters:~~
-~~- rainCounterDuringSleep~~
-~~- rainCounterDuringActive~~
+## Rain measurement
+The rain measurement is provided by rainReading() function. As describe in Spurkfun Weather Meter Kit datasheet, every 0,2794mm of rain causes the switch to close once, then the rain measurement can be executed counting the numbers of switch closed.
 
-~~It works as following:~~
+It works as following:
 
-~~During the normal mode, at startup time, a interrupt function to monitor the rain switch close is enabled. If a rain switch close is detected, the interrupt function increments the rainCounterDuringActive counter, then, when the rainReading function is called, it uses the counter to calculate the rain amount.~~
+At startup time, a interrupt function to monitor the rain switch close is enabled. If a rain switch close is detected, the interrupt function increments the rainClicks counter, then, when the rainReading function is called, it uses the counter to calculate the rain amount (# of count  * 0,2794mm). Then this value is stored in rain variable (in cm unit) and it will used to compose the json string.
 
-~~Instead, during the sleep mode, the External module monitors the rain GPIO and if it detects a rain switch close, wake-up the External module, increases the rainCounterDuringSleep counter and executes the normal mode above described.~~
-
-## Battery voltage measurement ![](https://img.shields.io/badge/status-todo-red)
+## Solar panel and battery voltage and current measurements ![](https://img.shields.io/badge/status-todo-red)
 ~~As already mentioned the voltages on GPIO33 shifts between 0 and 3,3 volts then between 0 and 4095 values (the ADC pin has 12bit resolution), so we can establish a constant to calculate the voltage applied to the pin based on its value. This constant, theoretically, will be c = 3,3 / 4095 = 0,000805860805861. As we are applying a voltage divider and the voltage applied to the pin is half the voltage of the battery, our constant should be c = 0,000805860805861 * 2 = 0,001611721611722. This means, for each unit in ADC pin we have 0,001611721611722 Volts applied to it.~~
 
 ~~For example, if the read value on ADC pin is 2320, then the voltage applied to the pin should be VBatt = 2320 * 0,001611721611722 = 3,74V~~
