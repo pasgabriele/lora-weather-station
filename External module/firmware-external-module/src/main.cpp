@@ -78,9 +78,11 @@ void lora_connection(){
   //433E6 for Asia
   //866E6 for Europe
   //915E6 for North America
+  if(debug){
+    Serial.println("INFO: Wait LoRa Begin...");
+  }
   while (!LoRa.begin(433E6)) {
     if(debug){
-      Serial.println("INFO: Wait LoRa Begin...");
       Serial.println(".");
     }
     delay(500);
