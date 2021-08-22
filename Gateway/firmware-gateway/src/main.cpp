@@ -169,11 +169,11 @@ boolean parseJson(int packetSize){
   Serial.println(solAmp);
   Serial.print("INFO: Battery voltage: ");
   Serial.println(battVolt);
-  Serial.print("INFO: : Battery current: ");
+  Serial.print("INFO: Battery current: ");
   Serial.println(battAmp);
-  Serial.print("INFO: : Battery voltage > 3.65: ");
+  Serial.print("INFO: Battery voltage > 3.65: ");
   Serial.println(txBatteryStatus);
-  Serial.print("INFO: : Battery in charging: ");
+  Serial.print("INFO: Battery in charging: ");
   Serial.println(batteryStatus1);
 
   //debug counter
@@ -238,6 +238,11 @@ boolean sendToMQTTBroker(){
   //publish json string to MQTT Broker
   char buffer[256];
   serializeJson(data, buffer);
+  
+  size_t len = strlen(buffer);
+  Serial.print("INFO: MQTT array size: ");
+  Serial.println(len);
+  
   if(MQTTClient.publish(MQTTTopic, buffer)){
     //disconnect from MQTT Broker
     mqtt_disconnect();
