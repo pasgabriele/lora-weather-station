@@ -15,6 +15,9 @@
 #define DIO0 26                     //for lora module
 #define LED 2
 
+//debug variable
+bool debug = false;
+
 //global variables
 String received = "";
 WiFiClient WIFIClient;
@@ -48,9 +51,11 @@ void lora_connection() {
   //433E6 for Asia
   //866E6 for Europe
   //915E6 for North America
-  Serial.println("INFO: Wait LoRa Begin...");
+  if(debug)
+    Serial.println("INFO: Wait LoRa Begin...");
   while (!LoRa.begin(433E6)) {
-    Serial.println(".");
+    if(debug)
+      Serial.println(".");
     delay(500);
   }
 
@@ -59,7 +64,8 @@ void lora_connection() {
   //ranges from 0-0xFF
   LoRa.setSyncWord(0xF3);
   LoRa.enableCrc();
-  Serial.println("INFO: LoRa Initializing OK!!!");
+  if(debug)
+    Serial.println("INFO: LoRa Initializing OK!!!");
   delay(500);
 }
 
@@ -67,39 +73,47 @@ void lora_connection() {
 void wifi_connection() {
   digitalWrite(LED, HIGH);
   if (!WiFi.config(ipaddress, gateway, subnet, dns1, dns2)) {
-    Serial.println("ERROR: STA Failed to configure");
+    if(debug)
+      Serial.println("ERROR: STA Failed to configure");
   }
 
-  Serial.print("INFO: Connecting to ");
-  Serial.println(SSID);
+  if(debug){
+    Serial.print("INFO: Connecting to ");
+    Serial.println(SSID);
+  }
 
   WiFi.begin(SSID, password);
 
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
-    Serial.print(".");
+    if(debug)
+      Serial.print(".");
   }
 
-  Serial.println("");
-  Serial.println("INFO: WiFi connected!!!");
-  Serial.print("INFO: IP address: ");
-  Serial.println(WiFi.localIP());
-  Serial.print("INFO: ESP Mac Address: ");
-  Serial.println(WiFi.macAddress());
-  Serial.print("INFO: Subnet Mask: ");
-  Serial.println(WiFi.subnetMask());
-  Serial.print("INFO: Gateway IP: ");
-  Serial.println(WiFi.gatewayIP());
-  Serial.print("INFO: DNS: ");
-  Serial.println(WiFi.dnsIP());
+  if(debug){
+    Serial.println("");
+    Serial.println("INFO: WiFi connected!!!");
+    Serial.print("INFO: IP address: ");
+    Serial.println(WiFi.localIP());
+    Serial.print("INFO: ESP Mac Address: ");
+    Serial.println(WiFi.macAddress());
+    Serial.print("INFO: Subnet Mask: ");
+    Serial.println(WiFi.subnetMask());
+    Serial.print("INFO: Gateway IP: ");
+    Serial.println(WiFi.gatewayIP());
+    Serial.print("INFO: DNS: ");
+    Serial.println(WiFi.dnsIP());
+  }
   digitalWrite(LED, LOW);
 }
 
 boolean parseJson(int packetSize){
 
-  //print incoming packet size
-  Serial.print("INFO: Incoming packet size: ");
-  Serial.println(packetSize);
+  if(debug){
+    //print incoming packet size
+    Serial.print("INFO: Incoming packet size: ");
+    Serial.println(packetSize);
+  }
 
   received = "";
 
@@ -110,10 +124,12 @@ boolean parseJson(int packetSize){
 
   //print the incoming packet with RSSI
   rxCheckPercent = LoRa.packetRssi();
-  Serial.print("INFO: Received packet '");
-  Serial.print(received);
-  Serial.print("' with RSSI ");
-  Serial.println(rxCheckPercent);
+  if(debug){
+    Serial.print("INFO: Received packet '");
+    Serial.print(received);
+    Serial.print("' with RSSI ");
+    Serial.println(rxCheckPercent);
+  }
 
   //map rssi value to percentage
   rxCheckPercent = map(rxCheckPercent, -145, -30, 0, 100);
@@ -123,9 +139,10 @@ boolean parseJson(int packetSize){
   //convert incoming string in json object using ArduinoJson.h library
   DeserializationError error = deserializeJson(data, received);
   if (error) {
-    Serial.print(F("deserializeJson() failed: "));
-    Serial.println(error.f_str());
-
+    if(debug){
+      Serial.print(F("ERROR: deserializeJson() failed: "));
+      Serial.println(error.f_str());
+    }
     return false;
   }
 
@@ -145,40 +162,42 @@ boolean parseJson(int packetSize){
   txBatteryStatus = data["tbs"];
   batteryStatus1 = data["bs1"];
 
-  Serial.print("INFO: ID mes: ");
-  Serial.println(id);
-  Serial.print("INFO: BME Temp: ");
-  Serial.println(BMETemperature);
-  Serial.print("INFO: BME Hum: ");
-  Serial.println(BMEHumidity);
-  Serial.print("INFO: BME Press: ");
-  Serial.println(BMEPressure);
-  Serial.print("INFO: Wind speed: ");
-  Serial.println(windSpeed);
-  Serial.print("INFO: Wind dir: ");
-  Serial.println(windDir);
-  Serial.print("INFO: UV Index: ");
-  Serial.println(UVIndex);
-  Serial.print("INFO: Rain: ");
-  Serial.println(rain);
-  Serial.print("INFO: Signal quality: ");
-  Serial.println(rxCheckPercent);
-  Serial.print("INFO: Solar voltage: ");
-  Serial.println(solVolt);
-  Serial.print("INFO: Solar current: ");
-  Serial.println(solAmp);
-  Serial.print("INFO: Battery voltage: ");
-  Serial.println(battVolt);
-  Serial.print("INFO: Battery current: ");
-  Serial.println(battAmp);
-  Serial.print("INFO: Battery voltage > 3.65: ");
-  Serial.println(txBatteryStatus);
-  Serial.print("INFO: Battery in charging: ");
-  Serial.println(batteryStatus1);
+  if(debug){
+    Serial.print("INFO: ID mes: ");
+    Serial.println(id);
+    Serial.print("INFO: BME Temp: ");
+    Serial.println(BMETemperature);
+    Serial.print("INFO: BME Hum: ");
+    Serial.println(BMEHumidity);
+    Serial.print("INFO: BME Press: ");
+    Serial.println(BMEPressure);
+    Serial.print("INFO: Wind speed: ");
+    Serial.println(windSpeed);
+    Serial.print("INFO: Wind dir: ");
+    Serial.println(windDir);
+    Serial.print("INFO: UV Index: ");
+    Serial.println(UVIndex);
+    Serial.print("INFO: Rain: ");
+    Serial.println(rain);
+    Serial.print("INFO: Signal quality: ");
+    Serial.println(rxCheckPercent);
+    Serial.print("INFO: Solar voltage: ");
+    Serial.println(solVolt);
+    Serial.print("INFO: Solar current: ");
+    Serial.println(solAmp);
+    Serial.print("INFO: Battery voltage: ");
+    Serial.println(battVolt);
+    Serial.print("INFO: Battery current: ");
+    Serial.println(battAmp);
+    Serial.print("INFO: Battery voltage > 3.65: ");
+    Serial.println(txBatteryStatus);
+    Serial.print("INFO: Battery in charging: ");
+    Serial.println(batteryStatus1);
 
-  //debug counter
-  Serial.print("INFO: Received packet: ");
-  Serial.println(counter);
+    //debug counter
+    Serial.print("INFO: Received packet: ");
+    Serial.println(counter);
+  }
   counter++;
   
   return true;
@@ -189,14 +208,18 @@ void mqtt_connection(){
   MQTTClient.setServer(MQTTServer, MQTTPort);
 
   while (!MQTTClient.connected()){
-    Serial.print("INFO: Connecting to MQTT...");
+    if(debug)
+      Serial.print("INFO: Connecting to MQTT...");
  
     if (MQTTClient.connect("Gateway", MQTTUsername, MQTTPassword)){
-      Serial.println("connected");
+      if(debug)
+        Serial.println("connected");
     }
     else{
-      Serial.print("failed with state ");
-      Serial.println(MQTTClient.state());
+      if(debug){
+        Serial.print("ERROR: failed with state ");
+        Serial.println(MQTTClient.state());
+      }
       delay(500);
     }
   }
@@ -205,7 +228,8 @@ void mqtt_connection(){
 //function to disconnect the client from MQTT Broker
 void mqtt_disconnect(){
   MQTTClient.disconnect();
-  Serial.println("INFO: Disconnected from MQTT Server");
+  if(debug)
+    Serial.println("INFO: Disconnected from MQTT Server");
 }
 
 boolean sendToMQTTBroker(){
@@ -229,7 +253,8 @@ boolean sendToMQTTBroker(){
 
   //add timestamp to json string
   while(timeClient.update() == false){
-    Serial.println("WARN: Waiting time from NTP Server");
+    if(debug)
+      Serial.println("WARN: Waiting time from NTP Server");
   }
   timestamp = timeClient.getEpochTime();
   
@@ -240,8 +265,10 @@ boolean sendToMQTTBroker(){
   serializeJson(data, buffer);
   
   size_t len = strlen(buffer);
-  Serial.print("INFO: MQTT array size: ");
-  Serial.println(len);
+  if(debug){
+    Serial.print("INFO: MQTT array size: ");
+    Serial.println(len);
+  }
   
   if(MQTTClient.publish(MQTTTopic, buffer)){
     //disconnect from MQTT Broker
