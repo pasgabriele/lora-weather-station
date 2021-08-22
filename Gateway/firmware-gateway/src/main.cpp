@@ -16,7 +16,7 @@
 #define LED 2
 
 //debug variable
-bool debug = false;
+bool debug = true;
 
 //global variables
 String received = "";
@@ -271,11 +271,15 @@ boolean sendToMQTTBroker(){
   }
   
   if(MQTTClient.publish(MQTTTopic, buffer)){
+    if(debug)
+      Serial.println("INFO: MQTT packet sent");
     //disconnect from MQTT Broker
     mqtt_disconnect();
     return true;
   }
   else{
+    if(debug)
+      Serial.println("ERROR: MQTT packet NOT sent");
     //disconnect from MQTT Broker
     mqtt_disconnect();
     return false;
