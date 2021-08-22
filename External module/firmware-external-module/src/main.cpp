@@ -524,7 +524,7 @@ void loop() {
   if(debug){
     unsigned int end = millis();
     unsigned int time = (end - start);
-    Serial.print("Loop time: ");
+    Serial.print("INFO: Loop time: ");
     Serial.print(time);
     Serial.println(" msec");
   }
