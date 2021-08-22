@@ -118,7 +118,7 @@ boolean parseJson(int packetSize){
   //map rssi value to percentage
   rxCheckPercent = map(rxCheckPercent, -145, -30, 0, 100);
 
-  StaticJsonDocument<256> data;
+  StaticJsonDocument<300> data;
 
   //convert incoming string in json object using ArduinoJson.h library
   DeserializationError error = deserializeJson(data, received);
@@ -213,7 +213,7 @@ boolean sendToMQTTBroker(){
   mqtt_connection();
 
   //insert sensor values on json object
-  StaticJsonDocument<256> data;
+  StaticJsonDocument<300> data;
   data["sv"] = solVolt;
   data["cbv"] = battVolt;
   data["ot"] = BMETemperature;
