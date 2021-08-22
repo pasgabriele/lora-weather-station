@@ -118,7 +118,7 @@ boolean parseJson(int packetSize){
   //map rssi value to percentage
   rxCheckPercent = map(rxCheckPercent, -145, -30, 0, 100);
 
-  StaticJsonDocument<300> data;
+  StaticJsonDocument<256> data;
 
   //convert incoming string in json object using ArduinoJson.h library
   DeserializationError error = deserializeJson(data, received);
@@ -131,19 +131,19 @@ boolean parseJson(int packetSize){
 
   //extract sensors values from json object
   id = data["id"];
-  solVolt = data["supplyVoltage"];
-  battVolt = data["consBatteryVoltage"];
-  solAmp = data["currentSol"];
-  battAmp = data["currentBatt"];
-  BMETemperature = data["outTemp"];
-  BMEHumidity = data["outHumidity"];
-  BMEPressure = data["pressure"];
-  windSpeed = data["windSpeed"];
-  windDir = data["windDir"];
-  UVIndex = data["UV"];
-  rain = data["rain"];
-  txBatteryStatus = data["txBatteryStatus"];
-  batteryStatus1 = data["batteryStatus1"];
+  solVolt = data["sv"];
+  battVolt = data["cbv"];
+  solAmp = data["cs"];
+  battAmp = data["cb"];
+  BMETemperature = data["ot"];
+  BMEHumidity = data["oh"];
+  BMEPressure = data["p"];
+  windSpeed = data["ws"];
+  windDir = data["wd"];
+  UVIndex = data["uv"];
+  rain = data["r"];
+  txBatteryStatus = data["tbs"];
+  batteryStatus1 = data["bs1"];
 
   Serial.print("INFO: ID mes: ");
   Serial.println(id);
@@ -213,19 +213,19 @@ boolean sendToMQTTBroker(){
   mqtt_connection();
 
   //insert sensor values on json object
-  StaticJsonDocument<300> data;
-  data["supplyVoltage"] = solVolt;
-  data["consBatteryVoltage"] = battVolt;
-  data["outTemp"] = BMETemperature;
-  data["outHumidity"] = BMEHumidity;
-  data["pressure"] = BMEPressure;
-  data["windSpeed"] = windSpeed;
-  data["windDir"] = windDir;
-  data["UV"] = UVIndex;
-  data["rain"] = rain;
-  data["txBatteryStatus"] = txBatteryStatus;
-  data["batteryStatus1"] = batteryStatus1;
-  data["rxCheckPercent"] = rxCheckPercent;
+  StaticJsonDocument<256> data;
+  data["sv"] = solVolt;
+  data["cbv"] = battVolt;
+  data["ot"] = BMETemperature;
+  data["oh"] = BMEHumidity;
+  data["p"] = BMEPressure;
+  data["ws"] = windSpeed;
+  data["wd"] = windDir;
+  data["uv"] = UVIndex;
+  data["r"] = rain;
+  data["tbs"] = txBatteryStatus;
+  data["bs1"] = batteryStatus1;
+  data["rcp"] = rxCheckPercent;
 
   //add timestamp to json string
   while(timeClient.update() == false){
@@ -233,7 +233,7 @@ boolean sendToMQTTBroker(){
   }
   timestamp = timeClient.getEpochTime();
   
-  data["dateTime"] = timestamp;
+  data["dt"] = timestamp;
 
   //publish json string to MQTT Broker
   char buffer[256];
