@@ -421,19 +421,19 @@ String composeJson(){
   String string;
   //populate JsonFormat
   data["id"] = counter++;
-  data["supplyVoltage"] = loadVoltageSol;
-  data["consBatteryVoltage"] = loadVoltageBatt;
-  data["currentSol"] = current_mASol;
-  data["currentBatt"] = current_mABatt;
-  data["outTemp"] = BMETemperature;
-  data["outHumidity"] = BMEHumidity;
-  data["pressure"] = BMEPressure;
-  data["windSpeed"] = windSpeed;
-  data["windDir"] = windDir;
-  data["UV"] = UVIndex;
-  data["rain"] = rain;
-  data["txBatteryStatus"] = txBatteryStatus;
-  data["batteryStatus1"] = charging;
+  data["sv"] = loadVoltageSol;
+  data["cbv"] = loadVoltageBatt;
+  data["cs"] = current_mASol;
+  data["cb"] = current_mABatt;
+  data["ot"] = BMETemperature;
+  data["oh"] = BMEHumidity;
+  data["p"] = BMEPressure;
+  data["ws"] = windSpeed;
+  data["wd"] = windDir;
+  data["uv"] = UVIndex;
+  data["r"] = rain;
+  data["tbs"] = txBatteryStatus;
+  data["bs1"] = charging;
 
   //copy JsonFormat to string
   serializeJson(data, string);
