@@ -306,21 +306,21 @@ void windDirectionReading(){
   pinMode(WDIR, INPUT);
   adc = averageAnalogRead(WDIR); //get the current reading from the sensor
 
-  if      (adc < 150) windDir = 112.5;
-  else if (adc < 220) windDir = 67.5;    
-  else if (adc < 280) windDir = 90;
-  else if (adc < 500) windDir = 157.5;
-  else if (adc < 700) windDir = 135;
-  else if (adc < 900) windDir = 202.5;   
-  else if (adc < 1200) windDir = 180;
-  else if (adc < 1600) windDir = 22.5;
-  else if (adc < 1900) windDir = 45;
-  else if (adc < 2300) windDir = 247.5;
-  else if (adc < 2500) windDir = 225;
-  else if (adc < 2800) windDir = 337.5;    
-  else if (adc < 3100) windDir = 0;
-  else if (adc < 3400) windDir = 292.5;
-  else if (adc < 3800) windDir = 315;
+  if      (adc < 150) windDir = 292.5;
+  else if (adc < 220) windDir = 247.5;    
+  else if (adc < 280) windDir = 270;
+  else if (adc < 500) windDir = 337.5;
+  else if (adc < 700) windDir = 315;
+  else if (adc < 900) windDir = 22.5;   
+  else if (adc < 1200) windDir = 0;
+  else if (adc < 1600) windDir = 202.5;
+  else if (adc < 1900) windDir = 225;
+  else if (adc < 2300) windDir = 67.5;
+  else if (adc < 2500) windDir = 45;
+  else if (adc < 2800) windDir = 157.5;    
+  else if (adc < 3100) windDir = 180;
+  else if (adc < 3400) windDir = 112.5;
+  else if (adc < 3800) windDir = 135;
   else windDir = 270;
 
   if(debug){
