@@ -44,6 +44,7 @@ bool UVInitializationStatus = false;
 float UVIndex = -10.0;
 
 float windDir = -1;
+int analogWindDir = 0;
 volatile long lastWindIRQ = 0;
 volatile byte windClicks = 0;
 float windSpeed = -1.0;
@@ -273,7 +274,7 @@ void INABattReading(){
   else {
     txBatteryStatus = false;
   }
-  if(current_mABatt < 0){
+  if(current_mABatt < -100){
     charging = true;
   }
   else{
@@ -305,27 +306,30 @@ void windDirectionReading(){
   unsigned int adc;
   pinMode(WDIR, INPUT);
   adc = averageAnalogRead(WDIR); //get the current reading from the sensor
+  analogWindDir = adc;
 
-  if      (adc < 150) windDir = 292.5;
-  else if (adc < 220) windDir = 247.5;    
-  else if (adc < 280) windDir = 270;
-  else if (adc < 500) windDir = 337.5;
-  else if (adc < 700) windDir = 315;
-  else if (adc < 900) windDir = 22.5;   
-  else if (adc < 1200) windDir = 0;
-  else if (adc < 1600) windDir = 202.5;
-  else if (adc < 1900) windDir = 225;
-  else if (adc < 2300) windDir = 67.5;
-  else if (adc < 2500) windDir = 45;
-  else if (adc < 2800) windDir = 157.5;    
-  else if (adc < 3100) windDir = 180;
-  else if (adc < 3400) windDir = 112.5;
-  else if (adc < 3800) windDir = 135;
+  if      (adc < 150) windDir = 112.5;
+  else if (adc < 205) windDir = 67.5;    
+  else if (adc < 300) windDir = 90;
+  else if (adc < 500) windDir = 157.5;
+  else if (adc < 700) windDir = 135;
+  else if (adc < 900) windDir = 202.5;   
+  else if (adc < 1200) windDir = 180;
+  else if (adc < 1600) windDir = 22.5;
+  else if (adc < 1900) windDir = 45;
+  else if (adc < 2300) windDir = 247.5;
+  else if (adc < 2500) windDir = 225;
+  else if (adc < 2800) windDir = 337.5;    
+  else if (adc < 3100) windDir = 0;
+  else if (adc < 3400) windDir = 292.5;
+  else if (adc < 3800) windDir = 315;
   else windDir = 270;
 
   if(debug){
     Serial.print("INFO: Wind Dir analogic pin value: ");
-    Serial.println(adc);
+    Serial.println(analogWindDir);
+    Serial.print("INFO: Wind Dir voltage value: ");
+    Serial.println(analogWindDir * (3.3 / 4095.0));
     Serial.print("INFO: Wind Dir degree: ");
     Serial.println(windDir);
   }
@@ -436,6 +440,7 @@ String composeJson(){
   data["r"] = rain;
   data["tbs"] = txBatteryStatus;
   data["bs1"] = charging;
+  data["awd"] = analogWindDir;
 
   //copy JsonFormat to string
   serializeJson(data, string);
