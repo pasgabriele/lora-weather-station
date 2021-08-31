@@ -12,7 +12,7 @@ In the following image an overview of its architecture and components.
 This repository is divided into components as defined above:
 - **External module folder:** contains all necessary files to install and to configure the External module.
 - **Gateway folder:** contains all necessary files to install and to configure the Gateway module.
-- - **WeeWX Server folder:** contains all necessary files to install and to configure the WeeWX server.
+- **WeeWX Server folder:** contains all necessary files to install and to configure the WeeWX server.
 
 For each folder there is a Readme.md file with all details for the specific module. This Readme.md file is just a overview on all weather station system.
 
