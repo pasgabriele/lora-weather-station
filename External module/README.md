@@ -153,7 +153,7 @@ Using the above schema and explanations, the following PCB has been created to m
 The External module source code is uploaded in [firmware-external-module](https://github.com/pasgabriele/lora-weather-station/tree/main/External%20module/firmware-external-module) folder.
 The code has been written using [Visul Studio Code](https://code.visualstudio.com/) and the [PlatformIO plugin](https://platformio.org/), therefore you can clone this repository directly on the above plaftorm.
 
-All weather data read from sensors are processed by the External module, inserted in json string (for example `{"id":3908,"supplyVoltage":3.747275,"outTemp":26.61,"outHumidity":49.11914,"pressure":935.8403,"windSpeed":0,"windDir":157.5,"UV":0}`) and send, via LoRa wireless communication (433Mhz), to the Gateway.
+All weather data read from sensors are processed by the External module, inserted in json string (for example `{"id":3908,"sv":3.747275,"ot":26.61,"oh":49.11914,"p":935.8403,"ws":0,"wd":157.5,"uv":0, "cbv":3.82, "cs":400.1, "cb":29.1, "tbs":false, "bs1":true, "awd":1023}`) and send, via LoRa wireless communication (433Mhz), to the Gateway.
 
 The External module is fully self powered via 2 li-ion 18650 batteries and a solar panel charger. The External module has been projected to work as following:
 
