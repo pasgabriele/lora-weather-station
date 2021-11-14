@@ -22,6 +22,7 @@ Below a list of External module main features:
 - Batteries voltage and current monitoring
 - Solar charged
 - Solar panel voltage and current monitoring
+- Watchdog implementation to prevent module freeze
 
 ## Components
 The External module is composed by following hardware components:
@@ -153,7 +154,7 @@ Using the above schema and explanations, the following PCB has been created to m
 The External module source code is uploaded in [firmware-external-module](https://github.com/pasgabriele/lora-weather-station/tree/main/External%20module/firmware-external-module) folder.
 The code has been written using [Visul Studio Code](https://code.visualstudio.com/) and the [PlatformIO plugin](https://platformio.org/), therefore you can clone this repository directly on the above plaftorm.
 
-All weather data read from sensors are processed by the External module, inserted in json string (for example `{"id":3908,"supplyVoltage":3.747275,"outTemp":26.61,"outHumidity":49.11914,"pressure":935.8403,"windSpeed":0,"windDir":157.5,"UV":0}`) and send, via LoRa wireless communication (433Mhz), to the Gateway.
+All weather data read from sensors are processed by the External module, inserted in json string (for example `{"id":3908,"sv":3.747275,"ot":26.61,"oh":49.11914,"p":935.8403,"ws":0,"wd":157.5,"uv":0,"r":0.2,"cbv":3.82,"cs":400.1,"cb":29.1,"tbs":false,"bs1":true,"awd":1023}`) and send, via LoRa wireless communication (433Mhz), to the Gateway.
 
 The External module is fully self powered via 2 li-ion 18650 batteries and a solar panel charger. The External module has been projected to work as following:
 
@@ -187,6 +188,9 @@ The rain measurement is provided by rainReading() function. As describe in Spurk
 It works as following:
 
 At startup time, a interrupt function to monitor the rain switch close is enabled. If a rain switch close is detected, the interrupt function increments the rainClicks counter, then, when the rainReading function is called, it uses the counter to calculate the rain amount (# of count  * 0,2794mm). Then this value is stored in rain variable (in cm unit) and it will used to compose the json string.
+
+## Watchdog implementation
+The External module will be placed in a difficult to reach position, therefore a freeze prevention system is required. This is made using an 60 seconds watchdog timer that will be restarted every LoRa packet trasmission. In this way, if the External module should freeze, after 60 seconds a software reboot will be performed. 
 
 ## Solar panel and battery voltage and current measurements ![](https://img.shields.io/badge/status-todo-red)
 ~~As already mentioned the voltages on GPIO33 shifts between 0 and 3,3 volts then between 0 and 4095 values (the ADC pin has 12bit resolution), so we can establish a constant to calculate the voltage applied to the pin based on its value. This constant, theoretically, will be c = 3,3 / 4095 = 0,000805860805861. As we are applying a voltage divider and the voltage applied to the pin is half the voltage of the battery, our constant should be c = 0,000805860805861 * 2 = 0,001611721611722. This means, for each unit in ADC pin we have 0,001611721611722 Volts applied to it.~~
