@@ -240,6 +240,8 @@ boolean sendToMQTTBroker(){
   StaticJsonDocument<300> data;
   data["sv"] = solVolt;
   data["cbv"] = battVolt;
+  data["cs"] = solAmp;
+  data["cb"] = battAmp;
   data["ot"] = BMETemperature;
   data["oh"] = BMEHumidity;
   data["p"] = BMEPressure;
